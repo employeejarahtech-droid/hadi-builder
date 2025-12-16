@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Preview - Demo Page Builder</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Page Builder CSS -->
+    <link rel="stylesheet" href="assets/css/page-builder.css">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .preview-header {
+            background: #10b981;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 14px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .preview-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            min-height: 80vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .preview-content {
+            padding: 40px;
+        }
+
+        /* Hide all edit controls and empty zones */
+        .element-controls,
+        .empty-container-zone,
+        .drop-zone {
+            display: none !important;
+        }
+
+        .element-wrapper {
+            margin: 0 !important;
+            outline: none !important;
+            cursor: default !important;
+        }
+
+        .element-wrapper:hover {
+            outline: none !important;
+        }
+
+        .element-wrapper.selected {
+            outline: none !important;
+        }
+
+        .canvas-area {
+            background: transparent !important;
+            border: none !important;
+        }
+
+        /* Ensure proper spacing for elements */
+        .element-wrapper {
+            margin-bottom: 20px !important;
+        }
+
+        .element-wrapper:last-child {
+            margin-bottom: 0 !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Preview Notice -->
+    <div class="preview-header">
+        <strong>Page Preview</strong> - This is how your page will appear to visitors
+    </div>
+
+    <!-- Page Content Container -->
+    <div class="preview-container">
+        <div class="preview-content">
+            <!-- Content will be loaded here -->
+            <div id="preview-area" class="canvas-area">
+                Loading preview...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load content from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const previewContent = localStorage.getItem('previewContent');
+            const previewArea = document.getElementById('preview-area');
+
+            if (previewContent) {
+                // Clean up the content for preview
+                let cleanContent = previewContent;
+
+                // Remove any script tags for security
+                cleanContent = cleanContent.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+
+                // Remove any onclick or other event handlers
+                cleanContent = cleanContent.replace(/on\w+="[^"]*"/g, '');
+
+                // Set the cleaned content
+                previewArea.innerHTML = cleanContent;
+
+                // Initialize any widgets that need JS
+                if (typeof window.elementorWidgetManager !== 'undefined') {
+                    // Trigger any widget initializations
+                    previewArea.querySelectorAll('[data-widget]').forEach(function(el) {
+                        const widgetType = el.getAttribute('data-widget');
+                        if (widgetType && window.elementorWidgetManager) {
+                            const widgetClass = window.elementorWidgetManager.getWidget(widgetType);
+                            if (widgetClass && typeof widgetClass.onFrontendInit === 'function') {
+                                widgetClass.onFrontendInit(el);
+                            }
+                        }
+                    });
+                }
+            } else {
+                previewArea.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">No content to preview. Please build your page first.</p>';
+            }
+        });
+
+        // Close preview message
+        window.addEventListener('beforeunload', function() {
+            // Clean up localStorage
+            localStorage.removeItem('previewContent');
+        });
+    </script>
+</body>
+</html>

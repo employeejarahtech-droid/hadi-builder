@@ -1,0 +1,28 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    RewriteBase /
+    RewriteRule ^index\.php$ - [L]
+    
+    # Handle /blog/{slug}
+    RewriteRule ^blog/(.*)$ index.php [L]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.php [L]
+</IfModule>
+
+# Protect .env and other hidden files (except .well-known)
+<FilesMatch "^\.(?!well-known).*">
+    Require all denied
+</FilesMatch>
+
+# Prevent directory listing
+Options -Indexes
+
+# Set default charset
+AddDefaultCharset UTF-8

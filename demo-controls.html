@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elementor-Style Control System Demo</title>
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f1f3f5;
+            padding: 20px;
+        }
+
+        .demo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 20px;
+        }
+
+        .controls-panel {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .preview-panel {
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        /* Control Styles */
+        .elementor-control {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+        }
+
+        .elementor-control-separator-before {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 15px;
+        }
+
+        .elementor-control-label {
+            margin-bottom: 8px;
+        }
+
+        .elementor-control-label label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #495057;
+            display: block;
+        }
+
+        .elementor-required {
+            color: #e74c3c;
+            margin-left: 3px;
+        }
+
+        .elementor-control-input-wrapper {
+            position: relative;
+        }
+
+        .elementor-control-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .elementor-control-input:focus {
+            outline: none;
+            border-color: #93c5fd;
+            box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.1);
+        }
+
+        .elementor-control-description {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .elementor-control-error .elementor-control-input {
+            border-color: #ef4444;
+        }
+
+        .elementor-control-errors {
+            margin-top: 6px;
+        }
+
+        .elementor-control-error-message {
+            color: #ef4444;
+            font-size: 12px;
+        }
+
+        .elementor-hidden {
+            display: none !important;
+        }
+
+        /* Responsive Switchers */
+        .elementor-control-responsive-switchers {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+
+        .elementor-responsive-switcher {
+            padding: 6px 10px;
+            border: 1px solid #d1d5db;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .elementor-responsive-switcher:hover {
+            background: #f3f4f6;
+        }
+
+        .elementor-responsive-switcher.elementor-active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        /* Preview Styles */
+        .preview-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .preview-output {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .preview-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+        }
+
+        .preview-label {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .preview-value {
+            color: #6b7280;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        /* Buttons */
+        .demo-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .json-output {
+            margin-top: 20px;
+            background: #1f2937;
+            color: #10b981;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+            <h1>Control Panel</h1>
+            <p class="subtitle">Elementor-style page builder controls</p>
+            
+            <div id="controls-container">
+                <!-- Controls will be rendered here -->
+            </div>
+
+            <div class="demo-actions">
+                <button class="btn btn-primary" onclick="validateControls()">Validate</button>
+                <button class="btn btn-secondary" onclick="resetControls()">Reset</button>
+                <button class="btn btn-secondary" onclick="showJSON()">Show JSON</button>
+            </div>
+        </div>
+
+        <!-- Preview Panel -->
+        <div class="preview-panel">
+            <div class="preview-title">Live Preview</div>
+            <div class="preview-output" id="preview-output">
+                <!-- Preview will update here -->
+            </div>
+
+            <div class="json-output" id="json-output" style="display: none;">
+                <!-- JSON output will show here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Utilities -->
+    <script src="assets/fields/utils/EventEmitter.js"></script>
+    <script src="assets/fields/utils/Validator.js"></script>
+    <script src="assets/fields/utils/Conditions.js"></script>
+
+    <!-- Load Core -->
+    <script src="assets/fields/BaseControl.js"></script>
+    <script src="assets/fields/ControlManager.js"></script>
+
+    <!-- Load Controls -->
+    <script src="assets/fields/text-new.js"></script>
+
+    <script>
+        // Initialize control manager
+        const controlManager = window.elementorControlManager;
+        controlManager.init();
+
+        // Define controls configuration
+        const controlsConfig = [
+            {
+                id: 'heading_text',
+                type: 'text',
+                label: 'Heading Text',
+                default_value: 'Welcome to Our Site',
+                placeholder: 'Enter heading...',
+                description: 'This is the main heading text',
+                required: true,
+                validators: [
+                    Validator.required('Heading is required'),
+                    Validator.minLength(3, 'Heading must be at least 3 characters')
+                ]
+            },
+            {
+                id: 'show_subtitle',
+                type: 'text',
+                label: 'Show Subtitle',
+                default_value: 'yes',
+                placeholder: 'yes or no',
+                description: 'Type "yes" to show subtitle field'
+            },
+            {
+                id: 'subtitle_text',
+                type: 'text',
+                label: 'Subtitle Text',
+                default_value: 'Your tagline here',
+                placeholder: 'Enter subtitle...',
+                description: 'This field appears when "Show Subtitle" is "yes"',
+                condition: {
+                    name: 'show_subtitle',
+                    operator: '===',
+                    value: 'yes'
+                }
+            },
+            {
+                id: 'author_name',
+                type: 'text',
+                label: 'Author Name',
+                default_value: 'John Doe',
+                placeholder: 'Enter author name...',
+                separator: 'before',
+                responsive: true,
+                description: 'Responsive control - try switching devices'
+            },
+            {
+                id: 'email',
+                type: 'text',
+                label: 'Email Address',
+                input_type: 'email',
+                placeholder: 'your@email.com',
+                validators: [
+                    Validator.email('Please enter a valid email')
+                ]
+            }
+        ];
+
+        // Render controls
+        controlManager.renderControls('#controls-container', controlsConfig);
+
+        // Update preview on any change
+        controlManager.on('change', () => {
+            updatePreview();
+        });
+
+        // Initial preview update
+        updatePreview();
+
+        // Update preview function
+        function updatePreview() {
+            const values = controlManager.getValues();
+            
+            let html = '';
+            Object.entries(values).forEach(([id, value]) => {
+                const control = controlManager.getControl(id);
+                if (control && control.visible) {
+                    html += `
+                        <div class="preview-item">
+                            <div class="preview-label">${control.label}</div>
+                            <div class="preview-value">${value || '(empty)'}</div>
+                        </div>
+                    `;
+                }
+            });
+            
+            document.getElementById('preview-output').innerHTML = html;
+        }
+
+        // Validate all controls
+        function validateControls() {
+            const isValid = controlManager.validateAll();
+            
+            if (isValid) {
+                alert('✅ All controls are valid!');
+            } else {
+                const errors = controlManager.getErrors();
+                console.log('Validation errors:', errors);
+                alert('❌ Some controls have errors. Check the console.');
+            }
+        }
+
+        // Reset all controls
+        function resetControls() {
+            controlManager.reset();
+            updatePreview();
+        }
+
+        // Show JSON output
+        function showJSON() {
+            const jsonOutput = document.getElementById('json-output');
+            const previewOutput = document.getElementById('preview-output');
+            
+            if (jsonOutput.style.display === 'none') {
+                const data = controlManager.serialize();
+                jsonOutput.textContent = JSON.stringify(data, null, 2);
+                jsonOutput.style.display = 'block';
+                previewOutput.style.display = 'none';
+            } else {
+                jsonOutput.style.display = 'none';
+                previewOutput.style.display = 'block';
+            }
+        }
+
+        // Log to console for debugging
+        console.log('Control Manager:', controlManager);
+        console.log('Available controls:', controlManager.getControlCount());
+    </script>
+</body>
+</html>

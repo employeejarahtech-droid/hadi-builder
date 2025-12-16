@@ -1,0 +1,29 @@
+# Cursor AI Configuration for New CMS Project
+
+# This file contains project-specific rules and preferences for Cursor AI
+
+# Project Context
+# This is a PHP/MySQL CMS with Elementor-style page builder
+# Main technologies: PHP 7+, MySQL, jQuery, Vanilla JavaScript
+
+# Code Style Preferences
+- Use PSR-12 coding standards for PHP where applicable
+- Use ES6+ JavaScript syntax
+- Always use prepared statements for database queries
+- Follow existing code patterns in the project
+
+# API Configuration
+# If you need to configure Z AI API key, add it to Cursor Settings:
+# Settings > Features > AI > API Keys > Add Z AI API Key
+
+# Project Structure Notes
+# - Backend: PHP in root and admin/ directories
+# - Frontend: JavaScript in assets/ directory
+# - Widgets: Extend WidgetBase class
+# - Controls: Extend BaseControl class
+
+
+
+
+
+

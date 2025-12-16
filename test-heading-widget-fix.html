@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heading Widget Fix Test</title>
+    
+    <!-- Include FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Include page builder CSS -->
+    <link rel="stylesheet" href="assets/css/page-builder.css">
+    
+    <style>
+        body {
+            padding: 40px;
+            background: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+        
+        .test-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1e293b;
+        }
+        
+        .status {
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 style="margin-bottom: 30px; color: #333;">HeadingWidget Fix Test</h1>
+        
+        <div class="test-section">
+            <div class="test-title">Basic Rendering Test</div>
+            <div id="basic-test-status"></div>
+            <div id="basic-test"></div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">Font Size Test</div>
+            <div id="fontsize-test-status"></div>
+            <div id="fontsize-test"></div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">Canvas Area Simulation</div>
+            <div id="canvas-test-status"></div>
+            <div id="canvas-area" class="canvas-area">
+                <div class="canvas-empty">
+                    <div>
+                        <i class="fa fa-cube"></i>
+                        <div>Testing widget rendering in canvas area</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Include WidgetBase -->
+    <script src="assets/widgets/WidgetBase.js"></script>
+    
+    <!-- Include WidgetManager -->
+    <script src="assets/core/WidgetManager.js"></script>
+    
+    <!-- Include HeadingWidget -->
+    <script src="assets/widgets/HeadingWidget.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Initialize widget manager
+            if (typeof WidgetManager !== 'undefined') {
+                window.elementorWidgetManager = new WidgetManager();
+            } else {
+                window.elementorWidgetManager = {
+                    widgets: new Map(),
+                    registerWidget: function(WidgetClass) {
+                        this.WidgetClass = WidgetClass;
+                    },
+                    getWidget: function(id) {
+                        return this.widgets.get(id);
+                    }
+                };
+            }
+            
+            // Initialize the manager
+            window.elementorWidgetManager.init();
+            
+            // Register the widget
+            window.elementorWidgetManager.registerWidget(HeadingWidget);
+            
+            // Test 1: Basic Rendering
+            try {
+                const basicWidget = new HeadingWidget();
+                basicWidget.init();
+                const basicHtml = basicWidget.render();
+                
+                $('#basic-test').html(basicHtml);
+                $('#basic-test-status').html('<div class="status success">✓ Basic rendering successful</div>');
+            } catch (error) {
+                $('#basic-test-status').html(`<div class="status error">✗ Basic rendering failed: ${error.message}</div>`);
+            }
+            
+            // Test 2: Font Size Rendering
+            try {
+                const fontWidget = new HeadingWidget();
+                fontWidget.init({
+                    title: 'Font Size Test',
+                    font_size: { size: 48, unit: 'px' },
+                    color: '#3b82f6'
+                });
+                const fontHtml = fontWidget.render();
+                
+                $('#fontsize-test').html(fontHtml);
+                $('#fontsize-test-status').html('<div class="status success">✓ Font size rendering successful</div>');
+            } catch (error) {
+                $('#fontsize-test-status').html(`<div class="status error">✗ Font size rendering failed: ${error.message}</div>`);
+            }
+            
+            // Test 3: Canvas Area Simulation
+            try {
+                const canvasWidget = new HeadingWidget();
+                canvasWidget.init({
+                    title: 'Canvas Area Test',
+                    font_size: { size: 36, unit: 'px' },
+                    color: '#10b981',
+                    align: 'center'
+                });
+                
+                // Simulate element wrapper structure like in page-builder.html
+                const elementHtml = `
+                    <div class="element-wrapper" data-element-id="test-elem">
+                        <div class="element-content">
+                            ${canvasWidget.render()}
+                        </div>
+                    </div>
+                `;
+                
+                $('#canvas-area').html(elementHtml);
+                $('#canvas-test-status').html('<div class="status success">✓ Canvas area rendering successful</div>');
+            } catch (error) {
+                $('#canvas-test-status').html(`<div class="status error">✗ Canvas area rendering failed: ${error.message}</div>`);
+            }
+            
+            // Log results for debugging
+            console.log('HeadingWidget fix test completed');
+        });
+    </script>
+</body>
+</html>

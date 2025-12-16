@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heading Widget Test</title>
+
+    <!-- Include FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Include page builder CSS -->
+    <link rel="stylesheet" href="assets/css/page-builder.css">
+
+    <style>
+        body {
+            padding: 40px;
+            background: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .demo-title {
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .widget-demo {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1 class="demo-title">Heading Widget Demo</h1>
+
+        <p>This demo shows the HeadingWidget with style option tabs. The tabs allow customization of typography, colors, text shadow, and spacing.</p>
+
+        <!-- Widget will be rendered here -->
+        <div id="widget-container"></div>
+
+        <div style="margin-top: 30px; padding: 20px; background: #f0f9ff; border-radius: 8px;">
+            <h3 style="margin-bottom: 10px; color: #1e40af;">Features:</h3>
+            <ul style="color: #64748b; line-height: 1.6;">
+                <li><strong>Content Tab:</strong> Set heading text, HTML tag (H1-H6), and alignment</li>
+                <li><strong>Typography Tab:</strong> Customize font family, size, weight, style, transform, line height, and letter spacing</li>
+                <li><strong>Colors Tab:</strong> Set text color and hover color</li>
+                <li><strong>Shadow Tab:</strong> Configure text shadow with position, blur, and color</li>
+                <li><strong>Spacing Tab:</strong> Adjust margins and padding</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Include WidgetBase -->
+    <script src="assets/widgets/WidgetBase.js"></script>
+
+    <!-- Include WidgetManager -->
+    <script src="assets/core/WidgetManager.js"></script>
+
+    <!-- Include HeadingWidget -->
+    <script src="assets/widgets/HeadingWidget.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Initialize widget manager
+            if (typeof WidgetManager !== 'undefined') {
+                window.elementorWidgetManager = new WidgetManager();
+            } else {
+                // Create a simple widget manager if not available
+                window.elementorWidgetManager = {
+                    widgets: new Map(),
+                    registerWidget: function(WidgetClass) {
+                        this.WidgetClass = WidgetClass;
+                    },
+                    getWidget: function(id) {
+                        return this.widgets.get(id);
+                    }
+                };
+            }
+
+            // Create a heading widget instance
+            const headingWidget = new HeadingWidget();
+
+            // Assign unique ID
+            headingWidget.id = 'demo-heading-' + Date.now();
+
+            // Configure initial settings
+            headingWidget.settings = {
+                heading_text: 'Welcome to Our Amazing Website',
+                heading_tag: 'h1',
+                alignment: 'center',
+                font_family: 'Georgia',
+                font_size: 48,
+                font_weight: '700',
+                text_transform: 'none',
+                text_color: '#1e293b',
+                line_height: 1.2,
+                margin_top: 0,
+                margin_bottom: 20,
+                text_shadow_horizontal: 2,
+                text_shadow_vertical: 2,
+                text_shadow_blur: 4,
+                text_shadow_color: 'rgba(0,0,0,0.1)',
+                active_style_tab: 'typography'
+            };
+
+            // Register widget with manager
+            window.elementorWidgetManager.widgets.set(headingWidget.id, headingWidget);
+
+            // Show style tabs for demo
+            headingWidget.showStyleTabs = true;
+
+            // Render the widget
+            const widgetHtml = headingWidget.render();
+
+            // Wrap in proper container structure
+            const fullWidgetHtml = `<div class="elementor-heading-widget" data-widget-id="${headingWidget.id}">
+                ${widgetHtml.match(/<div class="elementor-heading-widget"[^>]*>([\s\S]*?)<\/div>$/)?.[1] || widgetHtml}
+            </div>`;
+
+            $('#widget-container').html(fullWidgetHtml);
+
+            // Store widget instance globally for tab switching
+            window.demoHeadingWidget = headingWidget;
+
+            // Add a debug helper
+            window.debugWidget = function() {
+                console.log('Widget ID:', headingWidget.id);
+                console.log('Widget settings:', headingWidget.settings);
+                console.log('Widget manager widgets:', Array.from(window.elementorWidgetManager.widgets.keys()));
+            };
+
+            // Initial debug
+            setTimeout(debugWidget, 100);
+        });
+    </script>
+</body>
+</html>

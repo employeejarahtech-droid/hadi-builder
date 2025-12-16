@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Slider Fix</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .element-wrapper {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .element-controls {
+            margin-bottom: 10px;
+        }
+
+        .element-controls button {
+            margin-right: 10px;
+            padding: 5px 10px;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .element-controls button:hover {
+            background: #e0e0e0;
+        }
+
+        .elementor-control {
+            margin-bottom: 15px;
+        }
+
+        .elementor-control-label label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .slider-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slider-input {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider-input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .slider-input::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .slider-value {
+            min-width: 50px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .debug-info {
+            background: #f9f9f9;
+            border: 1px solid #eee;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+
+        .debug-info h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-container">
+        <h1>Slider Font Size Test</h1>
+
+        <div class="element-wrapper" data-element-id="test_element">
+            <div class="element-controls">
+                <button class="edit-element" title="Edit">
+                    <i>Edit</i>
+                </button>
+            </div>
+            <div class="element-content">
+                <h2 id="test-heading" style="font-size: 32px;">This is a test heading</h2>
+            </div>
+        </div>
+
+        <div class="elementor-control">
+            <div class="elementor-control-label">
+                <label for="font_size">Font Size</label>
+            </div>
+            <div class="elementor-control-input-wrapper">
+                <div class="slider-control">
+                    <input type="range" class="elementor-control-input slider-input" id="font_size" value="32" min="10"
+                        max="100" step="1">
+                    <span class="slider-value">32px</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="debug-info">
+            <h3>Debug Information</h3>
+            <p>Current slider value: <span id="debug-slider-value">32</span></p>
+            <p>Current font size: <span id="debug-font-size">32px</span></p>
+            <p>Expected behavior: When slider value changes, the font size of the heading should update immediately.</p>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            const $slider = $('#font_size');
+            const $sliderValue = $('.slider-value');
+            const $heading = $('#test-heading');
+            const $debugSliderValue = $('#debug-slider-value');
+            const $debugFontSize = $('#debug-font-size');
+
+            // Initialize debug values
+            $debugSliderValue.text($slider.val());
+            $debugFontSize.text($heading.css('font-size'));
+
+            // Add slider event listener
+            $slider.on('input', function () {
+                const sliderVal = $(this).val();
+                const unit = 'px';
+
+                // Update slider value display
+                $sliderValue.text(sliderVal + unit);
+
+                // Update heading font size
+                $heading.css('font-size', sliderVal + unit);
+
+                // Update debug information
+                $debugSliderValue.text(sliderVal);
+                $debugFontSize.text(sliderVal + unit);
+
+                console.log('Slider changed:', {
+                    sliderValue: sliderVal,
+                    fontSize: sliderVal + unit,
+                    headingStyle: $heading.attr('style')
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+/* Toast Container - Top Right */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    pointer-events: none; /* Allow clicking through container */
+}
+
+/* Toast Item */
+.toast-item {
+    background: #fff;
+    color: #333;
+    padding: 12px 20px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    min-width: 250px;
+    max-width: 400px;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.3s ease-out;
+    pointer-events: auto; /* Re-enable clicks on toasts */
+    border-left: 4px solid #ccc;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.toast-item.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* Toast Types */
+.toast-item.success {
+    border-left-color: #10b981;
+}
+
+.toast-item.success .toast-icon {
+    color: #10b981;
+}
+
+.toast-item.error {
+    border-left-color: #ef4444;
+}
+
+.toast-item.error .toast-icon {
+    color: #ef4444;
+}
+
+.toast-item.info {
+    border-left-color: #3b82f6;
+}
+
+.toast-item.info .toast-icon {
+    color: #3b82f6;
+}
+
+/* Icon */
+.toast-icon {
+    margin-right: 12px;
+    font-size: 18px;
+}
+
+/* Content */
+.toast-content {
+    flex-grow: 1;
+}

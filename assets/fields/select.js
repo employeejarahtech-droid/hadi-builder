@@ -1,28 +1,28 @@
 class SELECT {
     constructor(id, args) {
         this.id = id;
-        this.label = args.label || 'Select'; // Default label if not provided
-        this.defaultValue = args.default_value || ''; // Default selected value
-        this.placeholder = args.placeholder || 'Select an option'; // Default placeholder
-        this.options = args.options || []; // Options for the select element
-        this.labelBlock = args.label_block || false; // Default to false
+        this.label = args.label || 'Select';
+        this.defaultValue = args.default_value || '';
+        this.placeholder = args.placeholder || 'Select an option';
+        this.options = args.options || [];
+        this.labelBlock = args.label_block || false;
     }
 
     render() {
-        // Generate HTML for the select options
+        // Generate HTML for select options
         const optionsHtml = this.options.map(option => {
             const isSelected = option.value === this.defaultValue ? 'selected' : '';
             return `<option value="${option.value}" ${isSelected}>${option.label}</option>`;
         }).join('');
 
-        // Generate the full HTML for the select input
+        // Generate full HTML for select input
         return `
-            <div class="block-col ${this.labelBlock ? 'block-row' : ''}">
-                <div class="label">
+            <div class="elementor-control">
+                <div class="elementor-control-label">
                     <label for="${this.id}">${this.label}</label>
                 </div>
-                <div class="field">
-                    <select name="${this.id}" id="${this.id}">
+                <div class="elementor-control-input-wrapper">
+                    <select name="${this.id}" id="${this.id}" class="elementor-control-input">
                         <option value="" disabled ${!this.defaultValue ? 'selected' : ''}>${this.placeholder}</option>
                         ${optionsHtml}
                     </select>
@@ -31,35 +31,41 @@ class SELECT {
         `;
     }
 
-    static init(args) {
+    renderWithWrapper() {
+        return this.render();
+    }
+
+    getValue() {
+        const element = document.getElementById(this.id);
+        return element ? element.value : this.defaultValue;
+    }
+
+    setValue(value) {
+        this.value = value || this.defaultValue;
+        const element = document.getElementById(this.id);
+        if (element) {
+            element.value = this.value;
+        }
+    }
+
+    setupListeners() {
+        // Native select doesn't need additional listeners
+        // Change events will be handled by the main page builder
+    }
+
+    init() {
+        // Native select doesn't need additional initialization
+    }
+
+    static init(args, selector) {
         const id = args[0];
         const instance = new SELECT(id, args[1]);
         const html = instance.render();
-
-        // Return the generated HTML
-        return html;
+        
+        if (selector) {
+            document.querySelector(selector).innerHTML = html;
+        }
+        
+        return instance;
     }
 }
-
-// Example usage:
-// const args = [
-//     'selectId',
-//     {
-//         label: 'Choose a Vehicle',
-//         default_value: 'saab', // Default selected value
-//         placeholder: 'Select a vehicle',
-//         options: [
-//             { value: 'volvo', label: 'Volvo' },
-//             { value: 'saab', label: 'Saab' },
-//             { value: 'mercedes', label: 'Mercedes' },
-//             { value: 'audi', label: 'Audi' }
-//         ],
-//         label_block: true // Enable block-style label
-//     }
-// ];
-
-// // Get the generated HTML
-// const selectHtml = SELECT.init(args);
-
-// // Append the HTML to a specific container
-// $('#form-container').append(selectHtml); // Can be any container you want

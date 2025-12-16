@@ -87,6 +87,7 @@ if ($id) {
         const PAGE_SLUG = <?php echo json_encode($pageSlug); ?>;
         const INITIAL_DATA = <?php echo json_encode($pageData); ?>;
         const API_URL = "api/save-page.php";
+        const SAVE_ALL_URL = "api/save-all.php";
         window.CMS_API_BASE = '../api/';
     </script>
 
@@ -138,6 +139,32 @@ if ($id) {
             min-height: 100px;
             resize: vertical;
         }
+
+        /* Settings tab content styles */
+        .settings-tab-content {
+            display: none;
+        }
+
+        .settings-tab-content.active {
+            display: block;
+        }
+
+        .control-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-content {
+            padding-left: 10px;
+        }
     </style>
 </head>
 
@@ -178,6 +205,9 @@ if ($id) {
                 </button>
                 <button class="btn btn-secondary" id="btn-preview">
                     <i class="fa fa-eye"></i> Preview
+                </button>
+                <button class="btn btn-secondary" id="btn-save-all" title="Save All Changes">
+                    <i class="fa fa-save"></i> Save All
                 </button>
                 <button class="btn btn-primary" id="btn-save">
                     <i class="fa fa-save"></i> Save
@@ -257,6 +287,9 @@ if ($id) {
     <script src="../assets/fields/BaseControl.js"></script>
     <script src="../assets/fields/text-new.js"></script>
     <script src="../assets/fields/textarea.js"></script>
+    <script src="../assets/fields/slider.js"></script>
+    <script src="../assets/fields/color.js"></script>
+    <script src="../assets/fields/select.js"></script>
     <script src="../assets/fields/media.js"></script>
     <script src="../assets/fields/ControlManager.js"></script>
 
@@ -459,100 +492,203 @@ if ($id) {
             const $content = $('#settings-content');
             $content.empty();
 
-            // Simple rendering for now
+            // Group controls by tab
+            const controlsByTab = {
+                content: [],
+                style: [],
+                advanced: []
+            };
+
+            let currentTab = 'content';
+            let currentSection = null;
+
             controls.forEach(control => {
-                if (control.type === 'section' || control.type === 'section_end') return;
-
-                let value = element.settings[control.id];
-
-                // Handle undefined values by falling back to default
-                if (value === undefined || value === null) {
-                    value = control.default_value || '';
-                }
-
-                // For HTML tag specifically, ensure it has a default
-                if (control.id === 'html_tag' && !value) {
-                    value = 'h2';
-                }
-
-                if (control.type === 'media') {
-                    // Use MediaControl class for rendering
-                    const mediaControl = new MediaControl(control.id, {
-                        ...control,
-                        value: value
-                    });
-
-                    // Render HTML with wrapper
-                    const html = mediaControl.renderWithWrapper();
-                    const $control = $(html);
-                    $content.append($control);
-
-                    // Initialize (calls setupListeners and onInit)
-                    mediaControl.init();
-
-                    // Bridge change event
-                    mediaControl.on('change', (newVal) => {
-                        const newSettings = {
-                            ...element.settings,
-                            [control.id]: newVal
-                        };
-                        elementManager.updateElement(elementId, newSettings);
-                        renderCanvas();
-                    });
-
-                    return; // Skip default rendering
-                }
-
-                let inputHtml = '';
-
-                if (control.type === 'text' || control.type === 'url') {
-                    inputHtml = `<input type="text" class="elementor-control-input" id="${control.id}" value="${value}">`;
-                } else if (control.type === 'textarea') {
-                    inputHtml = `<textarea class="elementor-control-input" id="${control.id}">${value}</textarea>`;
-                } else if (control.type === 'select') {
-                    const options = control.options.map(opt => {
-                        // Handle complex default values (like font_size object)
-                        let isSelected = false;
-                        if (typeof value === 'object' && value !== null) {
-                            isSelected = opt.value === value.value || opt.value === value.size;
-                        } else {
-                            isSelected = opt.value === value;
-                        }
-                        return `<option value="${opt.value}" ${isSelected ? 'selected' : ''}>${opt.label}</option>`;
-                    }).join('');
-                    inputHtml = `<select class="elementor-control-input" id="${control.id}">${options}</select>`;
-                } else if (control.type === 'color') {
-                    inputHtml = `<input type="color" class="elementor-control-input" id="${control.id}" value="${value}">`;
+                if (control.type === 'section') {
+                    currentSection = {
+                        id: control.id,
+                        label: control.label,
+                        tab: control.tab || 'content',
+                        controls: []
+                    };
+                    controlsByTab[currentSection.tab].push(currentSection);
+                } else if (control.type === 'section_end') {
+                    currentSection = null;
+                } else if (currentSection) {
+                    currentSection.controls.push(control);
                 } else {
-                    inputHtml = `<input type="text" class="elementor-control-input" id="${control.id}" value="${value}">`;
+                    // Control without a section, add to default tab
+                    controlsByTab[control.tab || 'content'].push(control);
                 }
-
-                const $control = $(`
-                    <div class="elementor-control">
-                        <div class="elementor-control-label">
-                            <label for="${control.id}">${control.label}</label>
-                        </div>
-                        <div class="elementor-control-input-wrapper">
-                            ${inputHtml}
-                        </div>
-                    </div>
-                `);
-
-                $content.append($control);
             });
 
-            // Listen to changes
-            $content.find('.elementor-control-input').on('input change', function () {
+            // Render tab content
+            Object.keys(controlsByTab).forEach(tabName => {
+                const $tabContent = $(`<div class="settings-tab-content" data-tab="${tabName}"></div>`);
+                
+                controlsByTab[tabName].forEach(item => {
+                    if (item.controls) {
+                        // This is a section
+                        const $section = $(`
+                            <div class="control-section" data-section="${item.id}">
+                                <h3 class="section-title">${item.label}</h3>
+                                <div class="section-content"></div>
+                            </div>
+                        `);
+                        const $sectionContent = $section.find('.section-content');
+                        
+                        item.controls.forEach(control => {
+                            const $control = renderControl(control, element, elementId);
+                            $sectionContent.append($control);
+                        });
+                        
+                        $tabContent.append($section);
+                    } else {
+                        // This is a standalone control
+                        const $control = renderControl(item, element, elementId);
+                        $tabContent.append($control);
+                    }
+                });
+                
+                $content.append($tabContent);
+            });
+
+            // Show the first tab by default
+            $content.find('.settings-tab-content[data-tab="content"]').addClass('active');
+            
+            // Set the first tab button as active
+            $('.settings-tab').removeClass('active');
+            $('.settings-tab[data-tab="content"]').addClass('active');
+        }
+
+        // Helper function to render a single control
+        function renderControl(control, element, elementId) {
+            let value = element.settings[control.id];
+
+            // Handle undefined values by falling back to default
+            if (value === undefined || value === null) {
+                value = control.default_value || '';
+            }
+
+            // For HTML tag specifically, ensure it has a default
+            if (control.id === 'html_tag' && !value) {
+                value = 'h2';
+            }
+
+            if (control.type === 'media') {
+                // Use MediaControl class for rendering
+                const mediaControl = new MediaControl(control.id, {
+                    ...control,
+                    value: value
+                });
+
+                // Render HTML with wrapper
+                const html = mediaControl.renderWithWrapper();
+                const $control = $(html);
+
+                // Initialize (calls setupListeners and onInit)
+                mediaControl.init();
+
+                // Bridge change event
+                mediaControl.on('change', (newVal) => {
+                    const newSettings = {
+                        ...element.settings,
+                        [control.id]: newVal
+                    };
+                    elementManager.updateElement(elementId, newSettings);
+                    renderCanvas();
+                });
+
+                return $control; // Return the control element
+            }
+
+            let inputHtml = '';
+
+            if (control.type === 'text' || control.type === 'url') {
+                inputHtml = `<input type="text" class="elementor-control-input" id="${control.id}" value="${value}">`;
+            } else if (control.type === 'textarea') {
+                inputHtml = `<textarea class="elementor-control-input" id="${control.id}">${value}</textarea>`;
+            } else if (control.type === 'select') {
+                const options = control.options.map(opt => {
+                    // Handle complex default values (like font_size object)
+                    let isSelected = false;
+                    if (typeof value === 'object' && value !== null) {
+                        isSelected = opt.value === value.value || opt.value === value.size;
+                    } else {
+                        isSelected = opt.value === value;
+                    }
+                    return `<option value="${opt.value}" ${isSelected ? 'selected' : ''}>${opt.label}</option>`;
+                }).join('');
+                inputHtml = `<select class="elementor-control-input" id="${control.id}">${options}</select>`;
+            } else if (control.type === 'color') {
+                inputHtml = `<input type="color" class="elementor-control-input" id="${control.id}" value="${value}">`;
+            } else if (control.type === 'slider') {
+                // Handle slider controls with responsive values
+                let sliderValue = value;
+                let sliderUnit = 'px';
+                
+                if (typeof value === 'object' && value !== null) {
+                    sliderValue = value.size || value.value || 32;
+                    sliderUnit = value.unit || 'px';
+                }
+                
+                inputHtml = `
+                    <div class="elementor-control-input-wrapper">
+                        <input type="range" class="slider-input elementor-control-input" id="${control.id}"
+                               min="${control.range?.min || 0}" max="${control.range?.max || 100}"
+                               step="${control.range?.step || 1}" value="${sliderValue}">
+                        <div class="slider-value">${sliderValue}${sliderUnit}</div>
+                    </div>
+                `;
+            } else {
+                inputHtml = `<input type="text" class="elementor-control-input" id="${control.id}" value="${value}">`;
+            }
+
+            const $control = $(`
+                <div class="elementor-control">
+                    <div class="elementor-control-label">
+                        <label for="${control.id}">${control.label}</label>
+                    </div>
+                    <div class="elementor-control-input-wrapper">
+                        ${inputHtml}
+                    </div>
+                </div>
+            `);
+
+            // Listen to changes for this control
+            $control.find('.elementor-control-input').on('input change', function () {
                 const controlId = $(this).attr('id');
-                const value = $(this).val();
+                let newValue = $(this).val();
+
+                // Handle slider controls specially
+                if (control.type === 'slider') {
+                    const currentValue = element.settings[controlId] || {};
+                    const isObject = typeof currentValue === 'object' && currentValue !== null;
+                    
+                    if (isObject) {
+                        newValue = {
+                            ...currentValue,
+                            size: parseFloat($(this).val())
+                        };
+                    } else {
+                        newValue = {
+                            size: parseFloat($(this).val()),
+                            unit: currentValue.unit || 'px'
+                        };
+                    }
+                    
+                    // Update the displayed value
+                    $control.find('.slider-value').text(`${newValue.size}${newValue.unit}`);
+                }
 
                 const newSettings = {
                     ...element.settings,
-                    [controlId]: value
+                    [controlId]: newValue
                 };
                 elementManager.updateElement(elementId, newSettings);
                 renderCanvas();
             });
+
+            return $control;
         }
 
         // Event listeners
@@ -641,6 +777,72 @@ if ($id) {
             });
         });
 
+        // Save All button
+        $('#btn-save-all').on('click', function () {
+            const btn = $(this);
+            const originalText = btn.html();
+            
+            // Collect all data to save
+            const saveData = {
+                pages: [],
+                headers: [],
+                footers: []
+            };
+            
+            // Add current page/post data
+            if (PAGE_ID) {
+                const data = elementManager.serialize();
+                saveData.pages.push({
+                    id: PAGE_ID,
+                    type: ITEM_TYPE,
+                    content: data
+                });
+            }
+            
+            // Check if there are any unsaved changes in other managers (if they exist)
+            // For now, we'll focus on the current page, but this structure allows for expansion
+            
+            // Disable button and show loading state
+            btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Saving All...');
+            
+            $.ajax({
+                url: SAVE_ALL_URL,
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(saveData),
+                success: function (response) {
+                    const res = typeof response === 'string' ? JSON.parse(response) : response;
+                    if (res.success) {
+                        if (res.errors && res.errors.length > 0) {
+                            // Partial success
+                            Toast.warning('Some items saved with warnings: ' + res.message);
+                            console.warn('Save All warnings:', res.errors);
+                        } else {
+                            Toast.success(res.message || 'All changes saved successfully!');
+                        }
+                    } else {
+                        Toast.error('Error saving changes: ' + (res.message || 'Unknown error'));
+                        if (res.errors) {
+                            console.error('Save All errors:', res.errors);
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                    let errorMessage = 'System error: ' + error;
+                    try {
+                        const errorResponse = JSON.parse(xhr.responseText);
+                        errorMessage = errorResponse.message || errorMessage;
+                    } catch (e) {
+                        // Use default error message
+                    }
+                    Toast.error(errorMessage);
+                },
+                complete: function () {
+                    btn.prop('disabled', false).html(originalText);
+                }
+            });
+        });
+
         // Load saved data from DB
         if (INITIAL_DATA && (Array.isArray(INITIAL_DATA) ? INITIAL_DATA.length > 0 : Object.keys(INITIAL_DATA).length > 0)) {
             try {
@@ -681,6 +883,19 @@ if ($id) {
             $(window).trigger('resize');
 
             console.log('Switched to device:', device);
+        });
+
+        // Settings tabs functionality
+        $('.settings-tab').on('click', function () {
+            const tabName = $(this).data('tab');
+            
+            // Update active tab button
+            $('.settings-tab').removeClass('active');
+            $(this).addClass('active');
+            
+            // Show corresponding tab content
+            $('.settings-tab-content').removeClass('active');
+            $(`.settings-tab-content[data-tab="${tabName}"]`).addClass('active');
         });
 
         // Preview button handler

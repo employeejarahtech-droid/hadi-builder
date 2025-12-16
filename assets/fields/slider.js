@@ -2,99 +2,106 @@ class SLIDER {
     constructor(id, args) {
         this.id = id;
         this.label = args.label || 'Slider';
-        this.min = args.range.min || 0;
-        this.max = args.range.max || 100;
-        this.step = args.range.step || 1;
-        this.default = args.default || { size: 50, unit: '' };
+        this.min = args.range?.min || 0;
+        this.max = args.range?.max || 100;
+        this.step = args.range?.step || 1;
+        this.defaultValue = args.default_value || { size: 50, unit: 'px' };
+        this.value = args.value || this.defaultValue;
         this.randid = Math.random().toString(36).substr(2, 9);
     }
 
     render() {
-        const defaultSize = this.default.size;
-        const defaultUnit = this.default.unit;
+        let sliderValue = this.value;
+        let sliderUnit = 'px';
+        
+        if (typeof this.value === 'object' && this.value !== null) {
+            sliderValue = this.value.size || this.value.value || 50;
+            sliderUnit = this.value.unit || 'px';
+        }
 
         return `
-            <div class="block-col">
-                <div class="label">
-                    <label for='${this.id}'>${this.label}</label>
+            <div class="elementor-control">
+                <div class="elementor-control-label">
+                    <label for="${this.id}">${this.label}</label>
                 </div>
-                <div class="field">
-                    <span class='slider-value slider-${this.randid}'>${defaultSize} ${defaultUnit}</span>
-                    <input type='range' data-id='slider-${this.randid}' id='${this.id}' 
-                           name='${this.id}' 
-                           min='${this.min}' 
-                           max='${this.max}' 
-                           step='${this.step}' 
-                           value='${defaultSize}' 
-                           class='slider-input'>
+                <div class="elementor-control-input-wrapper">
+                    <input type="range" class="slider-input elementor-control-input" id="${this.id}" 
+                           min="${this.min}" max="${this.max}" 
+                           step="${this.step}" value="${sliderValue}">
+                    <div class="slider-value">${sliderValue}${sliderUnit}</div>
                 </div>
             </div>
         `;
     }
 
-    getValue() {
-        const sliderInput = $(`#${this.id}`);
-        if (sliderInput.length === 0) return this.default;
+    renderWithWrapper() {
+        return this.render();
+    }
 
-        const size = parseFloat(sliderInput.val()) || 0;
-        return { size, unit: this.default.unit };
+    getValue() {
+        const sliderInput = document.getElementById(this.id);
+        if (sliderInput.length === 0) return this.defaultValue;
+
+        const size = parseFloat(sliderInput.value) || 0;
+        const currentValue = this.value || this.defaultValue;
+        const unit = (typeof currentValue === 'object' && currentValue !== null) 
+            ? currentValue.unit || 'px' 
+            : 'px';
+            
+        return { size, unit };
     }
 
     setValue(value) {
         if (typeof value === 'object' && value.size !== undefined) {
-            const sliderInput = $(`#${this.id}`);
-            const valueDisplay = $(`.slider-${this.randid}`);
+            const sliderInput = document.getElementById(this.id);
+            const valueDisplay = document.querySelector(`.slider-value`);
 
-            if (sliderInput.length > 0) {
-                sliderInput.val(value.size);
-                valueDisplay.text(`${value.size} ${value.unit || this.default.unit}`);
+            if (sliderInput) {
+                sliderInput.value = value.size;
+                if (valueDisplay) {
+                    valueDisplay.textContent = `${value.size}${value.unit || 'px'}`;
+                }
             }
         }
     }
 
     setupListeners() {
-        const defaultUnit = this.default.unit;
-        const valueDisplay = $(`.slider-${this.randid}`);
+        const valueDisplay = document.querySelector(`.slider-value`);
+        const sliderInput = document.getElementById(this.id);
+        
+        if (sliderInput && valueDisplay) {
+            // Initialize display value
+            const currentValue = this.value || this.defaultValue;
+            const size = (typeof currentValue === 'object' && currentValue !== null) 
+                ? currentValue.size || 50 
+                : currentValue;
+            const unit = (typeof currentValue === 'object' && currentValue !== null) 
+                ? currentValue.unit || 'px' 
+                : 'px';
+            valueDisplay.textContent = `${size}${unit}`;
 
-        // Initialize display value
-        valueDisplay.text(`${this.default.size} ${defaultUnit}`);
-
-        // Update display value on input change using data-id
-        $(document).on('input', `[data-id='slider-${this.randid}']`, function() {
-            const value = $(this).val();
-            valueDisplay.text(`${value} ${defaultUnit}`);
-        });
+            // Update display value on input change
+            sliderInput.addEventListener('input', function() {
+                const value = parseFloat(this.value) || 0;
+                valueDisplay.textContent = `${value}${unit}`;
+            });
+        }
     }
 
-    static init(args, selectorDiv) {
+    init() {
+        this.setupListeners();
+    }
+
+    static init(args, selector) {
         const id = args[0];
         const instance = new SLIDER(id, args[1]);
         const html = instance.render();
-
-        // Append the generated HTML to the target element
-        $(selectorDiv).append(html);
-
-        // Set up the listeners
-        instance.setupListeners();
+        
+        if (selector) {
+            document.querySelector(selector).innerHTML = html;
+        }
+        
+        instance.init();
+        return instance;
     }
 }
-
-// Example usage
-// const args = [
-//     'sliderId',
-//     {
-//         label: 'Adjust Volume',
-//         range: {
-//             min: 0,
-//             max: 100,
-//             step: 1
-//         },
-//         default: {
-//             size: 50, // Default value for the slider
-//             unit: '%' // Unit for the slider value
-//         }
-//     }
-// ];
-
-// const selectorDiv = '#form-container'; // Ensure this is the correct container
-// SLIDER.init(args, selectorDiv);

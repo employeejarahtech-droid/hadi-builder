@@ -36,12 +36,16 @@ class ControlManager extends EventEmitter {
         this.registerControlType('text', TEXT);
         this.registerControlType('textarea', TEXTAREA);
         // this.registerControlType('number', NUMBER);
-        // this.registerControlType('select', SELECT);
+        if (typeof SELECT !== 'undefined') {
+            this.registerControlType('select', SELECT);
+        }
         // this.registerControlType('checkbox', CHECKBOX);
           if (typeof SLIDER !== 'undefined') {
             this.registerControlType('slider', SLIDER);
         }
-        // this.registerControlType('color', COLOR);
+        if (typeof COLOR !== 'undefined') {
+            this.registerControlType('color', COLOR);
+        }
         if (typeof MediaControl !== 'undefined') {
             this.registerControlType('media', MediaControl);
         } else if (typeof window.MediaControl !== 'undefined') {

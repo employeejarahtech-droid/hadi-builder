@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Heading Widget Tabs</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .settings-tabs {
+            display: flex;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+        .settings-tab {
+            padding: 12px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+        .settings-tab:hover {
+            color: #3b82f6;
+        }
+        .settings-tab.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+        .settings-content {
+            margin-bottom: 20px;
+        }
+        .settings-tab-content {
+            display: none;
+        }
+        .settings-tab-content.active {
+            display: block;
+        }
+        .control-section {
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .section-content {
+            padding-left: 10px;
+        }
+        .elementor-control {
+            margin-bottom: 20px;
+        }
+        .elementor-control-label label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #475569;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .elementor-control-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .elementor-control-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        .elementor-control-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .slider-value {
+            min-width: 60px;
+            padding: 6px 10px;
+            background: #f1f5f9;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #475569;
+            text-align: center;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Heading Widget Tabs Test</h1>
+        
+        <div class="settings-tabs">
+            <button class="settings-tab active" data-tab="content">
+                <i class="fa fa-file-alt"></i> Content
+            </button>
+            <button class="settings-tab" data-tab="style">
+                <i class="fa fa-paint-brush"></i> Style
+            </button>
+            <button class="settings-tab" data-tab="advanced">
+                <i class="fa fa-cog"></i> Advanced
+            </button>
+        </div>
+
+        <div class="settings-content">
+            <div class="settings-tab-content active" data-tab="content">
+                <div class="control-section" data-section="content_section">
+                    <h3 class="section-title">Content</h3>
+                    <div class="section-content">
+                        <div class="elementor-control">
+                            <div class="elementor-control-label">
+                                <label for="title">Title</label>
+                            </div>
+                            <div class="elementor-control-input-wrapper">
+                                <input type="text" class="elementor-control-input" id="title" value="This is a Heading">
+                            </div>
+                        </div>
+                        <div class="elementor-control">
+                            <div class="elementor-control-label">
+                                <label for="html_tag">HTML Tag</label>
+                            </div>
+                            <div class="elementor-control-input-wrapper">
+                                <select class="elementor-control-input" id="html_tag">
+                                    <option value="h1">H1</option>
+                                    <option value="h2" selected>H2</option>
+                                    <option value="h3">H3</option>
+                                    <option value="h4">H4</option>
+                                    <option value="h5">H5</option>
+                                    <option value="h6">H6</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-tab-content" data-tab="style">
+                <div class="control-section" data-section="style_section">
+                    <h3 class="section-title">Style</h3>
+                    <div class="section-content">
+                        <div class="elementor-control">
+                            <div class="elementor-control-label">
+                                <label for="color">Text Color</label>
+                            </div>
+                            <div class="elementor-control-input-wrapper">
+                                <input type="color" class="elementor-control-input" id="color" value="#333333">
+                            </div>
+                        </div>
+                        <div class="elementor-control">
+                            <div class="elementor-control-label">
+                                <label for="font_size">Font Size</label>
+                            </div>
+                            <div class="elementor-control-input-wrapper">
+                                <input type="range" class="slider-input elementor-control-input" id="font_size" min="10" max="100" step="1" value="32">
+                                <div class="slider-value">32px</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-tab-content" data-tab="advanced">
+                <div class="control-section" data-section="advanced_section">
+                    <h3 class="section-title">Advanced</h3>
+                    <div class="section-content">
+                        <div class="elementor-control">
+                            <div class="elementor-control-label">
+                                <label for="css_classes">CSS Classes</label>
+                            </div>
+                            <div class="elementor-control-input-wrapper">
+                                <input type="text" class="elementor-control-input" id="css_classes" placeholder="class-1 class-2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        $('.settings-tab').on('click', function () {
+            const tabName = $(this).data('tab');
+            
+            // Update active tab button
+            $('.settings-tab').removeClass('active');
+            $(this).addClass('active');
+            
+            // Show corresponding tab content
+            $('.settings-tab-content').removeClass('active');
+            $(`.settings-tab-content[data-tab="${tabName}"]`).addClass('active');
+        });
+
+        // Slider functionality
+        $('.slider-input').on('input', function () {
+            const value = $(this).val();
+            $(this).siblings('.slider-value').text(value + 'px');
+        });
+    </script>
+</body>
+</html>

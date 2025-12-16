@@ -60,12 +60,10 @@ class MediaControl extends BaseControl {
     }
 
     setupListeners() {
-        const $el = $(`[data-control-id="${this.id}"]`);
-
-        // Clickable area (preview or placeholder) to open modal
-        // We'll use a single unified handler for the entire area, including the Edit button
-        $el.on('click', '.media-clickable-area', (e) => {
-            // Ignore clicks on the Remove button
+        // Use event delegation for dynamically created elements
+        // This ensures clicks work even after control is re-rendered
+        $(document).on('click', `.media-clickable-area[data-control-id="${this.id}"]`, (e) => {
+            // Ignore clicks on Remove button
             if ($(e.target).closest('.media-remove-btn').length) {
                 return;
             }
@@ -77,8 +75,8 @@ class MediaControl extends BaseControl {
             this.openModal();
         });
 
-        // Remove button
-        $el.on('click', '.media-remove-btn', (e) => {
+        // Remove button - also use event delegation
+        $(document).on('click', `.media-remove-btn[data-control-id="${this.id}"]`, (e) => {
             e.preventDefault();
             e.stopPropagation();
 
@@ -87,40 +85,19 @@ class MediaControl extends BaseControl {
             // Clear the value
             this.setValue({ url: '' });
 
-            // Find the media preview container and replace it
-            const $mediaPreview = $el.find('.media-preview');
-
-            if ($mediaPreview.length) {
-                // Replace the preview with placeholder
-                $mediaPreview.replaceWith(`
-                    <div class="media-preview-placeholder media-choose-btn media-clickable-area">
-                        <div>
-                            <i class="${this.trigger.icon}"></i>
-                            <div>${this.trigger.text}</div>
-                        </div>
-                    </div>
-                `);
-                console.log('Preview replaced with placeholder');
+            // Find the control container and re-render it
+            const $controlContainer = $(`[data-control-id="${this.id}"]`).closest('.elementor-control-content');
+            
+            if ($controlContainer.length) {
+                // Re-render the entire control with placeholder
+                $controlContainer.html(this.render());
+                // Re-bind listeners for the new elements
+                this.setupListeners();
             } else {
-                // Try to find it in the parent
-                const $parentPreview = $el.closest('.elementor-control').find('.media-preview');
-                if ($parentPreview.length) {
-                    $parentPreview.replaceWith(`
-                        <div class="media-preview-placeholder media-choose-btn media-clickable-area">
-                            <div>
-                                <i class="${this.trigger.icon}"></i>
-                                <div>${this.trigger.text}</div>
-                            </div>
-                        </div>
-                    `);
-                    console.log('Parent preview replaced with placeholder');
-                } else {
-                    console.error('Could not find media preview element');
-                    console.log('Available elements:', $el.closest('.elementor-control').html());
-                }
+                console.error('Could not find media control container');
             }
 
-            // Trigger change event to update element manager
+            // Trigger change event to update the element manager
             this.emit('change', '');
         });
     }
@@ -329,7 +306,7 @@ class MediaControl extends BaseControl {
 
         // 2. Click on area triggers input too (optional, but good UX)
         $modal.on('click', '.media-upload-area', function (e) {
-            // Prevent recursion: don't trigger if clicking the input itself or the button
+            // Prevent recursion: don't trigger if clicking on input itself or button
             if ($(e.target).is('#media-upload-input') || $(e.target).closest('.media-select-files-btn').length) {
                 return;
             }
@@ -456,16 +433,16 @@ class MediaControl extends BaseControl {
                         <div class="media-library-item selected" data-id="${data.data.id}">
                             <img src="${data.data.url}" alt="${data.data.name}">
                             <div class="media-item-overlay">
-                                <button type="button" class="media-item-select-btn" title="Select">
-                                    <i class="fa fa-check"></i>
-                                </button>
-                                <button type="button" class="media-item-delete-btn" title="Delete">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            </div>
+                                    <button type="button" class="media-item-select-btn" title="Select">
+                                        <i class="fa fa-check"></i>
+                                    </button>
+                                    <button type="button" class="media-item-delete-btn" title="Delete">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
                             <div class="media-item-info">
-                                <div class="media-item-name">${data.data.name}</div>
-                            </div>
+                                    <div class="media-item-name">${data.data.name}</div>
+                                </div>
                         </div>
                     `;
 

@@ -738,6 +738,17 @@ if ($id) {
             elementManager.duplicateElement(elementId);
         });
 
+        $(document).on('click', '.edit-element', function (e) {
+            e.stopPropagation();
+            const elementId = $(this).closest('.element-wrapper').data('element-id');
+            
+            // Select the element and show its settings
+            $('.element-wrapper').removeClass('selected');
+            $(this).closest('.element-wrapper').addClass('selected');
+            elementManager.selectElement(elementId);
+            renderSettings(elementId);
+        });
+
         // Save button
         $('#btn-save').on('click', function () {
             if (!PAGE_ID) {

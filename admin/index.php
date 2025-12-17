@@ -3,7 +3,7 @@ session_start();
 
 // Check authentication
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    header('Location: login.php');
+    header('Location: /admin/login.php');
     exit;
 }
 
@@ -35,7 +35,7 @@ $appName = isset($env['APP_NAME']) ? $env['APP_NAME'] : 'New CMS';
 // Logout Logic
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     session_destroy();
-    header('Location: login.php');
+    header('Location: /admin/login.php');
     exit;
 }
 ?>

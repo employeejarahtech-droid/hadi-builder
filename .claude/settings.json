@@ -1,0 +1,26 @@
+{
+  "model": "sonnet",
+  "max_tokens": 4096,
+  "temperature": 0.1,
+  "theme": "dark",
+  "auto_save": true,
+  "line_numbers": true,
+  "word_wrap": true,
+  "font_size": 14,
+  "font_family": "Consolas, 'Courier New', monospace",
+  "custom_prompts": {},
+  "shortcuts": {
+    "save": "ctrl+s",
+    "find": "ctrl+f",
+    "replace": "ctrl+h",
+    "toggle_comment": "ctrl+/",
+    "format": "shift+alt+f"
+  },
+  "extensions": [],
+  "workspace_settings": {
+    "auto_format": true,
+    "lint_on_save": true,
+    "show_whitespace": false,
+    "show_line_endings": false
+  }
+}

@@ -35,13 +35,13 @@ class MediaControl extends BaseControl {
 
         if (hasImage) {
             return `
-                <div class="media-preview media-clickable-area">
+                <div class="media-preview media-clickable-area" data-control-id="${this.id}">
                     <img src="${url}" class="media-preview-image" alt="Preview">
                     <div class="media-controls">
-                        <button type="button" class="btn btn-secondary media-choose-btn">
+                        <button type="button" class="btn btn-secondary media-choose-btn" data-control-id="${this.id}">
                             <i class="fa fa-pencil"></i> Edit
                         </button>
-                        <button type="button" class="btn btn-secondary media-remove-btn">
+                        <button type="button" class="btn btn-secondary media-remove-btn" data-control-id="${this.id}">
                             <i class="fa fa-trash"></i> Remove
                         </button>
                     </div>
@@ -49,7 +49,7 @@ class MediaControl extends BaseControl {
             `;
         } else {
             return `
-                <div class="media-preview-placeholder media-choose-btn media-clickable-area">
+                <div class="media-preview-placeholder media-choose-btn media-clickable-area" data-control-id="${this.id}">
                     <div>
                         <i class="${this.trigger.icon}"></i>
                         <div>${this.trigger.text}</div>
@@ -277,13 +277,13 @@ class MediaControl extends BaseControl {
 
                 if ($content.length) {
                     $content.html(`
-                        <div class="media-preview media-clickable-area">
+                        <div class="media-preview media-clickable-area" data-control-id="${MediaControl.activeInstance.id}">
                             <img src="${imageUrl}" class="media-preview-image" alt="Preview">
                             <div class="media-controls">
-                                <button type="button" class="btn btn-secondary media-choose-btn">
+                                <button type="button" class="btn btn-secondary media-choose-btn" data-control-id="${MediaControl.activeInstance.id}">
                                     <i class="fa fa-pencil"></i> Edit
                                 </button>
-                                <button type="button" class="btn btn-secondary media-remove-btn">
+                                <button type="button" class="btn btn-secondary media-remove-btn" data-control-id="${MediaControl.activeInstance.id}">
                                     <i class="fa fa-trash"></i> Remove
                                 </button>
                             </div>
@@ -520,7 +520,7 @@ class MediaControl extends BaseControl {
         if (!url || url === '') {
             // Show placeholder
             $wrapper.html(`
-                <div class="media-preview-placeholder media-choose-btn media-clickable-area">
+                <div class="media-preview-placeholder media-choose-btn media-clickable-area" data-control-id="${this.id}">
                     <div>
                         <i class="${this.trigger.icon}"></i>
                         <div>${this.trigger.text}</div>
@@ -530,13 +530,13 @@ class MediaControl extends BaseControl {
         } else {
             // Show preview
             $wrapper.html(`
-                <div class="media-preview media-clickable-area">
+                <div class="media-preview media-clickable-area" data-control-id="${this.id}">
                     <img src="${url}" class="media-preview-image" alt="Preview">
                     <div class="media-controls">
-                        <button type="button" class="btn btn-secondary media-choose-btn">
+                        <button type="button" class="btn btn-secondary media-choose-btn" data-control-id="${this.id}">
                             <i class="fa fa-pencil"></i> Edit
                         </button>
-                        <button type="button" class="btn btn-secondary media-remove-btn">
+                        <button type="button" class="btn btn-secondary media-remove-btn" data-control-id="${this.id}">
                             <i class="fa fa-trash"></i> Remove
                         </button>
                     </div>

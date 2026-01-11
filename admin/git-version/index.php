@@ -470,20 +470,55 @@ require_once __DIR__ . '/../includes/header.php';
             method: 'POST',
             dataType: 'json',
             success: function (response) {
-                showConsole(response.output || response.message, true);
                 if (response.success) {
+                    showConsole(response.output || response.message, true);
                     showToast('SSH key generated successfully', 'success');
                     checkSSHKey();
+                    
+                    // Show instructions if provided
+                    if (response.instructions) {
+                        showConsole('\n=== Next Steps ===\n' + response.instructions.join('\n'), true);
+                    }
+                    
                     if (response.publicKey) {
                         $('#sshPublicKey').val(response.publicKey);
                         showSSHKeyModal();
                     }
                 } else {
+                    // Show error message
+                    let errorMsg = '=== SSH Key Generation Failed ===\n';
+                    errorMsg += response.message + '\n';
+                    
+                    if (response.reason) {
+                        errorMsg += '\nReason: ' + response.reason + '\n';
+                    }
+                    
+                    // Show manual instructions if available (cPanel environment)
+                    if (response.manual_instructions) {
+                        errorMsg += '\n' + response.manual_instructions.title + '\n';
+                        errorMsg += '='.repeat(response.manual_instructions.title.length) + '\n\n';
+                        errorMsg += response.manual_instructions.steps.join('\n') + '\n';
+                        
+                        if (response.manual_instructions.alternative) {
+                            errorMsg += '\n' + response.manual_instructions.alternative + '\n';
+                            errorMsg += response.manual_instructions.local_steps.join('\n') + '\n';
+                        }
+                    }
+                    
+                    if (response.help) {
+                        errorMsg += '\n💡 ' + response.help + '\n';
+                    }
+                    
+                    showConsole(errorMsg, false);
                     showToast(response.message || 'Failed to generate SSH key', 'error');
                 }
             },
-            error: function () {
-                showConsole('Error: Failed to generate SSH key', true);
+            error: function (xhr) {
+                let errorMsg = 'Error: Failed to generate SSH key\n';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMsg += xhr.responseJSON.message;
+                }
+                showConsole(errorMsg, true);
                 showToast('Failed to generate SSH key', 'error');
             }
         });

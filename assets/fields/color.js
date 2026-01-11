@@ -59,11 +59,15 @@ class COLOR {
         const id = args[0];
         const instance = new COLOR(id, args[1]);
         const html = instance.render();
-        
+
         if (selector) {
             document.querySelector(selector).innerHTML = html;
         }
-        
-        return instance;
+
+        // Return HTML string for repeater compatibility
+        return html;
     }
 }
+
+// Export global
+window.COLOR = COLOR;

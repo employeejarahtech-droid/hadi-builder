@@ -1,0 +1,106 @@
+
+  /* ===============================
+      Slider Social Icon Style 
+  =================================*/
+  
+  .slider-social {
+    position: absolute;
+    display: flex;
+    gap: 10px;
+    z-index: 99;
+  }
+  
+  .slider-social.bottom-left {
+    bottom: 30px;
+    left: 30px;
+    transform: translateY(0);
+  }
+  
+  .slider-social.bottom-right {
+    bottom: 30px;
+    right: 30px;
+    transform: translateY(0);
+  }
+  
+  .slider-social.vertical-left {
+    top: 50%;
+    left: 30px;
+    transform: translateY(-50%);
+    flex-direction: column;
+  }
+  
+  .slider-social.vertical-right {
+    top: 50%;
+    right: 30px;
+    transform: translateY(-50%);
+    flex-direction: column;
+  }
+  
+  .slider-social a {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    aspect-ratio: 1;
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    background-color: var(--color-white);
+    border-radius: 50px;
+    transition: color 0.15s ease-in,
+      box-shadow 0.75s cubic-bezier(0.74, 0.01, 0.02, 1);
+  }
+  
+  .slider-social a {
+    font-size: 16px;
+  }
+  
+  .slider-social a:hover {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+  }
+  
+  /* .slider-social a i {
+    transition: transform 0.75s ease-in-out;
+    font-size: 16px;
+    color: var(--color-primary);
+  }
+  
+  @property --fill-color {
+    syntax: "<percentage>";
+    inherits: true;
+    initial-value: 0%;
+  }
+   .slider-social a:hover {
+    --fill-color: 100%;
+    box-shadow: 0 0 0.5rem var(--color-white);
+  }
+  
+   .slider-social a:hover i {
+    transform: scale(1.05);
+  }
+  
+   .slider-social a::after {
+    position: absolute;
+    z-index: -1;
+    content: "";
+    inset: -3px;
+    border-radius: inherit;
+    background: conic-gradient(
+      var(--color-primary) var(--fill-color),
+      transparent var(--fill-color)
+    );
+    transition: --fill-color 0.75s ease-in-out;
+  } */
+  
+  /* slider social hide in mobile device */
+  
+  @media (max-width: 767px) {
+    .slider-social {
+      display: none;
+    }
+  }
+  
+  /* ===============================
+      Slider Social Icon Style End
+  =================================*/

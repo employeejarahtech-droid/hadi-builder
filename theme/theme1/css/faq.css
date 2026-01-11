@@ -1,0 +1,92 @@
+/* ==============================
+    FAQ 2
+=================================*/
+
+.faq-block-2 ul.accordion-list {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  list-style: none;
+}
+
+.faq-block-2 ul.accordion-list li {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  background-color: #FFF;
+  margin: 0 auto 15px auto;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.faq-block-2 ul.accordion-list li h3 {
+  font-weight: 700;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 5px 5px 0 0;
+  background-color: var(--color-default4);
+  transition: all 0.3s ease;
+}
+
+.faq-block-2 ul.accordion-list li.active h3 {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  transition: all 0.3s ease;
+}
+
+.faq-block-2 ul.accordion-list li h3 i {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 18px;
+  text-align: center;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.faq-block-2 ul.accordion-list li.active h3 i {
+  background-color: var(--color-white);
+  color: var(--color-black);
+}
+
+
+.faq-block-2 ul.accordion-list li div.answer {
+  position: relative;
+  display: none;
+  /* Hidden by default */
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Show answer when parent li has active class */
+.faq-block-2 ul.accordion-list li.active div.answer {
+  display: block;
+}
+
+.faq-block-2 ul.accordion-list li div.answer p {
+  padding: 16px 20px;
+}
+
+/* ==============================
+      FAQ 2 End
+  =================================*/

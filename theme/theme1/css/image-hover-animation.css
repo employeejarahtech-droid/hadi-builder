@@ -1,0 +1,1601 @@
+:root {
+    --img-hover-color: rgba(0, 0, 0, 0.4);
+  }
+  
+  /* Hover Effect 1 */
+  
+  /* Common */
+  
+  .img-box {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .bg-img-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+    transform: scale(1);
+    transition: all 0.5s ease;
+  }
+  
+  /* Common End */
+  
+  .anim-1.bg-img-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: var(--img-hover-color);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border-radius: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease;
+    z-index: 99;
+  }
+  
+  .anim-1.bg-img-effect::before {
+    content: "";
+    position: absolute;
+    transform: scale(1);
+    width: 80%;
+    height: 80%;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.5);
+    transition: all 0.5s ease;
+    opacity: 1;
+  }
+  
+  .img-animation:hover .anim-1.bg-img-effect {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .img-animation:hover .anim-1.bg-img-effect::before {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  .anim-1.bg-img-effect + a img{
+    transition: all 0.5s ease;
+  }
+  
+  .img-animation:hover .anim-1.bg-img-effect + a img {
+    transform: scale(1.1);
+  }
+  
+  .img-animation:hover .gallery_overlay {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .img-animation:hover .gallery_overlay .inner {
+    transform: scale(1);
+  }
+  
+  /*====== Hover Effect 2 ======*/
+  
+  .anim-2.bg-img-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: var(--img-hover-color);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border-radius: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0);
+    transition: all 0.5s ease;
+    z-index: 99;
+  }
+
+.anim-2.bg-img-effect + img {
+    transition: all 0.5s ease;
+  }
+  
+  .img-animation:hover .anim-2.bg-img-effect {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+  }
+  
+  .img-animation:hover .anim-2.bg-img-effect + img {
+    transform: scale(1.05);
+  }
+  
+  .img-animation:hover .gallery_overlay {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .img-animation:hover .gallery_overlay .inner {
+    transform: scale(1);
+  }
+  
+  /* ==============================
+      Hover Effect 3
+  =================================*/
+  .anim-3.bg-img-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: var(--img-hover-color);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border-radius: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease;
+    z-index: 99;
+  }
+  
+  .anim-3.bg-img-effect::before {
+    height: 100%;
+    left: 0;
+    top: 0;
+    position: absolute;
+    width: 100%;
+    content: "";
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: scale3d(1.9, 1.4, 1) rotate3d(0, 0, 1, 45deg)
+      translate3d(0, -101%, 0);
+    transition: all 0.6s;
+    -webkit-transform: scale3d(1.9, 1.4, 1) rotate3d(0, 0, 1, 45deg)
+      translate3d(0, -101%, 0);
+    -webkit-transition: all 0.6s;
+  }
+  
+  .img-animation:hover .anim-3.bg-img-effect {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .img-animation:hover .anim-3.bg-img-effect::before {
+    transform: scale3d(1.9, 1.4, 1) rotate3d(0, 0, 1, 45deg)
+      translate3d(0, 101%, 0);
+    -webkit-transform: scale3d(1.9, 1.4, 1) rotate3d(0, 0, 1, 45deg)
+      translate3d(0, 101%, 0);
+  }
+  
+  .img-animation:hover .anim-3.bg-img-effect + img {
+    transform: scale(1.05);
+  }
+  
+  .img-animation:hover .gallery_overlay {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .img-animation:hover .gallery_overlay .inner {
+    transform: scale(1);
+  }
+  
+  /* ==============================
+      Image Hover Effect 4
+  =================================*/
+  .anim-4.bg-img-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    border-radius: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease;
+    z-index: 99;
+  }
+  
+  .anim-4.bg-img-effect::before {
+    content: "";
+    position: absolute;
+    right: 30px;
+    left: 30px;
+    top: 30px;
+    bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    border: 1px solid #fff;
+    padding: 30px;
+    text-align: center;
+    opacity: 0;
+    transform: scale(1.5);
+    transition: all 0.5s ease-in-out;
+  }
+  
+  .anim-4.bg-img-effect > img {
+    transition: all 1s ease;
+    animation-duration: 1s;
+  }
+  
+  .img-animation:hover .anim-4.bg-img-effect {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .img-animation:hover .anim-4.bg-img-effect::before {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  .img-animation:hover .anim-4.bg-img-effect + img {
+    transform: scale(1.2);
+  }
+  
+  /* ==============================
+      Image Hover Effect 5
+  =================================*/
+  
+  .anim-5.bg-img-effect span {
+    position: absolute;
+    top: 0;
+    width: 25%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    transform: scaleY(0);
+    opacity: 0;
+    transition: all 0.5s ease;
+    display: inline-block;
+    z-index: 1;
+  }
+  
+  .anim-5.bg-img-effect span:nth-child(1) {
+    left: 0;
+    transition-delay: 0s;
+  }
+  
+  .img-animation:hover .anim-5.bg-img-effect span:nth-child(1) {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  
+  .anim-5.bg-img-effect span:nth-child(2) {
+    left: 50%;
+    transition-delay: 0.21s;
+  }
+  
+  .img-animation:hover .anim-5.bg-img-effect span:nth-child(2) {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  
+  .anim-5.bg-img-effect span:nth-child(3) {
+    left: 75%;
+    transition-delay: 0.35s;
+  }
+  
+  .img-animation:hover .anim-5.bg-img-effect span:nth-child(3) {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  
+  .anim-5.bg-img-effect span:nth-child(4) {
+    left: 25%;
+    transition-delay: 0.105s;
+  }
+  
+  .img-animation:hover .anim-5.bg-img-effect span:nth-child(4) {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  
+  /* ==============================
+      Image Hover Effect 6
+  =================================*/
+  .anim-6.bg-img-effect span {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    background-color: rgba(0, 0, 0, 0.1);
+    transform: scale(0.5);
+    opacity: 0;
+    transition: all 0.5s ease;
+    display: inline-block;
+    z-index: 1;
+  }
+  
+  .anim-6.bg-img-effect span:nth-child(1) {
+    top: 0;
+    left: 0;
+  }
+  
+  .img-animation:hover .anim-6.bg-img-effect span:nth-child(1) {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+    transition-delay: 0.15s;
+  }
+  
+  .anim-6.bg-img-effect span:nth-child(2) {
+    top: 0;
+    right: 0;
+  }
+  
+  .img-animation:hover .anim-6.bg-img-effect span:nth-child(2) {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+    transition-delay: 0s;
+  }
+  
+  .anim-6.bg-img-effect span:nth-child(3) {
+    bottom: 0;
+    right: 0;
+  }
+  
+  .img-animation:hover .anim-6.bg-img-effect span:nth-child(3) {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+    transition-delay: 0.17s;
+  }
+  
+  .anim-6.bg-img-effect span:nth-child(4) {
+    bottom: 0;
+    left: 0;
+  }
+  
+  .img-animation:hover .anim-6.bg-img-effect span:nth-child(4) {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+    transition-delay: 0.19s;
+  }
+  
+  /* ==============================
+      Image Hover Effect 7
+  =================================*/
+  
+  .anim-7::before {
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 50%;
+    top: 0;
+    opacity: 0;
+    transition: all 0.45s ease;
+    left: 0;
+    transform: rotateY(90deg);
+    transform-origin: 100% 50%;
+    z-index: 1;
+  }
+  
+  .anim-7::after {
+    background-color: black;
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 50%;
+    top: 0;
+    opacity: 0;
+    transition: all 0.45s ease;
+    right: 0;
+    transform: rotateY(-90deg);
+    transform-origin: 0% 50%;
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-7::before {
+    background-color: var(--img-hover-color);
+    opacity: 1;
+    transform: rotateY(0deg);
+  }
+  
+  .img-animation:hover .anim-7::after {
+    background-color: var(--img-hover-color);
+    opacity: 1;
+    transform: rotateY(0deg);
+  }
+  
+  /* ==============================
+      Image Hover Effect 8
+  =================================*/
+  
+  .anim-8.bg-img-effect {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--img-hover-color);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease-in-out;
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-8.bg-img-effect {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .anim-8.bg-img-effect span {
+    background-color: #ffffff;
+    position: absolute;
+    content: "";
+    z-index: 1;
+    transition: all 0.35s ease;
+  }
+  
+  .anim-8.bg-img-effect span:nth-child(1) {
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    height: 4px;
+    transform: scaleX(0);
+    transform-origin: 0 0;
+    transition-delay: 0.28s;
+  }
+  
+  .img-animation:hover .anim-8.bg-img-effect span:nth-child(1) {
+    transform: scale(1);
+    transition-delay: 0s;
+  }
+  
+  .anim-8.bg-img-effect span:nth-child(2) {
+    top: 5px;
+    left: 5px;
+    bottom: 5px;
+    width: 4px;
+    transform: scaleY(0);
+    transform-origin: 0 0;
+    transition-delay: 0.28s;
+  }
+  
+  .img-animation:hover .anim-8.bg-img-effect span:nth-child(2) {
+    transform: scale(1);
+    transition-delay: 0s;
+  }
+  
+  .anim-8.bg-img-effect span:nth-child(3) {
+    top: 5px;
+    right: 5px;
+    bottom: 5px;
+    width: 4px;
+    transform: scaleY(0);
+    transform-origin: 0 0;
+    transition-delay: 0.28s;
+  }
+  
+  .img-animation:hover .anim-8.bg-img-effect span:nth-child(3) {
+    transform: scale(1);
+    transition-delay: 0s;
+  }
+  
+  .anim-8.bg-img-effect span:nth-child(4) {
+    right: 5px;
+    left: 5px;
+    bottom: 5px;
+    height: 4px;
+    transform: scaleX(0);
+    transform-origin: 0 0;
+    transition-delay: 0.28s;
+  }
+  
+  .img-animation:hover .anim-8.bg-img-effect span:nth-child(4) {
+    transform: scale(1);
+    transition-delay: 0s;
+  }
+  
+  /* ==============================
+      Image Hover Effect 9
+  =================================*/
+  
+  .anim-9.bg-img-effect {
+    position: absolute;
+    width: 100%;
+    height: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--img-hover-color);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease-in-out;
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-9.bg-img-effect {
+    height: 100%;
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  /* ==============================
+      Image Hover Effect 10
+  =================================*/
+  
+  .anim-10.bg-img-effect {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    background-color: var(--img-hover-color);
+    transform: translateY(100%);
+    transition: all 0.5s ease-in-out;
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-10.bg-img-effect {
+    transform: translateY(0);
+  }
+  
+  /* ==============================
+      Image Hover Effect 11
+  =================================*/
+  
+  .anim-11.bg-img-effect {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    right: -100%;
+    left: auto;
+    background-color: var(--img-hover-color);
+    transition: all 0.5s ease-in-out;
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-11.bg-img-effect {
+    right: 0;
+  }
+  
+  /* ==============================
+      Image Hover Effect 12
+  =================================*/
+  
+  .anim-12.bg-img-effect {
+    transition: all 0.5s ease-in-out;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    perspective: 100px;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+  
+  .anim-12.bg-img-effect span:nth-child(1) {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--img-hover-color);
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+    transition-delay: 0.5s;
+    z-index: 1;
+    transform-style: preserve-3d;
+    transform: rotateX(60deg);
+  }
+  
+  .img-animation:hover .anim-12.bg-img-effect span:nth-child(1) {
+    opacity: 1;
+    transform: rotateX(0);
+  }
+  
+  .anim-12.bg-img-effect span:nth-child(2) {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--img-hover-color);
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+    transition-delay: 0.3s;
+    z-index: 1;
+    transform-style: preserve-3d;
+    transform: rotateX(45deg);
+  }
+  
+  .img-animation:hover .anim-12.bg-img-effect span:nth-child(2) {
+    opacity: 1;
+    transform: rotateX(0);
+  }
+  
+  .anim-12.bg-img-effect span:nth-child(3) {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--img-hover-color);
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+    transition-delay: 0.1s;
+    z-index: 1;
+    transform-style: preserve-3d;
+    transform: rotateX(30deg);
+  }
+  
+  .img-animation:hover .anim-12.bg-img-effect span:nth-child(3) {
+    opacity: 1;
+    transform: rotateX(0);
+  }
+  
+  /* ==============================
+      Image Hover Effect 13
+  =================================*/
+  
+  .anim-13.bg-img-effect {
+    transition: all 0.5s ease-in-out;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    perspective: 100px;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+  
+  .anim-13.bg-img-effect span:nth-child(1) {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--img-hover-color);
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+    transition-delay: 0.5s;
+    z-index: 1;
+    transform-style: preserve-3d;
+    transform-origin: 50% -50%;
+    transform: rotateX(-60deg);
+  }
+  
+  .img-animation:hover .anim-13.bg-img-effect span:nth-child(1) {
+    opacity: 1;
+    transform: rotateX(0);
+  }
+  
+  .anim-13.bg-img-effect span:nth-child(2) {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--img-hover-color);
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+    transition-delay: 0.3s;
+    z-index: 1;
+    transform-style: preserve-3d;
+    transform-origin: 50% -50%;
+    transform: rotateX(-45deg);
+  }
+  
+  .img-animation:hover .anim-13.bg-img-effect span:nth-child(2) {
+    opacity: 1;
+    transform: rotateX(0);
+  }
+  
+  .anim-13.bg-img-effect span:nth-child(3) {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--img-hover-color);
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+    transition-delay: 0.1s;
+    z-index: 1;
+    transform-style: preserve-3d;
+    transform-origin: 50% -50%;
+    transform: rotateX(-30deg);
+  }
+  
+  .img-animation:hover .anim-13.bg-img-effect span:nth-child(3) {
+    opacity: 1;
+    transform: rotateX(0);
+  }
+  
+  /* ==============================
+      Image Hover Effect 14
+  =================================*/
+  
+  .anim-14.bg-img-effect {
+    transition: all 0.5s ease-in-out;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    perspective: 100px;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+  
+  .anim-14.bg-img-effect span:nth-child(1) {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--img-hover-color);
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+    z-index: 1;
+    transform-style: preserve-3d;
+    transform-origin: 0% 50%;
+    transform: rotateX(90deg);
+  }
+  
+  .img-animation:hover .anim-14.bg-img-effect span:nth-child(1) {
+    opacity: 1;
+    transform: rotateX(0deg);
+    transition-delay: 0.14s;
+  }
+  
+  /* ==============================
+      Image Hover Effect 15
+  =================================*/
+  
+  .anim-15.bg-img-effect {
+    transition: all 0.5s ease-in-out;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    perspective: 100px;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+  
+  .anim-15.bg-img-effect span:nth-child(1) {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--img-hover-color);
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+    z-index: 1;
+    transform-style: preserve-3d;
+    transform-origin: 0% -50%;
+    transform: rotateX(-90deg);
+  }
+  
+  .img-animation:hover .anim-15.bg-img-effect span:nth-child(1) {
+    opacity: 1;
+    transform: rotateX(0deg);
+    transition-delay: 0.14s;
+  }
+  
+  /* ==============================
+      Image Hover Effect 16
+  =================================*/
+  
+  .anim-16.bg-img-effect {
+    transition: all 0.5s ease-in-out;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    perspective: 50em;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+  
+  .anim-16.bg-img-effect span:nth-child(1) {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--img-hover-color);
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+    transform-style: preserve-3d;
+    transform-origin: 0% 50%;
+    transform: rotateX(180deg);
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-16.bg-img-effect span:nth-child(1) {
+    opacity: 1;
+    transform: rotateX(0deg);
+    transition-delay: 0.14s;
+  }
+  
+  /* ==============================
+      Image Hover Effect 17
+  =================================*/
+  
+  .anim-17.bg-img-effect {
+    transition: all 0.5s ease-in-out;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    perspective: 50em;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+  
+  .anim-17.bg-img-effect span:nth-child(1) {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--img-hover-color);
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+    transform-style: preserve-3d;
+    transform-origin: 0% 50%;
+    transform: rotate3d(1, -1, 0, 100deg);
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-17.bg-img-effect span:nth-child(1) {
+    opacity: 1;
+    transform: rotate3d(0, 0, 0, 0deg);
+    transition-delay: 0.14s;
+  }
+  
+  /* ==============================
+      Image Hover Effect 18
+  =================================*/
+  
+  .anim-18.bg-img-effect {
+    transition: all 0.5s ease-in-out;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    perspective: 50em;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+  
+  .anim-18.bg-img-effect span:nth-child(1) {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--img-hover-color);
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+    transform-style: preserve-3d;
+    transform-origin: 0% 50%;
+    transform: rotate3d(1, 1, 0, 100deg);
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-18.bg-img-effect span:nth-child(1) {
+    opacity: 1;
+    transform: rotate3d(0, 0, 0, 0deg);
+    transition-delay: 0.14s;
+  }
+  
+  /* ==============================
+      Image Hover Effect 19
+  =================================*/
+  
+  .anim-19.bg-img-effect {
+    transition: all 0.5s ease-in-out;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    perspective: 50em;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+  
+  .anim-19.bg-img-effect span:nth-child(1) {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    right: 50%;
+    bottom: 0;
+    background-color: var(--img-hover-color);
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+    transition-delay: 0.105s;
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-19.bg-img-effect span:nth-child(1) {
+    opacity: 1;
+    left: 0;
+    right: 0;
+    transition-delay: 0s;
+  }
+  
+  /* ==============================
+      Image Hover Effect 20
+  =================================*/
+  
+  .anim-20.bg-img-effect {
+    transition: all 0.5s ease-in-out;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    perspective: 50em;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+  
+  .anim-20.bg-img-effect span:nth-child(1) {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    bottom: 50%;
+    background-color: var(--img-hover-color);
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+    transition-delay: 0.105s;
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-20.bg-img-effect span:nth-child(1) {
+    opacity: 1;
+    top: 0;
+    bottom: 0;
+    transition-delay: 0s;
+  }
+  
+  /* ==============================
+      Image Hover Effect 21
+  =================================*/
+  
+  .anim-21.bg-img-effect {
+    transition: all 0.5s ease-in-out;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    perspective: 50em;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+  
+  .anim-21.bg-img-effect span:nth-child(1) {
+    position: absolute;
+    top: 50%;
+    left: -35%;
+    right: -35%;
+    bottom: 50%;
+    background-color: var(--img-hover-color);
+    transform: rotate(45deg);
+    transition: all 0.5s ease-in-out;
+    transition-delay: 0.105s;
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-21.bg-img-effect span:nth-child(1) {
+    top: -35%;
+    bottom: -35%;
+    transition-delay: 0s;
+  }
+  
+  /* ==============================
+      Image Hover Effect 22
+  =================================*/
+  
+  .anim-22.bg-img-effect {
+    transition: all 0.5s ease-in-out;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    perspective: 50em;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+  
+  .anim-22.bg-img-effect span:nth-child(1) {
+    position: absolute;
+    top: 50%;
+    left: -35%;
+    right: -35%;
+    bottom: 50%;
+    background-color: var(--img-hover-color);
+    transform: rotate(-45deg);
+    transition: all 0.5s ease-in-out;
+    transition-delay: 0.105s;
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-22.bg-img-effect span:nth-child(1) {
+    top: -35%;
+    bottom: -35%;
+    transition-delay: 0s;
+  }
+  
+  /* ==============================
+      Image Hover Effect 23
+  =================================*/
+  
+  .anim-23.bg-img-effect {
+    transition: all 0.5s ease-in-out;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    perspective: 50em;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+  
+  .anim-23.bg-img-effect span:nth-child(1) {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 0;
+    height: 100%;
+    background-color: var(--img-hover-color);
+    transition: all 0.5s ease-in-out;
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-23.bg-img-effect span:nth-child(1) {
+    width: 50%;
+  }
+  
+  .anim-23.bg-img-effect span:nth-child(2) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background-color: var(--img-hover-color);
+    transition: all 0.5s ease-in-out;
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-23.bg-img-effect span:nth-child(2) {
+    width: 50%;
+  }
+  
+  /* ==============================
+      Image Hover Effect 24
+  =================================*/
+  
+  .anim-24.bg-img-effect {
+    transition: all 0.5s ease-in-out;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    perspective: 50em;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+  
+  .anim-24.bg-img-effect span:nth-child(1) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    background-color: var(--img-hover-color);
+    transition: all 0.5s ease-in-out;
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-24.bg-img-effect span:nth-child(1) {
+    height: 50%;
+  }
+  
+  .anim-24.bg-img-effect span:nth-child(2) {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 0;
+    background-color: var(--img-hover-color);
+    transition: all 0.5s ease-in-out;
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-24.bg-img-effect span:nth-child(2) {
+    height: 50%;
+  }
+  
+  /* ==============================
+      Image Hover Effect 25
+  =================================*/
+  
+  .anim-25.bg-img-effect {
+    transition: all 0.5s ease-in-out;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    perspective: 50em;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+  
+  .anim-25.bg-img-effect span:nth-child(1) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    background-color: var(--img-hover-color);
+    transition: all 0.5s ease-in-out;
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-25.bg-img-effect span:nth-child(1) {
+    height: 100%;
+  }
+  
+  .anim-25.bg-img-effect span:nth-child(2) {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 0;
+    background-color: var(--img-hover-color);
+    transition: all 0.5s ease-in-out;
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-25.bg-img-effect span:nth-child(2) {
+    height: 100%;
+  }
+  
+  /* ==============================
+      Image Hover Effect 26
+  =================================*/
+  
+  .anim-26.bg-img-effect {
+    transition: all 0.5s ease-in-out;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    perspective: 50em;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+  
+  .anim-26.bg-img-effect span:nth-child(1) {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 0;
+    height: 100%;
+    background-color: var(--img-hover-color);
+    transition: all 0.5s ease-in-out;
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-26.bg-img-effect span:nth-child(1) {
+    width: 100%;
+  }
+  
+  .anim-26.bg-img-effect span:nth-child(2) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background-color: var(--img-hover-color);
+    transition: all 0.5s ease-in-out;
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-26.bg-img-effect span:nth-child(2) {
+    width: 100%;
+  }
+  
+  /* ==============================
+      Image Hover Effect 27
+  =================================*/
+  
+  .anim-27.bg-img-effect {
+    transition: all 0.5s ease-in-out;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    perspective: 50em;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+  
+  .anim-27.bg-img-effect span:nth-child(1) {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 200%;
+    height: 200%;
+    transition: all 0.6s ease;
+    background-color: var(--img-hover-color);
+    transform: skew(-45deg) translateX(150%);
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-27.bg-img-effect span:nth-child(1) {
+    transform: skew(-45deg) translateX(50%);
+  }
+  
+  .anim-27.bg-img-effect span:nth-child(2) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 200%;
+    background-color: var(--img-hover-color);
+    transform: skew(-45deg) translateX(-150%);
+    transition: all 0.6s ease-in-out;
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-27.bg-img-effect span:nth-child(2) {
+    transform: skew(-45deg) translateX(-50%);
+  }
+  
+  /* ==============================
+      Image Hover Effect 28
+  =================================*/
+  
+  .anim-28.bg-img-effect {
+    transition: all 0.5s ease-in-out;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    perspective: 50em;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+  
+  .anim-28.bg-img-effect span:nth-child(1) {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 200%;
+    height: 200%;
+    transition: all 0.6s ease;
+    background-color: var(--img-hover-color);
+    transform: skew(45deg) translateX(100%);
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-28.bg-img-effect span:nth-child(1) {
+    transform: skew(45deg) translateX(0%);
+  }
+  
+  .anim-28.bg-img-effect span:nth-child(2) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 200%;
+    background-color: var(--img-hover-color);
+    transform: skew(45deg) translateX(-100%);
+    transition: all 0.6s ease-in-out;
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-28.bg-img-effect span:nth-child(2) {
+    transform: skew(45deg) translateX(0%);
+  }
+  
+  /* ==============================
+      Image Hover Effect 29
+  =================================*/
+  
+  .anim-29.bg-img-effect {
+    transition: all 0.5s ease-in-out;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    perspective: 50em;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+  
+  .anim-29.bg-img-effect span:nth-child(1) {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    transition: all 0.6s ease;
+    background-color: var(--img-hover-color);
+    transform: rotateX(90deg) translateY(-100%) scale(0.5);
+    transform-origin: 50% 50%;
+    opacity: 0;
+    z-index: 1;
+  }
+  
+  .img-animation:hover .anim-29.bg-img-effect span:nth-child(1) {
+    transform: rotateX(0) translateY(0%) scale(1);
+    opacity: 1;
+    transition-delay: 0.35s;
+  }
+  
+  /* ==============================
+      Image Hover Effect 30
+  =================================*/
+  
+  .anim-30.bg-img-effect + img {
+    webkit-filter: blur(3px);
+    filter: blur(3px);
+    -webkit-transition: 0.3s ease-in-out;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .img-animation:hover .anim-30.bg-img-effect + img {
+    -webkit-filter: blur(0);
+    filter: blur(0);
+  }
+  
+  /* ==============================
+      Image Hover Effect 31
+  =================================*/
+  
+  .anim-31.bg-img-effect + img {
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+    -webkit-transition: 0.3s ease-in-out;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .img-animation:hover .anim-31.bg-img-effect + img {
+    -webkit-filter: grayscale(0);
+    filter: grayscale(0);
+  }
+  
+  /* ==============================
+      Image Hover Effect 32
+  =================================*/
+  
+  .img-animation:hover .anim-32.bg-img-effect + img {
+    opacity: 1;
+    -webkit-animation: flash 1.5s;
+    animation: flash 1.5s;
+  }
+  
+  @-webkit-keyframes flash {
+    0% {
+      opacity: 0.4;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes flash {
+    0% {
+      opacity: 0.4;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  /* ==============================
+      Image Hover Effect 33
+  =================================*/
+  
+  /* Shine */
+  
+  .anim-33::before {
+    position: absolute;
+    top: 0;
+    left: -75%;
+    z-index: 2;
+    display: block;
+    content: "";
+    width: 50%;
+    height: 100%;
+    background: -webkit-linear-gradient(
+      left,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.3) 100%
+    );
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.3) 100%
+    );
+    -webkit-transform: skewX(-25deg);
+    transform: skewX(-25deg);
+  }
+  .img-animation:hover .anim-33::before {
+    -webkit-animation: shine 0.75s;
+    animation: shine 0.75s;
+  }
+  @-webkit-keyframes shine {
+    100% {
+      left: 125%;
+    }
+  }
+  @keyframes shine {
+    100% {
+      left: 125%;
+    }
+  }
+  
+  /* ==============================
+      Image Hover Effect 34
+  =================================*/
+  
+  .anim-34::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    display: block;
+    content: "";
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 100%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+  }
+  .img-animation:hover .anim-34::before {
+    -webkit-animation: circle 0.75s;
+    animation: circle 0.75s;
+  }
+  
+  @-webkit-keyframes circle {
+    0% {
+      opacity: 1;
+    }
+    40% {
+      opacity: 1;
+    }
+    100% {
+      width: 200%;
+      height: 200%;
+      opacity: 0;
+    }
+  }
+  @keyframes circle {
+    0% {
+      opacity: 1;
+    }
+    40% {
+      opacity: 1;
+    }
+    100% {
+      width: 200%;
+      height: 200%;
+      opacity: 0;
+    }
+  }
+  
+  /* ==============================
+      Image Hover Effect 35
+  =================================*/
+  
+  /* .anim-35::before,
+  .anim-35::after {
+      content: "";
+      background: #fff;
+      height: 0;
+      width: 0;
+      z-index: 1;
+      position: absolute;
+      transition-duration: 1.3s!important;
+      z-index: 3
+  }
+  
+  .anim-35::before {
+      right: 0;
+      opacity: 1;
+      top: 0
+  }
+  
+  .anim-35::after {
+      bottom: 0;
+      opacity: .7;
+      left: 0
+  }
+  
+  .img-animation:hover .anim-35::before {
+      height: 100%;
+      width: 100%;
+      opacity: 0
+  }
+  
+  .img-animation:hover .anim-35::after{
+      height: 100%;
+      width: 100%;
+      opacity: 0
+  } */

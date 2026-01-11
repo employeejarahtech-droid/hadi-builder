@@ -16,7 +16,7 @@ class TextWidget extends WidgetBase {
     }
 
     getCategories() {
-        return ['basic'];
+        return ['content'];
     }
 
     getKeywords() {
@@ -88,6 +88,9 @@ class TextWidget extends WidgetBase {
         });
 
         this.endControlsSection();
+
+        // Add Advanced tab
+        this.registerAdvancedControls();
     }
 
     render() {
@@ -97,19 +100,21 @@ class TextWidget extends WidgetBase {
         const fontSize = this.getSetting('font_size', { size: 16, unit: 'px' });
         const lineHeight = this.getSetting('line_height', { size: 1.6, unit: '' });
 
-        const styles = `
-            text-align: ${align};
-            color: ${color};
-            font-size: ${fontSize.size}${fontSize.unit};
-            line-height: ${lineHeight.size}${lineHeight.unit};
-            margin: 0;
-            padding: 10px 0;
-        `;
+        const safeFontSize = typeof fontSize === 'object' ? `${fontSize.size}${fontSize.unit}` : `${fontSize}px`;
+        const safeLineHeight = typeof lineHeight === 'object' ? `${lineHeight.size}${lineHeight.unit}` : lineHeight;
 
-        // Convert line breaks to <br> tags
+        const styles = [
+            `text-align: ${align}`,
+            `color: ${color}`,
+            `font-size: ${safeFontSize}`,
+            `line-height: ${safeLineHeight}`
+        ].join('; ');
+
         const formattedContent = this.escapeHtml(content).replace(/\n/g, '<br>');
 
-        return `<div class="text-widget"><p style="${styles}">${formattedContent}</p></div>`;
+        const contentHtml = `<div style="${styles}">${formattedContent}</div>`;
+
+        return this.wrapWithAdvancedSettings(contentHtml, 'text-widget');
     }
 
     escapeHtml(text) {

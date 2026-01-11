@@ -12,7 +12,7 @@ class ImageWidget extends WidgetBase {
     }
 
     getCategories() {
-        return ['basic'];
+        return ['content'];
     }
 
     registerControls() {
@@ -61,14 +61,7 @@ class ImageWidget extends WidgetBase {
             tab: 'style'
         });
 
-        this.addControl('width', {
-            type: 'slider',
-            label: 'Width (%)',
-            min: 1,
-            max: 100,
-            default_value: 100
-        });
-
+        // Width handled globally
         this.addControl('opacity', {
             type: 'slider',
             label: 'Opacity',
@@ -87,6 +80,9 @@ class ImageWidget extends WidgetBase {
         });
 
         this.endControlsSection();
+
+        // Add Advanced tab
+        this.registerAdvancedControls();
     }
 
     render() {
@@ -102,34 +98,51 @@ class ImageWidget extends WidgetBase {
         }
 
         const align = this.getSetting('align');
-        const width = this.getSetting('width');
         const opacity = this.getSetting('opacity');
         const radius = this.getSetting('border_radius');
         const caption = this.getSetting('caption');
         const link = this.getSetting('link');
 
-        const style = `
-             max-width: ${width}%;
-             opacity: ${opacity};
-             border-radius: ${radius}px;
-             height: auto;
-             display: block;
-        `;
-
         const wrapperStyle = `text-align: ${align};`;
 
-        let imageHtml = `<img src="${imgSrc}" style="${style}" alt="${caption}">`;
+        const imageStyle = `
+            width: 100%;
+            border-radius: ${radius}px;
+            opacity: ${opacity};
+            max-width: 100%;
+            height: auto;
+            box-shadow: none;
+        `;
 
+        let imageHtml = `<img src="${imgSrc}" style="${imageStyle}" alt="${caption || 'Image'}">`;
+
+        // Handle link
         if (link) {
-            imageHtml = `<a href="${link}" target="_blank">${imageHtml}</a>`;
+            let linkUrl = '';
+            let target = '';
+            let rel = '';
+
+            if (typeof link === 'object' && link.url) {
+                linkUrl = link.url;
+                if (link.is_external) target = 'target="_blank"';
+                if (link.nofollow) rel = 'rel="nofollow"';
+            } else if (typeof link === 'string' && link !== '') {
+                linkUrl = link;
+            }
+
+            if (linkUrl) {
+                imageHtml = `<a href="${linkUrl}" ${target} ${rel} style="display: inline-block; width: 100%;">${imageHtml}</a>`;
+            }
         }
 
-        return `
-            <div class="elementor-image-widget" style="${wrapperStyle}">
+        const content = `
+            <div style="${wrapperStyle}">
                 ${imageHtml}
                 ${caption ? `<figcaption style="text-align: center; margin-top: 5px; color: #666; font-size: 13px;">${caption}</figcaption>` : ''}
             </div>
         `;
+
+        return this.wrapWithAdvancedSettings(content, 'elementor-image-widget');
     }
 }
 

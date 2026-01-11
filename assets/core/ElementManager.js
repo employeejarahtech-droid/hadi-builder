@@ -16,7 +16,7 @@ class ElementManager extends EventEmitter {
      * @returns {string} Unique ID
      */
     generateId() {
-        return `elem_${this.nextId++}`;
+        return `elem_${Math.random().toString(36).substr(2, 9)}`;
     }
 
     /**
@@ -53,11 +53,12 @@ class ElementManager extends EventEmitter {
             order: position
         };
 
+        // Update orders of other siblings if inserted in middle
+        // MUST be done before adding the new element to map, otherwise the new element itself gets shifted
+        this.updateSiblingOrders(parentId, containerIndex, position, 1);
+
         // Store element
         this.elements.set(id, element);
-
-        // Update orders of other siblings if inserted in middle
-        this.updateSiblingOrders(parentId, containerIndex, position, 1);
 
         // Listen to widget changes
         widget.on('settings:change', (settings) => {
@@ -119,6 +120,7 @@ class ElementManager extends EventEmitter {
      * @param {object} settings - New settings
      */
     updateElement(id, settings) {
+        console.log('ElementManager.updateElement:', { id, settings });
         const element = this.elements.get(id);
 
         if (!element) {
@@ -128,6 +130,10 @@ class ElementManager extends EventEmitter {
 
         element.widget.setSettings(settings);
         element.settings = element.widget.getSettings();
+
+        // Verify update
+        console.log('ElementManager updated element:', element);
+        console.log('Widget settings after update:', element.widget.getSettings());
 
         this.emit('element:updated', id, element);
     }
@@ -223,10 +229,17 @@ class ElementManager extends EventEmitter {
 
             // Re-fetch siblings to handle reorder strictly
             const siblings = this.getChildren(oldParentId, oldContainerIndex);
+
+            // Adjust position if we are moving down (since removal shifts indices)
+            let insertPos = newPosition;
+            if (insertPos > oldOrder) {
+                insertPos--;
+            }
+
             // remove self
             const filtered = siblings.filter(el => el.id !== id);
             // insert self
-            filtered.splice(newPosition, 0, element);
+            filtered.splice(insertPos, 0, element);
             // update all orders
             filtered.forEach((el, index) => el.order = index);
         } else {

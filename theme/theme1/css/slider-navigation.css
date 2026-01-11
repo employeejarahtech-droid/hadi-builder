@@ -1,0 +1,37 @@
+/* Button / Swiper Navigation / Swiper Pagination Style */
+
+.swiper-navigation-style {
+  /* rounded */
+  /* border-radius: 5px; */
+
+  /* Transparent */
+
+  /* border: 1px solid var(--color-primary) !important;
+    background-color: transparent !important; */
+
+  /* Circle and Transparent */
+  /* border: 1px solid var(--color-primary) !important;
+      background-color: transparent !important;
+      border-radius: 50%; */
+
+  /* Rectangle */
+  /* border-radius: 0; */
+
+  /* Circle */
+  border-radius: 50%;
+}
+
+.hero-slider .swiper-button-next,
+.hero-slider .swiper-button-prev {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Swiper Navigation in Mobile */
+
+@media (max-width: 767px) {
+  .swiper-navigation {
+    display: none;
+  }
+}

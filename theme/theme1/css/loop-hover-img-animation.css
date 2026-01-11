@@ -1,0 +1,94 @@
+/* Common */
+.img-relative {
+    position: relative;
+}
+
+.bg-img-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+/* Common End */
+
+.img-anim-one.bg-img-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border-radius: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease;
+    z-index: 1;
+}
+
+.img-anim-one.bg-img-effect::before{
+    content: '';
+    position: absolute;
+    transform: scale(1);
+    width: 80%;
+    height: 80%;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.5);
+    transition: all 0.5s ease;
+    opacity: 1;
+}
+
+.img-animation:hover .img-anim-one.bg-img-effect {
+    opacity: 1;
+    visibility: visible;
+}
+
+.img-animation:hover .img-anim-one.bg-img-effect::before {
+    transform: scale(0);
+    opacity: 0;
+
+}
+
+
+/* Anim 2 */
+
+.img-anim-two.bg-img-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border-radius: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0);
+    transition: all 0.5s ease;
+    z-index: 99;
+  }
+
+  .img-anim-two.bg-img-effect + img{
+    transition: all 0.5s ease;
+  }
+  
+  .img-animation:hover .img-anim-two.bg-img-effect {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+  }
+  
+  .img-animation:hover .img-anim-two.bg-img-effect + img {
+    transform: scale(1.05);
+  }
+  
+

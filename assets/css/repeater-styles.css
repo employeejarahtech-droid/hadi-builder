@@ -1,0 +1,247 @@
+/* ============================================
+   REPEATER CONTROL STYLES
+   Modern, polished design for repeater fields
+   ============================================ */
+
+/* Repeater Container */
+.elementor-repeater {
+    margin-top: 10px;
+}
+
+/* Repeater Row */
+.elementor-repeater-row {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.elementor-repeater-row:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Row Header/Tools */
+.elementor-repeater-row-tools {
+    display: flex;
+    align-items: center;
+    padding: 6px 10px;
+    background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+    border-bottom: 1px solid #e2e8f0;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s ease;
+}
+
+.elementor-repeater-row-tools:hover {
+    background: linear-gradient(to bottom, #f1f5f9, #e2e8f0);
+}
+
+.elementor-repeater-row-collapsed .elementor-repeater-row-tools {
+    border-bottom: none;
+}
+
+/* Toggle Button */
+.elementor-repeater-tool-toggle {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    border-radius: 4px;
+    width: 28px;
+    height: 28px;
+}
+
+.elementor-repeater-tool-toggle:hover {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+}
+
+.elementor-repeater-tool-toggle i {
+    font-size: 12px;
+    transition: transform 0.2s ease;
+}
+
+/* Row Title */
+.elementor-repeater-row-title {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+    letter-spacing: -0.01em;
+}
+
+/* Remove Button */
+.elementor-repeater-tool-remove {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 6px 10px;
+    font-size: 18px;
+    line-height: 1;
+    transition: all 0.2s ease;
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.elementor-repeater-tool-remove:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+/* Row Controls Container */
+.elementor-repeater-row-controls {
+    padding: 20px;
+    background: #ffffff;
+}
+
+.elementor-repeater-row-collapsed .elementor-repeater-row-controls {
+    display: none;
+}
+
+/* Controls inside repeater */
+.elementor-repeater-row-controls .elementor-control {
+    margin-bottom: 16px;
+}
+
+.elementor-repeater-row-controls .elementor-control:last-child {
+    margin-bottom: 0;
+}
+
+.elementor-repeater-row-controls .elementor-control-label {
+    margin-bottom: 8px;
+}
+
+.elementor-repeater-row-controls .elementor-control-label label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #475569;
+}
+
+.elementor-repeater-row-controls .elementor-control-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    background: #ffffff;
+}
+
+.elementor-repeater-row-controls .elementor-control-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.elementor-repeater-row-controls .elementor-control-input:hover {
+    border-color: #cbd5e1;
+}
+
+/* Add Item Button */
+.elementor-repeater-add {
+    width: 100%;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+    margin-top: 12px;
+}
+
+.elementor-repeater-add:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    transform: translateY(-1px);
+}
+
+.elementor-repeater-add:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2);
+}
+
+.elementor-repeater-add i {
+    font-size: 14px;
+}
+
+/* Empty State */
+.elementor-repeater-fields:empty+.elementor-repeater-add {
+    margin-top: 0;
+}
+
+/* Drag Handle (for future sortable feature) */
+.elementor-repeater-tool-drag {
+    background: transparent;
+    border: none;
+    color: #cbd5e1;
+    cursor: grab;
+    padding: 6px;
+    display: none;
+    /* Hidden for now, enable when sortable is added */
+    align-items: center;
+    justify-content: center;
+}
+
+.elementor-repeater-tool-drag:hover {
+    color: #94a3b8;
+}
+
+.elementor-repeater-tool-drag:active {
+    cursor: grabbing;
+}
+
+/* Animations */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.elementor-repeater-row {
+    animation: slideDown 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .elementor-repeater-row-tools {
+        padding: 12px 14px;
+    }
+
+    .elementor-repeater-row-controls {
+        padding: 16px;
+    }
+
+    .elementor-repeater-add {
+        font-size: 13px;
+        padding: 10px 16px;
+    }
+}

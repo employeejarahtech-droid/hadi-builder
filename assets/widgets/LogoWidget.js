@@ -12,7 +12,7 @@ class LogoWidget extends WidgetBase {
     }
 
     getCategories() {
-        return ['basic'];
+        return ['media'];
     }
 
     getKeywords() {
@@ -108,8 +108,12 @@ class LogoWidget extends WidgetBase {
 
         this.endControlsSection();
 
-        this.startControlsSection('advanced_section', {
-            label: 'Advanced',
+        // Add standard advanced controls
+        this.registerAdvancedControls();
+
+        // Add logo-specific advanced controls
+        this.startControlsSection('logo_advanced_section', {
+            label: 'Logo Advanced',
             tab: 'advanced'
         });
 
@@ -117,12 +121,6 @@ class LogoWidget extends WidgetBase {
             type: 'switch',
             label: 'Lazy Load',
             default_value: true
-        });
-
-        this.addControl('css_classes', {
-            type: 'text',
-            label: 'Custom CSS Classes',
-            placeholder: 'my-custom-class another-class'
         });
 
         this.endControlsSection();
@@ -166,12 +164,27 @@ class LogoWidget extends WidgetBase {
     }
 
     /**
+     * Get dimension with unit
+     * @param {string|number} value
+     * @param {string} defaultValue
+     * @returns {string}
+     */
+    getDimension(value, defaultValue = '0px') {
+        if (value === undefined || value === null || value === '') {
+            return defaultValue;
+        }
+        // If it already has a unit (non-digit characters at end), return as is
+        if (String(value).match(/[a-z%]+$/i)) {
+            return value;
+        }
+        return value + 'px';
+    }
+
+    /**
      * Generate responsive styles
      * @returns {object}
      */
     generateStyles() {
-        const width = parseInt(this.getSetting('width')) || 150;
-        const height = this.getSetting('height');
         const align = this.getSetting('align') || 'left';
         const spacing = this.getSetting('spacing') || {};
         const lazyLoad = this.getSetting('lazy_load') !== false;
@@ -179,25 +192,16 @@ class LogoWidget extends WidgetBase {
         const styles = {
             wrapper: {
                 textAlign: align === 'inline' ? 'left' : align,
-                margin: `${spacing.top || 0}px ${spacing.right || 0}px ${spacing.bottom || 10}px ${spacing.left || 0}px`
+                // Check if values have units, otherwise append px
+                margin: `${this.getDimension(spacing.top, '0px')} ${this.getDimension(spacing.right, '0px')} ${this.getDimension(spacing.bottom, '10px')} ${this.getDimension(spacing.left, '0px')}`
             },
             image: {
                 maxWidth: '100%',
-                height: height ? `${height}px` : 'auto',
+                height: 'auto',
                 display: align === 'inline' ? 'inline-block' : 'block',
                 transition: 'opacity 0.3s ease'
             }
         };
-
-        // Set width only if specified, otherwise use responsive sizing
-        if (width > 0) {
-            if (align === 'inline') {
-                styles.image.width = `${width}px`;
-            } else {
-                styles.image.maxWidth = `${width}px`;
-                styles.image.width = 'auto';
-            }
-        }
 
         return styles;
     }
@@ -222,7 +226,6 @@ class LogoWidget extends WidgetBase {
         const link = this.getSetting('link');
         const openNewTab = this.getSetting('open_new_tab');
         const lazyLoad = this.getSetting('lazy_load') !== false;
-        const cssClasses = this.getSetting('css_classes');
 
         const styles = this.generateStyles();
         const wrapperStyle = this.stylesToString(styles.wrapper);
@@ -230,7 +233,6 @@ class LogoWidget extends WidgetBase {
 
         const sanitizedImgSrc = this.sanitizeAttribute(imgSrc);
         const sanitizedAltText = this.sanitizeAttribute(altText);
-        const sanitizedCssClasses = this.sanitizeAttribute(cssClasses);
 
         const lazyLoadAttr = lazyLoad ? 'loading="lazy"' : '';
         const targetAttr = link && openNewTab ? 'target="_blank" rel="noopener noreferrer"' : '';
@@ -243,19 +245,16 @@ class LogoWidget extends WidgetBase {
                                  onerror="this.style.opacity='0.5'; this.onerror=null;">`;
 
         if (link) {
-            contentHtml = `<a href="${linkAttr}" ${targetAttr}>${contentHtml}</a>`;
+            contentHtml = `<a href="${linkAttr}" ${targetAttr} class="widget-link">${contentHtml}</a>`;
         }
 
-        const wrapperClasses = ['logo-widget'];
-        if (sanitizedCssClasses) {
-            wrapperClasses.push(sanitizedCssClasses);
-        }
-
-        return `
-            <div class="${wrapperClasses.join(' ')}" style="${wrapperStyle}">
+        const content = `
+            <div style="${wrapperStyle}">
                 ${contentHtml}
             </div>
         `;
+
+        return this.wrapWithAdvancedSettings(content, 'logo-widget');
     }
 }
 

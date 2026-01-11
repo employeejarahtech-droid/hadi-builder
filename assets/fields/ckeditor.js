@@ -1,80 +1,96 @@
-class CKEditor {
-    constructor(id, args) {
-        this.id = id;  // The unique ID for the CKEditor instance
-        this.label = args.label || 'Editor'; // Default label
-        this.value = args.value || args.default_value || ''; // Use value if provided; otherwise, default_value
-        this.placeholder = args.placeholder || this.label; // Default placeholder is the label if not provided
-        this.labelBlock = args.label_block || false; // Default to false for label styling
-        this.height = args.height || '200px'; // Optional: define height of the CKEditor
-        this.randId = this.generateRandId();  // Generate a unique rand_id
-
-    }
-
-    // Generate a unique rand_id similar to PHP uniqid('ckeditor_', true)
-    generateRandId() {
-        return `ckeditor_${Math.random().toString(36).substr(2, 9)}_${Date.now()}`;
+class CKEditorControl extends BaseControl {
+    constructor(id, args = {}) {
+        super(id, args);
+        this.height = args.height || '200px';
     }
 
     render() {
-        const labelClass = this.labelBlock ? 'block-row' : '';
-
-        // Render the HTML for the CKEditor
         return `
-            <div class="block-col block-row">
-                <div class="label">
-                    <label for="${this.id}">${this.label}</label>
-                </div>
-                <div class="field">
-                    <textarea id="${this.id}" class="ckeditor" data-id="${this.randId}" name="${this.id}" placeholder="${this.placeholder}" style="height: ${this.height};">${this.value}</textarea>
-                </div>
+            <div class="elementor-control-input-wrapper">
+                <textarea id="${this.id}" class="elementor-control-input ckeditor-input" rows="5" 
+                    style="height: ${this.height}; visibility: hidden;">${this.value}</textarea>
             </div>
         `;
     }
 
-    static init(args) {
-        const id = args[0];
-        const instance = new CKEditor(id, args[1]);
-        const html = instance.render(); // Render the HTML
+    setupListeners() {
+        super.setupListeners();
 
-        // Include the CKEditor script dynamically
-        const script = document.createElement('script');
-        script.src = '/vendor/jquery/ck-editor/ckeditor.js';  // Path to CKEditor script
-        script.onload = () => {
-            CKEDITOR.disableAutoInline = true;
+        // Load CKEditor if not already loaded
+        if (typeof CKEDITOR === 'undefined') {
+            this.loadScript('/assets/jquery/ck-editor/ckeditor.js')
+                .then(() => this.initEditor())
+                .catch(err => console.error('Failed to load CKEditor:', err));
+        } else {
+            this.initEditor();
+        }
+    }
 
-            // Use setTimeout to ensure the HTML is rendered before initializing CKEditor
-            setTimeout(() => {
-                // Initialize CKEditor using the rand_id stored in data-id
-                let chedit = document.querySelector(`[data-id='${instance.randId}']`);
-                let editor = CKEDITOR.replace(chedit);
+    loadScript(src) {
+        return new Promise((resolve, reject) => {
+            if (document.querySelector(`script[src="${src}"]`)) {
+                resolve();
+                return;
+            }
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
 
-                // Listen for changes in the CKEditor content
-                editor.on("change", function () {
-                    // Get data from CKEditor and update the original textarea
-                    chedit.value = editor.getData(); // Correct way to get data from CKEditor instance
-                });
-            }, 100);
-        };
+    initEditor() {
+        const $textarea = $(`#${this.id}`);
+        if (!$textarea.length) return;
 
-        // Append the script to the head of the document
-        document.head.appendChild(script);
+        // Destroy existing instance if any
+        if (CKEDITOR.instances[this.id]) {
+            CKEDITOR.instances[this.id].destroy(true);
+        }
 
-        return html;  // Return the generated HTML string
+        CKEDITOR.disableAutoInline = true;
+
+        try {
+            const editor = CKEDITOR.replace(this.id, {
+                height: this.height,
+                toolbar: [
+                    { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat'] },
+                    { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },
+                    { name: 'links', items: ['Link', 'Unlink', 'Anchor'] },
+                    { name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'SpecialChar'] },
+                    '/',
+                    { name: 'styles', items: ['Styles', 'Format', 'Font', 'FontSize'] },
+                    { name: 'colors', items: ['TextColor', 'BGColor'] },
+                    { name: 'tools', items: ['Maximize', 'ShowBlocks'] }
+                ]
+            });
+
+            editor.on('change', () => {
+                const data = editor.getData();
+                this.setValue(data);
+            });
+
+            // Sync initial value if needed
+            editor.setData(this.value);
+
+        } catch (e) {
+            console.error('CKEditor Init Error:', e);
+        }
+    }
+
+    destroy() {
+        if (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances[this.id]) {
+            CKEDITOR.instances[this.id].destroy();
+        }
+        super.destroy();
     }
 }
 
-// Example usage:
-// const args = [
-//     'editorId', // Unique ID for the CKEditor
-//     {
-//         label: 'Content Editor',  // Label for the CKEditor
-//         default_value: 'This is some default content...',  // Default content
-//         placeholder: 'Start typing your content here...',  // Placeholder text
-//         label_block: true,  // Optional: Add 'block-row' class to the label
-//         height: '300px'  // Optional: Set custom height for the CKEditor
-//     }
-// ];
-
-// // Generate the HTML and initialize CKEditor
-// const html = CKEditor.init(args);
-// console.log(html);  // This will log the generated HTML string
+// Register with ControlManager
+if (window.elementorControlManager) {
+    window.elementorControlManager.registerControlType('ckeditor', CKEditorControl);
+} else {
+    // Fallback or early registration
+    window.CKEditorControl = CKEditorControl;
+}

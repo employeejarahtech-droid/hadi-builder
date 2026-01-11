@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Debug Widget Settings</title>
+</head>
+
+<body>
+    <h1>Debug: Check Widget Settings</h1>
+    <p>Open browser console (F12) and check the output</p>
+
+    <script>
+        // Simulate widget data
+        const testWidget = {
+            id: 'elem_1',
+            type: 'header-section',
+            settings: {
+                menu_gap: { size: 30, unit: 'px' }
+            }
+        };
+
+        console.log('=== Test Widget Data ===');
+        console.log('Widget:', testWidget);
+        console.log('menu_gap value:', testWidget.settings.menu_gap);
+        console.log('menu_gap.size:', testWidget.settings.menu_gap?.size);
+        console.log('menu_gap.unit:', testWidget.settings.menu_gap?.unit);
+
+        // Test placeholder replacement
+        const cssRule = 'margin-right: {{SIZE}}{{UNIT}};';
+        const value = testWidget.settings.menu_gap;
+
+        let result = cssRule;
+        if (value && value.size !== undefined && value.unit !== undefined) {
+            result = result.replace(/\{\{SIZE\}\}/g, value.size);
+            result = result.replace(/\{\{UNIT\}\}/g, value.unit);
+        }
+
+        console.log('=== Placeholder Replacement Test ===');
+        console.log('Original:', cssRule);
+        console.log('Value:', value);
+        console.log('Result:', result);
+        console.log('Expected: margin-right: 30px;');
+        console.log('Match:', result === 'margin-right: 30px;');
+    </script>
+</body>
+
+</html>

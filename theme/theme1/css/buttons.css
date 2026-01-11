@@ -1,0 +1,178 @@
+/* ==============================
+Buttons
+=================================*/
+
+.button_list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  .btn-common {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: #fff;
+    font-family: var(--btn-font-family);
+    font-size: 16px;
+    line-height: 1;
+    border: 1px solid transparent;
+    padding: 14px 30px;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+  }
+  
+  /* Primary Button */
+  
+  .primary-btn {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+  }
+  
+  .primary-btn:hover {
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+  }
+  
+  /* Primary Button Outline */
+  
+  .primary-btn-outline {
+    background-color: transparent;
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+  }
+  
+  .primary-btn-outline:hover {
+    background-color: var(--color-primary);
+    color: #fff;
+  }
+  
+  /* Secondary Button */
+  
+  .secondary-btn {
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+  }
+  
+  .secondary-btn:hover {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+  }
+  
+  /* Secondary Button Outline */
+  
+  .secondary-btn-outline {
+    background-color: transparent;
+    color: var(--color-secondary);
+    border: 1px solid var(--color-secondary);
+  }
+  
+  .secondary-btn-outline:hover {
+    background-color: var(--color-secondary);
+    color: #fff;
+  }
+  
+  /* Button Bg White */
+  
+  .btn-bg-white {
+    background-color: var(--color-white);
+    color: var(--color-primary);
+  }
+  
+  .btn-bg-white:hover {
+    background-color: var(--color-default2);
+    color: var(--color-white);
+  }
+  
+  /* Button Plain */
+  
+  .btn-plain {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 8px;
+  }
+  
+  .btn-plain:hover {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+  
+  /* Play Button */
+  
+  .btn-play {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background-color: var(--color-white);
+    padding: 0;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .btn-play:before {
+    width: 60px;
+    height: 60px;
+    background-color: var(--color-white);
+    box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.2);
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    border-radius: 50%;
+    z-index: -1;
+  }
+  
+  .btn-play:hover:before {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  
+  .btn-play::after {
+    width: 60px;
+    height: 60px;
+    background-color: var(--color-white);
+    box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.2);
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    border-radius: 50%;
+    animation: blinkingPlay 2s infinite;
+    z-index: -1;
+  }
+  
+  .btn-play:hover:after {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  
+  @keyframes blinkingPlay {
+    0% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.6;
+    }
+  
+    100% {
+      transform: translate(-50%, -50%) scale(2);
+      opacity: 0;
+    }
+  }
+  
+  /* Button */
+  
+  
+  .global-btn-style {
+    /* rounded */
+    /* border-radius: 30px; */
+  
+    /* Rectangle */
+    /* border-radius: 0; */
+  
+    /* Rounded and Rectangle */
+    border-radius: 5px;
+  }
+  
+  /* ==============================
+      Buttons End
+  =================================*/

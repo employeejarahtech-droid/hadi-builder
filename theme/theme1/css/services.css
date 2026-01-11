@@ -1,0 +1,303 @@
+.jt-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* ==============================
+  Resusable Classes
+  =================================*/
+
+.jt-col-12 {
+  width: 100%;
+}
+
+.jt-col-6 {
+  width: calc(50% - (20px / 2));
+}
+
+.jt-col-4 {
+  width: calc(33.33% - (40px / 3));
+}
+
+.jt-col-3 {
+  width: calc(25% - 15px);
+}
+
+@media (max-width: 1024px) {
+  .jt-col-4 {
+    width: calc(50% - (20px / 2));
+  }
+
+  .jt-col-3 {
+    width: calc(50% - (20px / 2));
+  }
+}
+
+@media (max-width: 767px) {
+  .jt-col-4 {
+    width: 100%;
+  }
+
+  .jt-col-3 {
+    width: 100%;
+  }
+}
+
+/* ==============================
+    Services Style 1
+=================================*/
+
+.service-1 .service_list .service-item {
+  width: 100%;
+  border-radius: 10px;
+  background-color: #fff;
+  border: 0.2px solid #dedede;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  margin: 0 0 30px 0;
+  display: inline-block;
+  box-shadow: 0 10px 30px 0 rgb(0 0 0 / 20%);
+}
+
+/* Special design */
+
+/* .service-1 .service_list {
+    max-width: 700px;
+    margin: 0 auto;
+  } */
+
+.service-1 .service_list .jt-col-6:nth-child(odd) {
+  padding-top: 50px;
+}
+
+.service-1 .service_list .jt-col-4:nth-child(2),
+.service-1 .service_list .jt-col-4:nth-child(5),
+.service-1 .service_list .jt-col-4:nth-child(8) {
+  padding-top: 50px;
+}
+
+.service-1 .service_list .jt-col-3:nth-child(2),
+.service-1 .service_list .jt-col-3:nth-child(4),
+.service-1 .service_list .jt-col-3:nth-child(6),
+.service-1 .service_list .jt-col-3:nth-child(8) {
+  padding-top: 50px;
+}
+
+.service-1 .service_list .service-item:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-primary);
+  visibility: hidden;
+  opacity: 0;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.service-1 .service_list .service-item:hover:after {
+  visibility: visible;
+  opacity: 0.79;
+}
+
+.service-1 .service_list .service-item:hover .service-figure img {
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+.service-1 .service_list .service-item:hover .service-content .service-title a {
+  color: #fff;
+}
+
+.service-1 .service_list .service-item:hover .service-content p {
+  color: #fff !important;
+}
+
+.service-1 .service_list .service-item:hover .btn-service {
+  color: var(--primary-color) !important;
+  background-color: #fff;
+}
+
+.service-1 .service_list .service-item:hover .service-content .icon i {
+  color: #fff;
+}
+
+.service-1 .service_list .service-item .service-figure {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+.service-1 .service_list .service-item .service-figure img {
+  width: 100%;
+  object-fit: cover;
+  filter: grayscale(1);
+  transform: scale(1.02);
+  opacity: 0;
+  min-height: 330px;
+  transition: all 0.3s ease;
+}
+.service-1 .service_list .service-item .service-box-content {
+  padding: 33px;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.service-1 .service_list .service-content .icon i {
+  font-size: 42px;
+  line-height: 1;
+  vertical-align: middle;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.service-1 .service_list .service-content .service-title h3 {
+  position: relative;
+  padding-top: 20px;
+  margin-bottom: 12px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.service-1 .service_list .service-content .service-title h3 a {
+  color: #000;
+  transition: none;
+}
+
+.service-1 .service_list .service-button {
+  margin-top: 30px;
+}
+
+.service-1 .service_list .btn-service {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  border-radius: 4px;
+  padding: 8px 28px;
+  transition: all 0.4s ease;
+}
+
+.service-1 .service_list .btn-service svg {
+  margin-left: 0;
+  transform: translateX(7px);
+  width: 20px;
+  transition: all 0.4s ease;
+  height: 20px;
+}
+
+/* Hover Content */
+
+.service-1 .service_list .service-item .hover-content {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  border-radius: 10px;
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: bottom center;
+  transition: all 0.5s ease;
+  display: none;
+}
+
+.service-1 .service_list .service-item .hover-content::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #161e2e;
+  opacity: 0.85;
+  border-radius: 10px;
+  transition: all 0.5s ease;
+  z-index: -1;
+}
+
+.service-1 .service_list .service-item:hover .hover-content {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.service-1 .service_list .service-item .hover-content-inner {
+  width: 100%;
+  height: 100%;
+  padding: 30px 20px;
+}
+
+.service-1 .service_list .service-item .hover-content-text {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.service-1 .service_list .service-item .hover-content-text h3 {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 34px;
+  margin-bottom: 0;
+}
+
+.service-1 .service-item .hover-content-text h3 a {
+  color: var(--color-white);
+  transition: all ease 0.3s;
+}
+
+.service-1 .service_list .service-item .hover-content-text p {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 0;
+  color: var(--color-white);
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 767px) {
+  .service-1 .service_list .jt-col-6:nth-child(odd) {
+    padding-top: 0;
+  }
+
+  .service-1 .service_list .jt-col-4:nth-child(2),
+  .service-1 .service_list .jt-col-4:nth-child(5),
+  .service-1 .service_list .jt-col-4:nth-child(8) {
+    padding-top: 0;
+  }
+
+  .service-1 .service_list .jt-col-3:nth-child(2),
+  .service-1 .service_list .jt-col-3:nth-child(4),
+  .service-1 .service_list .jt-col-3:nth-child(6),
+  .service-1 .service_list .jt-col-3:nth-child(8) {
+    padding-top: 0;
+  }
+
+  .service-1 .service_list .service-item {
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 575px) {
+  .service-1 .service_list .service-item .service-box-content {
+    padding: 20px;
+  }
+}
+
+/* ==============================
+      Services Style 1 End
+  =================================*/

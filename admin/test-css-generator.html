@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CSS Generator Test</title>
+    <script src="../assets/core/WidgetManager.js"></script>
+    <script src="../assets/core/CSSGenerator.js"></script>
+    <script src="../assets/widgets/WidgetBase.js"></script>
+    <script src="../assets/widgets/HeaderSectionWidget.js"></script>
+</head>
+
+<body>
+    <h1>CSS Generator Test</h1>
+    <button onclick="testCSSGeneration()">Test CSS Generation</button>
+    <pre id="output"></pre>
+
+    <script>
+        function testCSSGeneration() {
+            const output = document.getElementById('output');
+            output.textContent = '=== CSS Generation Test ===\n\n';
+
+            // Check if CSS Generator exists
+            output.textContent += '1. CSS Generator exists: ' + (typeof window.cssGenerator !== 'undefined') + '\n';
+            output.textContent += '2. CSSGenerator class exists: ' + (typeof window.CSSGenerator !== 'undefined') + '\n';
+
+            if (!window.cssGenerator) {
+                output.textContent += '\nERROR: CSS Generator not initialized!\n';
+                return;
+            }
+
+            // Create test widget data
+            const testWidget = {
+                id: 'test-widget-123',
+                type: 'header-section',
+                settings: {
+                    menu_gap: { size: 30, unit: 'px' }
+                }
+            };
+
+            output.textContent += '\n3. Test widget data:\n' + JSON.stringify(testWidget, null, 2) + '\n\n';
+
+            // Check if widget manager exists
+            output.textContent += '4. Widget Manager exists: ' + (typeof window.elementorWidgetManager !== 'undefined') + '\n';
+
+            if (!window.elementorWidgetManager) {
+                output.textContent += '\nERROR: Widget Manager not initialized!\n';
+                return;
+            }
+
+            // Get widget instance
+            const widgetInstance = window.elementorWidgetManager.getWidget('header-section');
+            output.textContent += '5. Widget instance found: ' + (widgetInstance !== null) + '\n';
+
+            if (!widgetInstance) {
+                output.textContent += '\nERROR: HeaderSectionWidget not registered!\n';
+                return;
+            }
+
+            // Get controls
+            const controls = widgetInstance.getControls();
+            output.textContent += '6. Controls count: ' + (controls ? controls.length : 0) + '\n';
+
+            // Find menu_gap control
+            const menuGapControl = controls.find(c => c.id === 'menu_gap');
+            output.textContent += '7. menu_gap control found: ' + (menuGapControl !== undefined) + '\n';
+
+            if (menuGapControl) {
+                output.textContent += '8. menu_gap has selectors: ' + (menuGapControl.selectors !== undefined) + '\n';
+                if (menuGapControl.selectors) {
+                    output.textContent += '9. Selectors:\n' + JSON.stringify(menuGapControl.selectors, null, 2) + '\n\n';
+                }
+            }
+
+            // Generate CSS
+            try {
+                const css = window.cssGenerator.generateWidgetCSS(
+                    testWidget.id,
+                    testWidget.type,
+                    testWidget.settings,
+                    controls
+                );
+
+                output.textContent += '10. Generated CSS:\n' + css + '\n';
+
+                if (css.length > 0) {
+                    output.textContent += '\n✅ SUCCESS! CSS generated correctly!\n';
+                } else {
+                    output.textContent += '\n⚠️ WARNING: CSS is empty!\n';
+                }
+            } catch (e) {
+                output.textContent += '\n❌ ERROR generating CSS:\n' + e.message + '\n' + e.stack;
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,591 @@
+/**
+ * FooterSectionWidget - A comprehensive 4-column footer section widget
+ * Simplified approach with repeater-based columns
+ */
+class FooterSectionWidget extends WidgetBase {
+    getName() {
+        return 'footer-section';
+    }
+
+    getTitle() {
+        return 'Footer Section (4 Columns)';
+    }
+
+    getIcon() {
+        return 'fa fa-th-large';
+    }
+
+    getCategories() {
+        return ['section', 'footer'];
+    }
+
+    getKeywords() {
+        return ['footer', 'section', 'columns', 'bottom'];
+    }
+
+    isContainer() {
+        return false;
+    }
+
+    getDefaultSettings() {
+        return {
+            // Column 1 - About
+            col1_title: 'About Us',
+            col1_content: 'We are a leading company dedicated to providing exceptional services and solutions to our clients worldwide.',
+
+            // Column 2 - Quick Links
+            col2_title: 'Quick Links',
+            col2_links: 'Home|/\nAbout|/about\nServices|/services\nContact|/contact',
+
+            // Column 3 - Resources
+            col3_title: 'Resources',
+            col3_links: 'Blog|/blog\nFAQ|/faq\nSupport|/support\nPrivacy|/privacy',
+
+            // Column 4 - Contact
+            col4_title: 'Get In Touch',
+            col4_address: '123 Main Street\nCity, State 12345',
+            col4_phone: '+1 (234) 567-8900',
+            col4_email: 'info@example.com',
+            social_links: [
+                {
+                    icon: 'fab fa-facebook-f',
+                    url: 'https://facebook.com',
+                    label: 'Facebook'
+                },
+                {
+                    icon: 'fab fa-twitter',
+                    url: 'https://twitter.com',
+                    label: 'Twitter'
+                },
+                {
+                    icon: 'fab fa-instagram',
+                    url: 'https://instagram.com',
+                    label: 'Instagram'
+                },
+                {
+                    icon: 'fab fa-linkedin-in',
+                    url: 'https://linkedin.com',
+                    label: 'LinkedIn'
+                }
+            ],
+
+            // Style
+            background_color: '#1e293b',
+            text_color: '#e2e8f0',
+            heading_color: '#ffffff',
+            link_hover_color: '#60a5fa',
+            column_gap: '30'
+        };
+    }
+
+    registerControls() {
+        // ===== COLUMN 1 - ABOUT =====
+        this.startControlsSection('column1_section', {
+            label: 'Column 1 - About',
+            tab: 'content'
+        });
+
+        // Add media logo
+        this.addControl('col1_logo', {
+            type: 'media',
+            label: 'Logo',
+            default_value: '',
+            placeholder: 'Upload logo'
+        });
+
+        this.addControl('col1_title', {
+            type: 'text',
+            label: 'Title',
+            default_value: 'About Us',
+            placeholder: 'Enter title'
+        });
+
+        this.addControl('col1_content', {
+            type: 'textarea',
+            label: 'Content',
+            default_value: 'Company description...',
+            placeholder: 'Enter about text'
+        });
+
+        this.endControlsSection();
+
+        // ===== COLUMN 2 - LINKS =====
+        this.startControlsSection('column2_section', {
+            label: 'Column 2 - Links',
+            tab: 'content'
+        });
+
+        this.addControl('col2_title', {
+            type: 'text',
+            label: 'Title',
+            default_value: 'Quick Links',
+            placeholder: 'Enter title'
+        });
+
+        // Menu Control
+        this.addControl('col2_menu', {
+            type: 'menu',
+            label: 'Menu',
+            default_value: '',
+            placeholder: 'Select menu'
+        });
+
+        this.endControlsSection();
+
+        // ===== COLUMN 3 - LINKS =====
+        this.startControlsSection('column3_section', {
+            label: 'Column 3 - Links',
+            tab: 'content'
+        });
+
+        this.addControl('col3_title', {
+            type: 'text',
+            label: 'Title',
+            default_value: 'Resources',
+            placeholder: 'Enter title'
+        });
+
+        // Menu Control
+        this.addControl('col3_menu', {
+            type: 'menu',
+            label: 'Menu',
+            default_value: '',
+            placeholder: 'Select menu'
+        });
+
+        this.endControlsSection();
+
+        // ===== COLUMN 4 - CONTACT =====
+        this.startControlsSection('column4_section', {
+            label: 'Column 4 - Contact',
+            tab: 'content'
+        });
+
+        this.addControl('col4_title', {
+            type: 'text',
+            label: 'Title',
+            default_value: 'Get In Touch',
+            placeholder: 'Enter title'
+        });
+
+        this.addControl('col4_address', {
+            type: 'textarea',
+            label: 'Address',
+            default_value: '123 Main Street\nCity, State 12345',
+            placeholder: 'Enter address'
+        });
+
+        this.addControl('col4_phone', {
+            type: 'text',
+            label: 'Phone',
+            default_value: '+1 (234) 567-8900',
+            placeholder: '+1 234 567 890'
+        });
+
+        this.addControl('col4_email', {
+            type: 'text',
+            label: 'Email',
+            default_value: 'info@example.com',
+            placeholder: 'info@example.com'
+        });
+
+        // Social Links Repeater in Column 4
+        this.addControl('social_links', {
+            type: 'repeater',
+            label: 'Social Links',
+            default_value: [
+                {
+                    icon: 'fab fa-facebook-f',
+                    url: 'https://facebook.com',
+                    label: 'Facebook'
+                },
+                {
+                    icon: 'fab fa-twitter',
+                    url: 'https://twitter.com',
+                    label: 'Twitter'
+                },
+                {
+                    icon: 'fab fa-instagram',
+                    url: 'https://instagram.com',
+                    label: 'Instagram'
+                },
+                {
+                    icon: 'fab fa-linkedin-in',
+                    url: 'https://linkedin.com',
+                    label: 'LinkedIn'
+                }
+            ],
+            fields: [
+                {
+                    name: 'icon',
+                    type: 'icon',
+                    label: 'Icon',
+                    default_value: 'fab fa-facebook-f'
+                },
+                {
+                    name: 'url',
+                    type: 'url',
+                    label: 'URL',
+                    default_value: '#',
+                    placeholder: 'https://facebook.com'
+                },
+                {
+                    name: 'label',
+                    type: 'text',
+                    label: 'Label',
+                    default_value: 'Social',
+                    placeholder: 'Facebook'
+                }
+            ],
+            title_field: 'label'
+        });
+
+        this.endControlsSection();
+
+        // ===== STYLE =====
+        this.startControlsSection('style_section', {
+            label: 'Footer Style',
+            tab: 'style'
+        });
+
+        this.addControl('background_color', {
+            type: 'color',
+            label: 'Background Color',
+            default_value: '#1e293b'
+        });
+
+        this.addControl('text_color', {
+            type: 'color',
+            label: 'Text Color',
+            default_value: '#e2e8f0'
+        });
+
+        this.addControl('heading_color', {
+            type: 'color',
+            label: 'Heading Color',
+            default_value: '#ffffff'
+        });
+
+        this.addControl('link_hover_color', {
+            type: 'color',
+            label: 'Link Hover Color',
+            default_value: '#60a5fa'
+        });
+
+        this.addControl('column_gap', {
+            type: 'text',
+            label: 'Column Gap (px)',
+            default_value: '30',
+            placeholder: '30'
+        });
+
+        // Add here with image list repeater    
+        this.addControl('background_image_list', {
+            type: 'repeater',
+            label: 'Background Image List',
+            default_value: [
+                {
+                    image: 'https://via.placeholder.com/150',
+                    position: 'top-left'
+                },
+                {
+                    image: 'https://via.placeholder.com/150',
+                    position: 'top-right'
+                },
+                {
+                    image: 'https://via.placeholder.com/150',
+                    position: 'bottom-left'
+                }
+            ],
+            fields: [
+                {
+                    name: 'image',
+                    type: 'media',
+                    label: 'Image',
+                    default_value: '',
+                    placeholder: 'Upload image'
+                },
+                {
+                    name: 'position',
+                    type: 'select',
+                    label: 'Position',
+                    options: [
+                        { value: 'top-left', label: 'Top Left' },
+                        { value: 'top-center', label: 'Top Center' },
+                        { value: 'top-right', label: 'Top Right' },
+                        { value: 'center-left', label: 'Center Left' },
+                        { value: 'center-center', label: 'Center Center' },
+                        { value: 'center-right', label: 'Center Right' },
+                        { value: 'bottom-left', label: 'Bottom Left' },
+                        { value: 'bottom-center', label: 'Bottom Center' },
+                        { value: 'bottom-right', label: 'Bottom Right' }
+                    ],
+                    default_value: 'top-left'
+                }
+            ]
+        });
+
+        this.endControlsSection();
+    }
+
+    constructor() {
+        super();
+    }
+
+    render() {
+        // Get all settings
+        const col1Logo = this.getSetting('col1_logo', { url: '' });
+        const col1Title = this.getSetting('col1_title', 'About Us');
+        const col1Content = this.getSetting('col1_content', '');
+
+        const col2Title = this.getSetting('col2_title', 'Quick Links');
+        const col2Menu = this.getSetting('col2_menu', []);
+
+        const col3Title = this.getSetting('col3_title', 'Resources');
+        const col3Menu = this.getSetting('col3_menu', []);
+
+        const col4Title = this.getSetting('col4_title', 'Get In Touch');
+        const col4Address = this.getSetting('col4_address', '');
+        const col4Phone = this.getSetting('col4_phone', '');
+        const col4Email = this.getSetting('col4_email', '');
+
+        const backgroundColor = this.getSetting('background_color', '#1e293b');
+        const textColor = this.getSetting('text_color', '#e2e8f0');
+        const headingColor = this.getSetting('heading_color', '#ffffff');
+        const linkHoverColor = this.getSetting('link_hover_color', '#60a5fa');
+        const columnGap = this.getSetting('column_gap', '30');
+
+        // Build Column 1 logo
+        const col1LogoHTML = col1Logo && col1Logo.url ?
+            `<img src="${col1Logo.url}" alt="Logo" class="footer-4col-logo">` : '';
+
+        // Build Column 2 menu from menu control
+        let col2MenuHTML = '';
+        if (col2Menu && col2Menu.length > 0) {
+            col2MenuHTML = col2Menu.map(item => {
+                return `<li><a href="${item.url || '#'}">${this.escapeHtml(item.text || 'Link')}</a></li>`;
+            }).join('');
+        }
+
+        // Build Column 3 menu from menu control
+        let col3MenuHTML = '';
+        if (col3Menu && col3Menu.length > 0) {
+            col3MenuHTML = col3Menu.map(item => {
+                return `<li><a href="${item.url || '#'}">${this.escapeHtml(item.text || 'Link')}</a></li>`;
+            }).join('');
+        }
+
+        // Build Social Links
+        const socialLinks = this.getSetting('social_links', []);
+        console.log('Footer Social Links:', socialLinks);
+        let socialLinksHTML = '';
+        if (socialLinks && socialLinks.length > 0) {
+            socialLinksHTML = socialLinks.map(link => {
+                const iconHTML = link.icon ? `<i class="${link.icon}"></i>` : '<i class="fab fa-link"></i>';
+                return `<a href="${link.url || '#'}" target="_blank" rel="noopener noreferrer" class="footer-social-link" title="${this.escapeHtml(link.label || 'Social')}">${iconHTML}</a>`;
+            }).join('');
+        }
+        console.log('Footer Social Links HTML:', socialLinksHTML);
+
+        // Build Background Image List
+        const backgroundImageList = this.getSetting('background_image_list', []);
+        let backgroundImageListHTML = '';
+        if (backgroundImageList && backgroundImageList.length > 0) {
+            backgroundImageListHTML = backgroundImageList.map((item, index) => {
+                if (!item.image || !item.image.url) return '';
+
+                const position = item.position || 'top-left';
+                let positionStyles = '';
+
+                // Map position to CSS
+                switch (position) {
+                    case 'top-left':
+                        positionStyles = 'top: 0; left: 0;';
+                        break;
+                    case 'top-center':
+                        positionStyles = 'top: 0; left: 50%; transform: translateX(-50%);';
+                        break;
+                    case 'top-right':
+                        positionStyles = 'top: 0; right: 0;';
+                        break;
+                    case 'center-left':
+                        positionStyles = 'top: 50%; left: 0; transform: translateY(-50%);';
+                        break;
+                    case 'center-center':
+                        positionStyles = 'top: 50%; left: 50%; transform: translate(-50%, -50%);';
+                        break;
+                    case 'center-right':
+                        positionStyles = 'top: 50%; right: 0; transform: translateY(-50%);';
+                        break;
+                    case 'bottom-left':
+                        positionStyles = 'bottom: 0; left: 0;';
+                        break;
+                    case 'bottom-center':
+                        positionStyles = 'bottom: 0; left: 50%; transform: translateX(-50%);';
+                        break;
+                    case 'bottom-right':
+                        positionStyles = 'bottom: 0; right: 0;';
+                        break;
+                    default:
+                        positionStyles = 'top: 0; left: 0;';
+                }
+
+                return `<div class="footer-bg-image footer-bg-${index}" style="position: absolute; ${positionStyles} z-index: 0; pointer-events: none;">
+                    <img src="${item.image.url}" alt="Background decoration" style="max-width: 200px; opacity: 0.3;">
+                </div>`;
+            }).join('');
+        }
+
+        return `
+<div class="footer-section-4col" style="background-color: ${backgroundColor}; color: ${textColor};">
+
+${backgroundImageListHTML}  
+
+  <div class="container">
+    <div class="footer-4col-grid" style="gap: ${columnGap}px;">
+      
+      <!-- Column 1: About -->
+      <div class="footer-4col-item">
+        ${col1LogoHTML}
+        <h3 class="footer-4col-title" style="color: ${headingColor};">${this.escapeHtml(col1Title)}</h3>
+        <p class="footer-4col-text">${this.escapeHtml(col1Content)}</p>
+      </div>
+      
+      <!-- Column 2: Menu -->
+      <div class="footer-4col-item">
+        <h3 class="footer-4col-title" style="color: ${headingColor};">${this.escapeHtml(col2Title)}</h3>
+        ${col2MenuHTML ? `<ul class="footer-4col-menu">${col2MenuHTML}</ul>` : ''}
+      </div>
+      
+      <!-- Column 3: Menu -->
+      <div class="footer-4col-item">
+        <h3 class="footer-4col-title" style="color: ${headingColor};">${this.escapeHtml(col3Title)}</h3>
+        ${col3MenuHTML ? `<ul class="footer-4col-menu">${col3MenuHTML}</ul>` : ''}
+      </div>
+      
+      <!-- Column 4: Contact -->
+      <div class="footer-4col-item">
+        <h3 class="footer-4col-title" style="color: ${headingColor};">${this.escapeHtml(col4Title)}</h3>
+        <div class="footer-4col-contact">
+          ${col4Address ? `<div class="footer-4col-contact-item"><i class="fa fa-map-marker-alt"></i> <span>${this.escapeHtml(col4Address).replace(/\n/g, '<br>')}</span></div>` : ''}
+          ${col4Phone ? `<div class="footer-4col-contact-item"><i class="fa fa-phone"></i> <a href="tel:${col4Phone}">${this.escapeHtml(col4Phone)}</a></div>` : ''}
+          ${col4Email ? `<div class="footer-4col-contact-item"><i class="fa fa-envelope"></i> <a href="mailto:${col4Email}">${this.escapeHtml(col4Email)}</a></div>` : ''}
+        </div>
+        ${socialLinksHTML ? `
+        <div class="footer-col4-social">
+          ${socialLinksHTML}
+        </div>
+        ` : ''}
+      </div>
+      
+    </div>
+  </div>
+  <style>
+    .footer-section-4col {
+      padding: 60px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .footer-4col-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: ${columnGap}px;
+    }
+    .footer-4col-logo {
+      max-width: 180px;
+      height: auto;
+      margin-bottom: 15px;
+      display: block;
+    }
+    .footer-4col-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      margin-top: 0;
+    }
+    .footer-4col-text {
+      line-height: 1.6;
+      margin: 0;
+    }
+    .footer-4col-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .footer-4col-menu li {
+      margin-bottom: 10px;
+    }
+    .footer-4col-menu a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-4col-menu a:hover {
+      color: ${linkHoverColor};
+    }
+    .footer-4col-contact-item {
+      margin-bottom: 15px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .footer-4col-contact-item i {
+      margin-top: 3px;
+      min-width: 16px;
+    }
+    .footer-4col-contact-item a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-4col-contact-item a:hover {
+      color: ${linkHoverColor};
+    }
+    .footer-col4-social {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .footer-social-link {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      color: inherit;
+      text-decoration: none;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+    .footer-social-link:hover {
+      background: ${linkHoverColor};
+      color: #ffffff;
+      transform: translateY(-2px);
+    }
+    @media (max-width: 992px) {
+      .footer-4col-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 576px) {
+      .footer-4col-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</div>
+    `;
+    }
+
+    escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+}
+
+window.elementorWidgetManager.registerWidget(FooterSectionWidget);

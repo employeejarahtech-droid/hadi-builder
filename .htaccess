@@ -8,9 +8,25 @@
     RewriteBase /
     RewriteRule ^index\.php$ - [L]
     
-    # Handle /blog/{slug}
-    RewriteRule ^blog/(.*)$ index.php [L]
+    # Blog clean URLs
+    RewriteRule ^blog/?$ blog/index.php [L,QSA]
+    RewriteRule ^blog/(.*)$ blog/index.php?slug=$1 [L,QSA]
+    
+    # Shop clean URLs
+    RewriteRule ^shop/?$ shop/index.php [L,QSA]
+    
+    # Handle /product (product listing)
+    RewriteRule ^product/?$ index.php [L,QSA]
+    
+    # Handle /product/{slug} (single product)
+    # Product clean URLs
+RewriteRule ^product/(.*)$ product/index.php?slug=$1 [L,QSA]
 
+    # Projects clean URLs
+    RewriteRule ^projects/?$ projects/index.php [L,QSA]
+    RewriteRule ^project/(.*)$ project/index.php?slug=$1 [L,QSA]
+
+    # Handle regular pages - only if file/directory doesn't exist
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule . /index.php [L]

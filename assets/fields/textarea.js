@@ -40,6 +40,36 @@ class TEXTAREA extends BaseControl {
         });
     }
 
-    // Copy methods from TEXT or generic ones if BaseControl doesn't cover
-    // BaseControl handles logic, this just renders specific HTML
+    /**
+     * Get the current value
+     * Reads directly from DOM to ensure accuracy
+     */
+    getValue() {
+        const $input = $(`#${this.id}`);
+        if ($input.length) {
+            return $input.val();
+        }
+        return this.value;
+    }
+
+    /**
+     * Set a new value
+     */
+    setValue(newValue, silent = false) {
+        const oldValue = this.value;
+        this.value = newValue;
+
+        // Update DOM
+        const $input = $(`#${this.id}`);
+        if ($input.length) {
+            $input.val(newValue);
+        }
+
+        if (!silent && oldValue !== newValue) {
+            this.handleChange(newValue, oldValue);
+        }
+    }
 }
+
+// Export global
+window.TEXTAREA = TEXTAREA;

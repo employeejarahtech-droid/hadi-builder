@@ -1,0 +1,46 @@
+/* ==============================
+    Experience List
+=================================*/
+
+.experience_list_section {
+    background-color: var(--color-primary);
+    padding: 80px 0;
+  }
+  
+  .experience_list_section .experience_list_count .counterUp {
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 1.2;
+    text-align: center;
+    color: #fff;
+  }
+  
+  .experience_list_section .experience_list_count .plus {
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 300;
+    font-size: 40px;
+    line-height: 1.2;
+    text-align: center;
+    color: #fff;
+  }
+  
+  .experience_list_section .count-text {
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 600;
+    font-size: 22px;
+    color: #fff;
+  }
+  
+  @media (max-width: 991px) {
+    .experience_list_section {
+      padding: 50px 0;
+    }
+  
+    .experience_list_section .experience_list_single {
+      margin-bottom: 50px;
+    }
+  }
+  /* ==============================
+      Experience List End
+  =================================*/

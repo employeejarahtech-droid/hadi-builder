@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Git Version Page Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .test-section {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .success {
+            color: #10b981;
+        }
+
+        .error {
+            color: #ef4444;
+        }
+
+        .pending {
+            color: #f59e0b;
+        }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Git Version Deploy Page - Dynamic Test</h1>
+
+    <div class="test-section">
+        <h2>Test 1: Page Accessibility</h2>
+        <p id="test1" class="pending">Testing...</p>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Repository Info API</h2>
+        <p id="test2" class="pending">Testing...</p>
+        <pre id="test2-output"></pre>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Git Status API</h2>
+        <p id="test3" class="pending">Testing...</p>
+        <pre id="test3-output"></pre>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 4: SSH Key Check API</h2>
+        <p id="test4" class="pending">Testing...</p>
+        <pre id="test4-output"></pre>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 5: Branches API</h2>
+        <p id="test5" class="pending">Testing...</p>
+        <pre id="test5-output"></pre>
+    </div>
+
+    <script>
+        // Test 1: Page loads
+        fetch('/new-cms-final/admin/git-version/')
+            .then(response => {
+                if (response.ok || response.status === 302) {
+                    document.getElementById('test1').innerHTML = '<span class="success">✓ Page is accessible (may require login)</span>';
+                } else {
+                    document.getElementById('test1').innerHTML = '<span class="error">✗ Page returned status: ' + response.status + '</span>';
+                }
+            })
+            .catch(err => {
+                document.getElementById('test1').innerHTML = '<span class="error">✗ Error: ' + err.message + '</span>';
+            });
+
+        // Test 2: Repository Info API
+        fetch('/new-cms-final/admin/git-version/api/get-repo-info.php')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('test2-output').textContent = JSON.stringify(data, null, 2);
+                if (data.success) {
+                    document.getElementById('test2').innerHTML = '<span class="success">✓ API working - Branch: ' + data.branch + '</span>';
+                } else {
+                    document.getElementById('test2').innerHTML = '<span class="error">✗ API returned error: ' + data.message + '</span>';
+                }
+            })
+            .catch(err => {
+                document.getElementById('test2').innerHTML = '<span class="error">✗ Error: ' + err.message + '</span>';
+            });
+
+        // Test 3: Git Status API
+        fetch('/new-cms-final/admin/git-version/api/get-git-status.php')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('test3-output').textContent = JSON.stringify(data, null, 2);
+                if (data.success) {
+                    document.getElementById('test3').innerHTML = '<span class="success">✓ API working - ' + data.count + ' file(s) changed</span>';
+                } else {
+                    document.getElementById('test3').innerHTML = '<span class="error">✗ API returned error: ' + data.message + '</span>';
+                }
+            })
+            .catch(err => {
+                document.getElementById('test3').innerHTML = '<span class="error">✗ Error: ' + err.message + '</span>';
+            });
+
+        // Test 4: SSH Key Check API
+        fetch('/new-cms-final/admin/git-version/api/check-ssh-key.php')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('test4-output').textContent = JSON.stringify(data, null, 2);
+                if (data.success) {
+                    const status = data.exists ? 'SSH key exists' : 'No SSH key found';
+                    document.getElementById('test4').innerHTML = '<span class="success">✓ API working - ' + status + '</span>';
+                } else {
+                    document.getElementById('test4').innerHTML = '<span class="error">✗ API returned error: ' + data.message + '</span>';
+                }
+            })
+            .catch(err => {
+                document.getElementById('test4').innerHTML = '<span class="error">✗ Error: ' + err.message + '</span>';
+            });
+
+        // Test 5: Branches API
+        fetch('/new-cms-final/admin/git-version/api/get-branches.php')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('test5-output').textContent = JSON.stringify(data, null, 2);
+                if (data.success) {
+                    document.getElementById('test5').innerHTML = '<span class="success">✓ API working - ' + data.branches.length + ' branch(es) found</span>';
+                } else {
+                    document.getElementById('test5').innerHTML = '<span class="error">✗ API returned error: ' + data.message + '</span>';
+                }
+            })
+            .catch(err => {
+                document.getElementById('test5').innerHTML = '<span class="error">✗ Error: ' + err.message + '</span>';
+            });
+    </script>
+</body>
+
+</html>

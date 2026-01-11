@@ -1,0 +1,117 @@
+/* ==============================
+    Blog List
+=================================*/
+
+.bloglist-1 .blog_list .blog_grid {
+    padding: 0 5px;
+}
+
+.bloglist-1 .blog_list .blog_item {
+  z-index: 2;
+  position: relative;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--color-white);
+  -webkit-box-shadow: 0.68px 12.982px 29px 0 rgb(0 0 0 / 7%);
+  box-shadow: 0.68px 12.982px 29px 0 rgb(0 0 0 / 7%);
+  padding: 30px;
+  transition: all 0.8s;
+  margin-bottom: 30px;
+}
+
+.bloglist-1 .blog_list .blog_img {
+  position: relative;
+  overflow: hidden;
+}
+
+.bloglist-1 .blog_list .blog_img img {
+  position: relative;
+  width: 100%;
+  display: block;
+  transition: all 0.5s ease;
+}
+
+.bloglist-1 .blog_list .blog_img img:first-child {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  transform: translateX(50%) scaleX(2);
+  opacity: 0;
+  filter: blur(10px);
+}
+
+.bloglist-1 .blog_list .blog_item:hover .blog_img img:first-child {
+  transform: translateX(0) scaleX(1);
+  opacity: 1;
+  filter: blur(0);
+}
+
+.bloglist-1 .blog_list .blog_item:hover .blog_img img:nth-child(2) {
+  transform: translateX(-50%) scaleX(2);
+  opacity: 0;
+  filter: blur(10px);
+}
+
+.bloglist-1 .blog_list .blog_img:hover .blog-date {
+  border-radius: 0 0 0 0;
+}
+
+.bloglist-1 .blog_list .blog_img:hover img {
+  transform: scale(1.1);
+  border-radius: 6px;
+}
+
+.bloglist-1 .blog_list .blog-date {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background-color: #fa360a;
+  padding: 10px 20px;
+  color: #fff;
+  border-radius: 0 0 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bloglist-1 .blog_list .blog_meta {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 50px;
+}
+
+.bloglist-1 .blog_list .blog_meta span {
+  color: #797979;
+  font-size: 15px;
+  line-height: 30px;
+  font-weight: 500;
+  transition: all 0.3s ease-in-out;
+}
+
+.bloglist-1 .blog_list .blog_heading {
+  margin-top: 10px;
+}
+
+.bloglist-1 .blog_heading h3 {
+  position: relative;
+  z-index: 1;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.32;
+}
+
+.bloglist-1 .blog_heading h3 a {
+  color: inherit;
+}
+
+.bloglist-1 .blog_heading h3 a:hover {
+  color: var(--color-primary);
+}
+
+/* ==============================
+    Blog List End
+=================================*/

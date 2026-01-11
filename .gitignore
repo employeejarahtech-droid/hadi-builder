@@ -35,6 +35,11 @@ assets/uploads/*
 images/*
 !images/.gitkeep
 
+# Generated CSS files (dynamically created)
+assets/css/generated/*
+!assets/css/generated/.gitkeep
+
+
 
 
 

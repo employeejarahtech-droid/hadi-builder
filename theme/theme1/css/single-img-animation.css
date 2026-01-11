@@ -1,0 +1,12 @@
+.single-img-wrapper{
+    position: relative;
+    overflow: hidden;
+}
+
+.single-img-wrapper img{
+    transition: all 0.5s;
+}
+
+.single-img-wrapper:hover img{
+    transform: scale(1.05);
+}

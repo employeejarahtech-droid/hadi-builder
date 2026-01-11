@@ -1,0 +1,727 @@
+/* Layout */
+
+*{
+	margin: 0px;
+	padding: 0px;
+} 
+
+body, a, div {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 12px;
+	text-decoration: none;
+	color: #000000;
+}
+
+.wrap {
+	height: auto;
+	width: 980px;
+	margin-top: 80px;
+	margin-right: auto;
+	margin-left: auto;
+	margin-bottom: 0px;
+	padding: auto;
+}
+
+#powered a{
+	color: #FF0033;
+	text-decoration: underline;
+}
+
+#Powered img{
+	height: auto;
+	width: auto;
+	margin-left: 40px;
+	margin-top: 3px;
+	margin-bottom: 3px;
+}
+
+.wrap_body {
+	height: 900px;
+	width: auto;
+}
+
+/*  Header  */
+
+
+.header {
+	background-color: #339933;
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+	height: 40px;
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	z-index: 5030;
+}
+
+.header2 {
+	width: 100%;
+	padding: 0px;
+	height: 40px;
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	z-index: 5030;
+	margin-top: 40px;
+	background-color: #FFFFFF;
+}
+
+
+.main_header_area{
+	height: 40px;
+	width: 980px;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-left: auto;
+	padding-top: 0px;
+	padding-right: auto;
+	padding-bottom: 0px;
+	padding-left: auto;
+	margin-bottom: 0px;
+}
+
+.main_header_left {
+	margin: 0px;
+	padding: 0px;
+	float: left;
+	height: 40px;
+	width: 420px;
+}
+
+.main_header_left2 {
+	margin: 0px;
+	padding: 0px;
+	float: left;
+	height: 40px;
+	width: 220px;
+}
+
+.logo_area {
+	height: 20px;
+	margin-top: 8px;
+	font-family: "Times New Roman", Times, serif;
+	font-size: 20px;
+	color: #F0F0F0;
+}
+.main_header_moddle{
+	margin: 0px;
+	padding: 0px;
+	float: left;
+	height: 40px;
+	width: 450px;
+}
+
+.search_box {
+	background-color: #FFFFFF;
+	float: left;
+	height: 22px;
+	width: 300px;
+	margin-top: 9px;
+}
+
+.s_box{
+	float: left;
+	height: 22px;
+	width: 270px;
+}
+
+.s_img{
+	float: left;
+	height: 22px;
+	width: 30px;
+}
+
+.s_img img {
+	margin-top: 2px;
+}
+
+.search_box input{
+	height: 22px;
+	width: 270px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	font-family: "Times New Roman", Times, serif;
+	font-size: 12px;
+	padding-left: 2px;
+}
+
+.main_header_right{
+	margin: 0px;
+	padding: 0px;
+	float: left;
+	height: 40px;
+	width: 200px;
+}
+
+
+.header_bottom {
+	width: 980px;
+	position: fixed;
+	height: 80px;
+	z-index: 5020;
+	background-color: #FFFFFF;
+}
+
+.portfolio {
+	margin: 0px;
+	padding: 0px;
+	float: left;
+	height: 70px;
+	width: 200px;
+	background-color: #FFFFFF;
+}
+
+.details_click_area{
+	margin: 1px;
+	padding: 0px;
+	height: 36px;
+	width: 156px;
+	float: left;
+}
+
+.Our_service {
+	margin-right: auto;
+	margin-left: auto;
+	font-size: 18px;
+	text-align: center;
+	color: #339933;
+	font-family: "Times New Roman", Times, serif;
+	font-weight: bold;
+	padding-top: 5px;
+	padding-right: auto;
+	padding-bottom: 1px;
+	padding-left: auto;
+	margin-top: 5px;
+}
+
+.Our_address {
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: 5px;
+	margin-left: auto;
+	font-size: 12px;
+	text-align: center;
+	color: #444444;
+	font-family: "Times New Roman", Times, serif;
+	font-weight: bold;
+	padding-top: 0px;
+	padding-right: auto;
+	padding-bottom: 5px;
+	padding-left: auto;
+}
+
+
+.details_sign_area{
+	margin: 1px;
+	padding: 0px;
+	height: 72px;
+	width: 36px;
+	float: left;
+}
+
+.current_section {
+	padding: 0px;
+	float: left;
+	height:80px;
+	width: 778px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 1px;
+	background-color: #FFFFFF;
+}
+
+.current_header{
+	font-family: "Times New Roman", Times, serif;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: bolder;
+	color: #008800;
+	width: 95%;
+	margin-top: 10px;
+	margin-right: auto;
+	margin-bottom: 5px;
+	margin-left: auto;
+	text-transform: uppercase;
+	text-decoration: none;
+}
+
+.current_detail{
+	font-family: "Times New Roman", Times, serif;
+	font-size: 12px;
+	color: #001100;
+	width: 95%;
+	margin-right: auto;
+	margin-left: auto;
+	padding: 0px;
+	margin-top: 0px;
+}
+
+.current_tab_section{
+	height: 20px;
+	width: 95%;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	text-align: right;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.current_tabs{
+	height: 20px;
+	width: 100%;
+}
+.current_tabs .tabs{
+	font-family: "Times New Roman", Times, serif;
+	font-size: 12px;
+	color: #FFFFFF;
+	background-color: #339933;
+	display: inline;
+	height: 20px;
+	width: 300px;
+	padding-top: 2px;
+	padding-right: 2px;
+	padding-bottom: 2px;
+	padding-left: 2px;
+}
+/*.current_tabs a:link{
+	font-family: "Times New Roman", Times, serif;
+	font-size: 12px;
+	color: #FFFFFF;
+	background-color: #339933;
+	display: inline;
+	height: 20px;
+	width: 150px;
+}
+*/
+.be_our_sponsor {
+	float: left;
+	height: 80px;
+	width: 196px;
+	margin-left: 3px;
+	background-color: #FFFFFF;
+}
+
+.be_sponsor_now{
+	height: 55px;
+	background-color: #FFFFFF;
+}
+
+.sponsor_header{
+	width: 190px;
+	text-align: center;
+	margin-top: 5px;
+	margin-right: 2px;
+	margin-bottom: 5px;
+	margin-left: 2px;
+	padding-top: 2px;
+	padding-bottom: 3px;
+	color: #FFFFFF;
+	background-color: #339933;
+	font-family: "Times New Roman", Times, serif;
+	font-size: 12px;
+}
+
+
+.left_b {
+	float: left;
+	height: auto;
+	width: 220px;
+	margin: 0px;
+	padding: 0px;
+	background-color: #ECE9D8;
+}
+
+.menu_section {
+	padding: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	height: auto;
+	width: 200px;
+	position: fixed;
+}
+
+.menu_inner {
+	height: auto;
+	width: 220px;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	margin-left: 0px;
+}
+
+.civil_works {
+
+}
+
+.menu_inner .menu_header{
+	font-size: 13px;
+	font-weight: bold;
+	text-transform: capitalize;
+	text-decoration: none;
+	margin-top: 7px;
+	margin-bottom: 7px;
+	color: #FF6666;
+}
+
+.menu_inner .menu a{
+	font-size: 12px;
+	font-style: normal;
+	text-decoration: none;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	height: 15px;
+	margin-top: 1px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	width: 220px;
+	font-weight: bold;
+}
+
+.menu_inner img {
+	border:0px;
+	margin-right: 7px;
+	margin-left: 5px;
+	height: 11px;
+	width: 16px;
+}
+
+.menu_inner .menu a{
+	display: block;
+}
+.menu_inner .menu a:link{
+	display: block;
+}
+.menu_inner .menu .menu_selected,.menu_inner .menu  a:hover{
+	display: block;
+	background-color: #339933;
+	color: #FFFFFF;
+}
+
+.menu_selected{
+	display: block;
+	background-color: #339933;
+	color: #FFFFFF;
+}
+
+.middle {
+	margin: 0px;
+	padding: 0px;
+	float: right;
+	height: auto;
+	width: 760px;
+	border: 1px solid #666666;
+	padding-bottom: 20px;
+}
+
+.top_right{
+	height: auto;
+	width: 760px;
+	margin: 0px;
+	padding: 0px;
+}
+.bottom_right{
+	height: 100Px;
+	width: 780px;
+}
+
+
+.middle_left {
+	margin: 0px;
+	padding: 0px;
+	float: left;
+	height: auto;
+	width: 778px;
+}
+
+.middle_main {
+	height: auto;
+	width: 100%;
+	margin-top: 90px;
+}
+
+
+.middle_right {
+	margin: 0px;
+	padding: 0px;
+	float: right;
+	height: 500px;
+	width: 196px;
+}
+
+.add_section {
+	padding: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	height: 700px;
+	width: 200px;
+}
+.sponsor {
+	padding: 0px;
+	height: 500px;
+	width: 190px;
+	margin-top: 80px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+}
+
+
+.sponsor_adds_area {
+	width: 190px;
+	text-align: left;
+	margin-top: 10px;
+	margin-right: 2px;
+	margin-bottom: 5px;
+	margin-left: 2px;
+	padding-top: 2px;
+	padding-bottom: 3px;
+	color: #FFFFFF;
+	height: auto;
+}
+
+.adds{
+	height: auto;
+	width: 98%;
+	padding-top: 2px;
+	padding-right: 2px;
+	padding-bottom: 2px;
+	padding-left: 2px;
+}
+
+.border_area{
+	height: 10px;
+	width: 90%;
+	margin-top: 5px;
+	margin-right: auto;
+	margin-bottom: 5px;
+	margin-left: auto;
+}
+
+.add_header{
+	font-family: "Times New Roman", Times, serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #339933;
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	text-align: left;
+}
+
+.footer {
+	height: 100px;
+	width: 980px;
+	background-color: #339933;
+}
+
+/* Comon Color */
+
+.light_color {
+
+}
+
+.dark_color {
+
+}
+
+/* Border */
+.top {
+	border-top-width: thin;
+	border-top-style: solid;
+	border-top-color: #AAAAAA;
+}
+
+.bottom {
+	border-bottom-width: thin;
+	border-bottom-style: solid;
+	border-bottom-color: #AAAAAA;
+}
+
+.left {
+	border-left-width: thin;
+	border-left-style: solid;
+	border-left-color: #AAAAAA;
+}
+
+.right {
+	border-right-width: thin;
+	border-right-style: solid;
+	border-right-color: #AAAAAA;
+}
+
+/* Font */
+
+.full_page {
+
+}
+
+.menu_font_header {
+	font-size: 14px;
+	font-weight: bold;
+	text-transform: capitalize;
+	text-decoration: none;
+}
+
+.menufont_all {
+
+}
+
+
+/* oommon */
+
+.clear {
+	clear: both;
+	height: 1px;
+	width: 100%;
+}
+
+
+/* Event related  */
+.chane_button_color{
+	font-family: "Times New Roman", Times, serif;
+	font-size: 12px;
+	color: #FFFFFF;
+	background-color: #CC6600;
+	display: inline;
+	height: 20px;
+	width: 300px;
+	padding-top: 2px;
+	padding-right: 2px;
+	padding-bottom: 2px;
+	padding-left: 2px;
+}
+.middle #current {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 18px;
+	color: #550000;
+	height: 50px;
+}
+
+#action_message {
+	height: 30px;
+	width: 100%;
+	font-family: "Times New Roman", Times, serif;
+	font-size: 16px;
+	color: #110000;
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+	/* buttons*/
+	
+	.yui3-button1 {    /* Structure */
+    display: inline-block;
+    *display: inline; /*IE 6/7*/
+    zoom: 1;
+    font-size: 100%; 
+    *font-size: 90%; /*IE 6/7 - To reduce IE's oversized button text*/
+    *overflow: visible; /*IE 6/7 - Because of IE's overly large left/right padding on buttons */
+    padding: 0.4em 1em 0.45em;
+    line-height: normal;
+    white-space: nowrap;
+    vertical-align: baseline;
+    text-align: center;
+    cursor: pointer;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+
+    /* Presentation */
+    color: #444; /* rgba not supported (IE 8) */
+    color: rgba(0, 0, 0, 0.80); /* rgba supported */
+    *color: #444; /* IE 6 & 7 */
+    border: 1px solid #999;  /*IE 6/7/8*/
+    border: none rgba(0, 0, 0, 0);  /*IE9 + everything else*/
+    background-color: #E6E6E6;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#80ffffff', endColorstr='#00ffffff', GradientType=0);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(255,255,255, 0.30)), color-stop(40%, rgba(255,255,255, 0.15)), to(transparent));
+    background-image: -webkit-linear-gradient(rgba(255,255,255, 0.30), rgba(255,255,255, 0.15) 40%, transparent);
+    background-image: -moz-linear-gradient(top, rgba(255,255,255, 0.30), rgba(255,255,255, 0.15) 40%, transparent);
+    background-image: -ms-linear-gradient(rgba(255,255,255, 0.30), rgba(255,255,255, 0.15) 40%, transparent);
+    background-image: -o-linear-gradient(rgba(255,255,255, 0.30), rgba(255,255,255, 0.15) 40%, transparent);
+    background-image: linear-gradient(rgba(255,255,255, 0.30), rgba(255,255,255, 0.15) 40%, transparent);
+    text-decoration: none;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 2px 0 rgba(255,255,255, 0.30) inset, 0 1px 2px rgba(0,0,0, 0.15);
+    -moz-box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 2px 0 rgba(255,255,255, 0.30) inset, 0 1px 2px rgba(0,0,0, 0.15);
+    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 2px 0 rgba(255,255,255, 0.30) inset, 0 1px 2px rgba(0,0,0, 0.15);
+
+    /* Transitions */
+    -webkit-transition: 0.1s linear -webkit-box-shadow;
+    -moz-transition: 0.1s linear -moz-box-shadow;
+    -ms-transition: 0.1s linear box-shadow;
+    -o-transition: 0.1s linear box-shadow;
+    transition: 0.1s linear box-shadow;
+}
+
+	.yui3-button1_hover {    /* Structure */
+    display: inline-block;
+    *display: inline; /*IE 6/7*/
+    zoom: 1;
+    font-size: 100%; 
+    *font-size: 90%; /*IE 6/7 - To reduce IE's oversized button text*/
+    *overflow: visible; /*IE 6/7 - Because of IE's overly large left/right padding on buttons */
+    padding: 0.2em 1em 0.25em;
+    line-height: normal;
+    white-space: nowrap;
+    vertical-align: baseline;
+    text-align: center;
+    cursor: pointer;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+
+    /* Presentation */
+    color: #444; /* rgba not supported (IE 8) */
+    color: rgba(0, 0, 0, 0.80); /* rgba supported */
+    *color: #444; /* IE 6 & 7 */
+    border: 1px solid #999;  /*IE 6/7/8*/
+    border: none rgba(0, 0, 0, 0);  /*IE9 + everything else*/
+
+    background-color: #E6E6E6;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#80ffffff', endColorstr='#00ffffff', GradientType=0);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(255,255,255, 0.30)), color-stop(40%, rgba(255,255,255, 0.15)), to(transparent));
+    background-image: -webkit-linear-gradient(rgba(255,255,255, 0.30), rgba(255,255,255, 0.15) 40%, transparent);
+    background-image: -moz-linear-gradient(top, rgba(255,255,255, 0.30), rgba(255,255,255, 0.15) 40%, transparent);
+    background-image: -ms-linear-gradient(rgba(255,255,255, 0.30), rgba(255,255,255, 0.15) 40%, transparent);
+    background-image: -o-linear-gradient(rgba(255,255,255, 0.30), rgba(255,255,255, 0.15) 40%, transparent);
+    background-image: linear-gradient(rgba(255,255,255, 0.30), rgba(255,255,255, 0.15) 40%, transparent);
+    text-decoration: none;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 2px 0 rgba(255,255,255, 0.30) inset, 0 1px 2px rgba(0,0,0, 0.15);
+    -moz-box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 2px 0 rgba(255,255,255, 0.30) inset, 0 1px 2px rgba(0,0,0, 0.15);
+    box-shadow: 0 0 0 1px rgba(0,0,0, 0.25) inset, 0 2px 0 rgba(255,255,255, 0.30) inset, 0 1px 2px rgba(0,0,0, 0.15);
+
+    /* Transitions */
+    -webkit-transition: 0.1s linear -webkit-box-shadow;
+    -moz-transition: 0.1s linear -moz-box-shadow;
+    -ms-transition: 0.1s linear box-shadow;
+    -o-transition: 0.1s linear box-shadow;
+    transition: 0.1s linear box-shadow;
+}
+
+.yui3-button1:hover{
+    background-color: #009933;
+}
+
+.yui3-button1:active{
+    background-color: #009933;
+}
+	

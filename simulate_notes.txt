@@ -1,0 +1,37 @@
+<?php
+// Simulate a logged-in admin
+session_start();
+$_SESSION['admin_logged_in'] = true;
+
+// Mock the environment
+$_SERVER['REQUEST_METHOD'] = 'POST';
+
+// Mock input data
+$modData = [
+    'id' => 1,
+    'type' => 'mobile_menu',
+    'content' => '[{"id":"elem_random_123","type":"container"}]',
+    'css_data' => '.container { color: blue; }'
+];
+
+// Write mock input to a temporary file to be read by php://input wrapper if needed?
+// Actually php://input reads raw body.
+// We can't easily mock php://input in CLI unless we pipe content.
+
+// Alternative: Create a wrapper script that includes save-page.php after setting up state?
+// But save-page.php reads php://input.
+
+// Let's rely on `curl` if `php -S` was running. But we can't spawn a server.
+
+// Hack: Modify save-page.php locally to read from a variable if defined? No.
+
+// Better: pipe input to php-cgi?
+// Or just let the user try?
+
+// Let's assume I can use `php -r` with streaming.
+// `echo 'JSON' | php path/to/save-page.php`
+// But session logic might fail if run as CLI without session cookie.
+// But I can comment out session check temporarily in `save-page.php` or just mock $_SESSION in the file itself if CLI SAPI.
+
+// Let's modify save-page.php to bypass authentication if running from CLI.
+?>

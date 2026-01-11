@@ -1,0 +1,24 @@
+/* Swiper Pagination */
+
+.swiper-pagination.vertical.vertical-left,
+.swiper-pagination.vertical.vertical-right {
+  width: 20px !important;
+}
+
+.swiper-pagination-style {
+  /* rounded */
+  border-radius: 5px;
+
+  /* Transparent */
+  /* border: 1px solid var(--color-white);
+    background-color: transparent !important;
+    border-radius: 0; */
+
+  /* Transparent & rounded */
+  /* border: 1px solid var(--color-white);
+    background-color: transparent !important;
+    border-radius: 5px; */
+
+  /* Rectangle */
+  /* border-radius: 0; */
+}

@@ -76,22 +76,63 @@ class PublicRenderer {
         let html;
         try {
             html = element.widget.render();
-            console.log('PublicRenderer: Rendered HTML length:', html ? html.length : 0);
+            // console.log('PublicRenderer: Rendered HTML length:', html ? html.length : 0);
         } catch (e) {
             console.error('PublicRenderer: Widget render failed:', e);
             return;
         }
 
         const $elementWrapper = $(html);
+        const settings = element.settings || {};
+
+        // Apply Margin/Padding styles to the wrapper
+        // This ensures global styles work even if widget render() doesn't implement them
+        if (settings.margin) {
+            const m = settings.margin;
+            const unit = m.unit || 'px';
+            if (m.top) $elementWrapper.css('margin-top', m.top + unit);
+            if (m.right) $elementWrapper.css('margin-right', m.right + unit);
+            if (m.bottom) $elementWrapper.css('margin-bottom', m.bottom + unit);
+            if (m.left) $elementWrapper.css('margin-left', m.left + unit);
+        }
+
+        if (settings.padding) {
+            const p = settings.padding;
+            const unit = p.unit || 'px';
+            if (p.top) $elementWrapper.css('padding-top', p.top + unit);
+            if (p.right) $elementWrapper.css('padding-right', p.right + unit);
+            if (p.bottom) $elementWrapper.css('padding-bottom', p.bottom + unit);
+            if (p.left) $elementWrapper.css('padding-left', p.left + unit);
+        }
 
         // Set ID (optional, might cause collisions if multiple sections use same IDs)
-        $elementWrapper.attr('id', element.id);
+        // Only set if widget didn't render one (e.g. user custom ID or internal widget ID)
+        if (!$elementWrapper.attr('id')) {
+            $elementWrapper.attr('id', element.id);
+        }
+
         $elementWrapper.addClass('elementor-element');
         $elementWrapper.data('id', element.id);
         $elementWrapper.data('type', element.type);
 
         // Append to parent
         parentContainer.append($elementWrapper);
+
+        // Store widget reference on the element for potential future use
+        $elementWrapper.data('widget', element.widget);
+
+        // Call onContentRendered lifecycle method if it exists
+        // This allows widgets to initialize event handlers and other post-render logic
+        if (element.widget && typeof element.widget.onContentRendered === 'function') {
+            try {
+                // Set $el reference for the widget to use in onContentRendered
+                element.widget.$el = $elementWrapper[0];
+                element.widget.onContentRendered();
+                console.log('PublicRenderer: Called onContentRendered for', element.id);
+            } catch (e) {
+                console.error('PublicRenderer: onContentRendered failed for', element.id, e);
+            }
+        }
 
         // If it's a container (has children), render them
         // We need to find the content area within the widget
@@ -157,6 +198,11 @@ $(document).ready(function () {
     window.publicRenderer.init();
 
     if (window.SITE_DATA) {
+        // Render Topbar
+        if (window.SITE_DATA.topbar) {
+            window.publicRenderer.renderSection('#site-topbar', window.SITE_DATA.topbar);
+        }
+
         // Render Header
         if (window.SITE_DATA.header) {
             window.publicRenderer.renderSection('#site-header', window.SITE_DATA.header);
@@ -170,6 +216,11 @@ $(document).ready(function () {
         // Render Footer
         if (window.SITE_DATA.footer) {
             window.publicRenderer.renderSection('#site-footer', window.SITE_DATA.footer);
+        }
+
+        // Render Mobile Menu Drawer
+        if (window.SITE_DATA.mobileMenu) {
+            window.publicRenderer.renderSection('#mobile-drawer-content', window.SITE_DATA.mobileMenu);
         }
     }
 });

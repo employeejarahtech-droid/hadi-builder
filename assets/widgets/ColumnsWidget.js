@@ -107,7 +107,7 @@ class ColumnsWidget extends WidgetBase {
         // Render slots (containers)
         for (let i = 0; i < numCols; i++) {
             // Added data-container-index for the renderer to identify where to drop children
-            html += `<div class="column-item elementor-container-slot" data-container-index="${i}" style="min-height: 50px; border: 1px dashed #e5e7eb;"></div>`;
+            html += `<div class="column-item elementor-container-slot" data-container-index="${i}"></div>`;
         }
 
         html += `</div>`;

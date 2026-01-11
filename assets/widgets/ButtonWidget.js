@@ -103,6 +103,12 @@ class ButtonWidget extends WidgetBase {
             default_value: '#3b82f6'
         });
 
+        this.addControl('hover_bg_color', {
+            type: 'color',
+            label: 'Hover Background Color',
+            default_value: '#2563eb'
+        });
+
         this.addControl('text_color', {
             type: 'color',
             label: 'Text Color',
@@ -132,54 +138,92 @@ class ButtonWidget extends WidgetBase {
         });
 
         this.endControlsSection();
+
+        // Add Advanced tab
+        this.registerAdvancedControls();
     }
 
     render() {
         const text = this.getSetting('text', 'Click Me');
-        const link = this.getSetting('link', '#');
+        const linkValue = this.getSetting('link', '#');
         const icon = this.getSetting('icon', '');
         const iconPosition = this.getSetting('icon_position', 'left');
         const align = this.getSetting('align', 'left');
         const buttonType = this.getSetting('button_type', 'primary');
         const bgColor = this.getSetting('bg_color', '#3b82f6');
+        const hoverBgColor = this.getSetting('hover_bg_color', '#2563eb');
         const textColor = this.getSetting('text_color', '#ffffff');
         const padding = this.getSetting('padding', { size: 15, unit: 'px' });
         const borderRadius = this.getSetting('border_radius', { size: 4, unit: 'px' });
 
-        const buttonStyles = `
-            display: inline-block;
-            padding: ${padding.size}${padding.unit} ${padding.size * 2}${padding.unit};
-            background-color: ${bgColor};
-            color: ${textColor};
-            border: ${buttonType === 'outline' ? `2px solid ${bgColor}` : 'none'};
-            border-radius: ${borderRadius.size}${borderRadius.unit};
-            text-decoration: none;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        `;
+        // Handle URL control - it returns an object with url, is_external, nofollow
+        let link = '#';
+        let target = '_self';
+        let rel = '';
 
-        const wrapperStyles = `
-            text-align: ${align};
-            padding: 10px 0;
-        `;
-
-        let iconHtml = '';
-        if (icon) {
-            iconHtml = `<i class="${icon}" style="margin-${iconPosition === 'left' ? 'right' : 'left'}: 8px;"></i>`;
+        if (typeof linkValue === 'string') {
+            link = linkValue;
+        } else if (linkValue && typeof linkValue === 'object') {
+            link = linkValue.url || '#';
+            target = linkValue.is_external ? '_blank' : '_self';
+            rel = linkValue.nofollow ? 'nofollow' : '';
         }
 
-        const buttonContent = iconPosition === 'left'
-            ? `${iconHtml}${this.escapeHtml(text)}`
-            : `${this.escapeHtml(text)}${iconHtml}`;
+        // Initialize styles
+        let wrapperStyles = `text-align: ${align};`;
 
-        return `
-            <div class="button-widget" style="${wrapperStyles}">
-                <a href="${this.escapeHtml(link)}" class="button-widget-link" style="${buttonStyles}">
+        let initialShadow = '0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08)';
+        let hoverShadow = '0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08)';
+
+        if (buttonType === 'outline' || buttonType === 'text') {
+            initialShadow = 'none';
+            hoverShadow = '0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08)';
+            if (buttonType === 'text') hoverShadow = 'none';
+        }
+
+        let buttonStyles = `
+            display: inline-block;
+            padding: 10px 24px;
+            background-color: ${bgColor};
+            color: ${textColor};
+            border-radius: ${borderRadius.size}${borderRadius.unit};
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+            box-shadow: ${initialShadow};
+            vertical-align: middle;
+        `;
+
+        if (buttonType === 'outline') {
+            buttonStyles += `background-color: transparent; border: 2px solid ${bgColor}; color: ${bgColor};`;
+        } else if (buttonType === 'text') {
+            buttonStyles += `background-color: transparent; color: ${bgColor}; padding: 0; box-shadow: none;`;
+        }
+
+        // Build content with icon
+        let buttonContent = `<span style="vertical-align: middle;">${this.escapeHtml(text)}</span>`;
+        if (icon) {
+            const iconHtml = `<i class="${this.escapeHtml(icon)}" style="margin-${iconPosition === 'left' ? 'right' : 'left'}: 8px; vertical-align: middle;"></i>`;
+            buttonContent = iconPosition === 'left' ? iconHtml + buttonContent : buttonContent + iconHtml;
+        }
+
+        const hoverAttr = (buttonType === 'primary' || buttonType === 'secondary')
+            ? `onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='${hoverShadow}'; this.style.backgroundColor='${hoverBgColor}'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='${initialShadow}'; this.style.backgroundColor='${bgColor}'"`
+            : `onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'"`;
+
+        const content = `
+            <div style="${wrapperStyles}">
+                <a href="${this.escapeHtml(link)}" target="${target}" rel="${rel}" class="button-widget-link" style="${buttonStyles}" ${hoverAttr}>
                     ${buttonContent}
                 </a>
             </div>
         `;
+
+        return this.wrapWithAdvancedSettings(content, 'button-widget');
     }
 
     escapeHtml(text) {

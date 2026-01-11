@@ -1,0 +1,33 @@
+<div class="form-group">
+    <label class="form-label" for="category_id">Categories</label>
+    <select id="category_id" name="category_id[]" class="form-input" multiple size="6" style="height: auto;">
+        <?php
+        // Parse existing categories
+        $selectedCategories = [];
+        if (!empty($product['category_id'])) {
+            // Check if it's JSON array
+            $decoded = json_decode($product['category_id'], true);
+            if (is_array($decoded)) {
+                $selectedCategories = $decoded;
+            } elseif (is_numeric($product['category_id'])) {
+                // Old format: single ID
+                $selectedCategories = [$product['category_id']];
+            } elseif (strpos($product['category_id'], ',') !== false) {
+                // Comma-separated
+                $selectedCategories = explode(',', $product['category_id']);
+            }
+        }
+
+        foreach ($categories as $category):
+            $isSelected = in_array($category['id'], $selectedCategories);
+            ?>
+            <option value="<?php echo $category['id']; ?>" <?php echo $isSelected ? 'selected' : ''; ?>>
+                <?php echo str_repeat('— ', $category['level']); ?>
+                <?php echo htmlspecialchars($category['name']); ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+    <small style="color: var(--secondary); display: block; margin-top: 5px;">
+        Hold Ctrl (Windows) or Cmd (Mac) to select multiple categories
+    </small>
+</div>

@@ -1,0 +1,9 @@
+.title h2 {
+    font-family: var(--title-font-family);
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--color-black);
+    line-height: 44px;
+    position: relative;
+  }
+  

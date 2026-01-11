@@ -33,9 +33,9 @@ class DividerWidget extends WidgetBase {
             default_value: 'solid'
         });
 
-        this.addControl('width', {
+        this.addControl('divider_width', {
             type: 'slider',
-            label: 'Width (%)',
+            label: 'Divider Width (%)',
             min: 1,
             max: 100,
             default_value: 100
@@ -75,11 +75,14 @@ class DividerWidget extends WidgetBase {
         });
 
         this.endControlsSection();
+
+        // Add Advanced tab
+        this.registerAdvancedControls();
     }
 
     render() {
         const style = this.getSetting('style');
-        const width = this.getSetting('width');
+        const dividerWidth = this.getSetting('divider_width');
         const align = this.getSetting('align');
         const color = this.getSetting('color');
         const weight = this.getSetting('weight');
@@ -89,13 +92,16 @@ class DividerWidget extends WidgetBase {
         if (align === 'left') containerAlign = 'flex-start';
         if (align === 'right') containerAlign = 'flex-end';
 
-        return `
-            <div class="elementor-divider-widget" style="display: flex; justify-content: ${containerAlign}; padding-top: ${gap}px; padding-bottom: ${gap}px;">
+        const content = `
+            <div style="display: flex; justify-content: ${containerAlign}; padding-top: ${gap}px; padding-bottom: ${gap}px; width: 100%;">
                 <span class="elementor-divider-separator" style="
                     border-top: ${weight}px ${style} ${color};
-                    width: ${width}%;
+                    width: ${dividerWidth}%;
+                    display: block;
                 "></span>
             </div>
         `;
+
+        return this.wrapWithAdvancedSettings(content, 'elementor-divider-widget');
     }
 }

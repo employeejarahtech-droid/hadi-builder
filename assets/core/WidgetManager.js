@@ -26,30 +26,110 @@ class WidgetManager extends EventEmitter {
      * Register default widget categories
      */
     registerDefaultCategories() {
-        this.registerCategory('basic', {
-            title: 'Basic',
-            icon: 'fa fa-cube',
+        this.registerCategory('content', {
+            title: 'Content',
+            icon: 'fa fa-align-left',
             order: 1
-        });
-
-        this.registerCategory('media', {
-            title: 'Media',
-            icon: 'fa fa-image',
-            order: 2
         });
 
         this.registerCategory('layout', {
             title: 'Layout',
             icon: 'fa fa-columns',
+            order: 2
+        });
+
+        this.registerCategory('basic', {
+            title: 'Basic',
+            icon: 'fa fa-columns',
+            order: 2
+        });
+
+        this.registerCategory('team', {
+            title: 'Team',
+            icon: 'fa fa-users',
             order: 3
+        });
+
+        this.registerCategory('testimonials', {
+            title: 'Testimonials',
+            icon: 'fa fa-quote-right',
+            order: 4
+        });
+
+        this.registerCategory('icons', {
+            title: 'Icons',
+            icon: 'fa fa-icons',
+            order: 5
+        });
+
+        this.registerCategory('stats', {
+            title: 'Stats',
+            icon: 'fa fa-chart-bar',
+            order: 6
+        });
+
+        this.registerCategory('pricing', {
+            title: 'Pricing',
+            icon: 'fa fa-dollar-sign',
+            order: 7
+        });
+
+        this.registerCategory('cta', {
+            title: 'Marketing',
+            icon: 'fa fa-bullhorn',
+            order: 8
+        });
+
+        this.registerCategory('interactive', {
+            title: 'Interactive',
+            icon: 'fa fa-hand-pointer',
+            order: 9
+        });
+
+        this.registerCategory('media', {
+            title: 'Media',
+            icon: 'fa fa-image',
+            order: 10
+        });
+
+        this.registerCategory('social', {
+            title: 'Social',
+            icon: 'fa fa-share-alt',
+            order: 11
         });
 
         this.registerCategory('forms', {
             title: 'Forms',
             icon: 'fa fa-wpforms',
-            order: 4
+            order: 12
+        });
+
+        this.registerCategory('maps', {
+            title: 'Maps',
+            icon: 'fa fa-map-marked-alt',
+            order: 13
+        });
+
+        this.registerCategory('events', {
+            title: 'Events',
+            icon: 'fa fa-calendar-alt',
+            order: 14
+        });
+
+        this.registerCategory('ecommerce', {
+            title: 'E-Commerce',
+            icon: 'fa fa-shopping-cart',
+            order: 15
+        });
+
+
+        this.registerCategory('section', {
+            title: 'Section',
+            icon: 'fa fa-section',
+            order: 16
         });
     }
+
 
     /**
      * Register a category

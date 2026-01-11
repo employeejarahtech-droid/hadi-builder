@@ -141,3 +141,6 @@ class TEXT extends BaseControl {
         return instance.renderWithWrapper();
     }
 }
+
+// Export global
+window.TEXT = TEXT;

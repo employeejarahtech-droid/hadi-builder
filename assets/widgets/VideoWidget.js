@@ -12,7 +12,7 @@ class VideoWidget extends WidgetBase {
     }
 
     getCategories() {
-        return ['basic'];
+        return ['media'];
     }
 
     registerControls() {
@@ -40,6 +40,9 @@ class VideoWidget extends WidgetBase {
         });
 
         this.endControlsSection();
+
+        // Add Advanced tab
+        this.registerAdvancedControls();
     }
 
     render() {
@@ -61,22 +64,18 @@ class VideoWidget extends WidgetBase {
         if (aspectRatio === '4:3') paddingBottom = '75%';
         if (aspectRatio === '1:1') paddingBottom = '100%';
 
-        if (!embedUrl) {
-            return '<div style="background:#eee; padding:20px; text-align:center;">Please enter a valid video URL</div>';
-        }
-
-        return `
-            <div class="elementor-video-widget">
-                <div class="video-container" style="position: relative; padding-bottom: ${paddingBottom}; height: 0; overflow: hidden;">
-                     <iframe 
-                        src="${embedUrl}" 
-                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
+        const content = `
+            <div class="video-container" style="position: relative; padding-bottom: ${paddingBottom}; height: 0; overflow: hidden;">
+                 <iframe 
+                    src="${embedUrl}" 
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
             </div>
         `;
+
+        return this.wrapWithAdvancedSettings(content, 'elementor-video-widget');
     }
 }
 

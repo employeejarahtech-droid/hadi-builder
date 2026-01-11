@@ -1,0 +1,59 @@
+MANUAL FIX REQUIRED - Category Fetching in edit.php
+
+PROBLEM: Only showing 1 of 2 categories in dropdown
+
+SOLUTION: Replace lines 127-169 in edit.php
+
+FIND THESE LINES (starting at line 127):
+    // Build hierarchical array
+    $categoryTree = [];
+    $categoryMap = [];
+    
+    // First pass: create map and identify parents
+    foreach ($allCategories as $cat) {
+        $categoryMap[$cat['id']] = $cat;
+        if (empty($cat['parent_id'])) {
+            $categoryTree[] = $cat;
+        }
+    }
+    
+    // Second pass: add children to parents
+    foreach ($allCategories as $cat) {
+        if (!empty($cat['parent_id'])) {
+            if (isset($categoryMap[$cat['parent_id']])) {
+                // Valid parent exists
+                if (!isset($categoryMap[$cat['parent_id']]['children'])) {
+                    $categoryMap[$cat['parent_id']]['children'] = [];
+                }
+                $categoryMap[$cat['parent_id']]['children'][] = $cat;
+            } else {
+                // Orphaned category (parent doesn't exist) - treat as top-level
+                $categoryTree[] = $cat;
+            }
+        }
+    }
+    
+    // Flatten for dropdown with indentation
+    function flattenCategories($cats, $level = 0)
+    {
+        $result = [];
+        foreach ($cats as $cat) {
+            $cat['level'] = $level;
+            $result[] = $cat;
+            if (isset($cat['children'])) {
+                $result = array_merge($result, flattenCategories($cat['children'], $level + 1));
+            }
+        }
+        return $result;
+    }
+    
+    $categories = flattenCategories($categoryTree);
+
+REPLACE WITH THESE 5 LINES:
+    // Simply add level indicator and add ALL categories
+    foreach ($allCategories as $cat) {
+        $cat['level'] = empty($cat['parent_id']) ? 0 : 1;
+        $categories[] = $cat;
+    }
+
+THAT'S IT! Save and refresh the page.

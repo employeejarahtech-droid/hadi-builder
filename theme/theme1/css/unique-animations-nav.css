@@ -1,0 +1,17 @@
+.hero-slider .swiper-button-next,
+.hero-slider .swiper-button-prev {
+  width: 60px;
+  height: 60px;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 50%;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+/* Swiper button hover start */
+
+.hero-slider .btn-next-prev:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+}

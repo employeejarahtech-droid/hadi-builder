@@ -270,6 +270,7 @@ class BaseControl extends EventEmitter {
      * @param {boolean} silent - Don't emit change event
      */
     setValue(newValue, silent = false) {
+        console.log(`URLControl.setValue [${this.id}]:`, newValue);
         const oldValue = this.value;
         this.value = newValue;
 
@@ -277,7 +278,8 @@ class BaseControl extends EventEmitter {
             this.deviceValues[this.currentDevice] = newValue;
         }
 
-        if (!silent && oldValue !== newValue) {
+        // Always emit change for objects to be safe, or do deep comparison
+        if (!silent) {
             this.handleChange(newValue, oldValue);
         }
     }
@@ -445,6 +447,22 @@ class BaseControl extends EventEmitter {
         this.emit('destroy', this);
     }
 
+
+    /**
+     * Escape HTML special characters
+     * @param {string} text - Text to escape
+     * @returns {string} Escaped text
+     */
+    escapeHtml(text) {
+        if (text === null || text === undefined) return '';
+        return String(text)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
     /**
      * Static factory method
      * @param {array} args - [id, options]
@@ -457,3 +475,6 @@ class BaseControl extends EventEmitter {
         return instance.renderWithWrapper();
     }
 }
+
+// Export to global scope
+window.BaseControl = BaseControl;

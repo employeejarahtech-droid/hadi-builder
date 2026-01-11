@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute([$title, $slug]);
 
                 $newId = $pdo->lastInsertId();
-                header("Location: ../header-builder.php?id=$newId"); // Redirect to builder
+                header("Location: ../builder.php?type=header&id=$newId"); // Redirect to builder
                 exit;
             }
         } catch (Exception $e) {

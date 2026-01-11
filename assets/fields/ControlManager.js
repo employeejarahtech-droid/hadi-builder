@@ -33,14 +33,24 @@ class ControlManager extends EventEmitter {
     registerDefaultControls() {
         // Register all available control types
         // These will be registered as they're loaded
-        this.registerControlType('text', TEXT);
-        this.registerControlType('textarea', TEXTAREA);
-        // this.registerControlType('number', NUMBER);
+        if (typeof TEXT !== 'undefined') {
+            this.registerControlType('text', TEXT);
+        } else if (typeof window.TEXT !== 'undefined') {
+            this.registerControlType('text', window.TEXT);
+        }
+
+        if (typeof TEXTAREA !== 'undefined') {
+            this.registerControlType('textarea', TEXTAREA);
+        } else if (typeof window.TEXTAREA !== 'undefined') {
+            this.registerControlType('textarea', window.TEXTAREA);
+        }
         if (typeof SELECT !== 'undefined') {
             this.registerControlType('select', SELECT);
+        } else if (typeof window.SELECT !== 'undefined') {
+            this.registerControlType('select', window.SELECT);
         }
         // this.registerControlType('checkbox', CHECKBOX);
-          if (typeof SLIDER !== 'undefined') {
+        if (typeof SLIDER !== 'undefined') {
             this.registerControlType('slider', SLIDER);
         }
         if (typeof COLOR !== 'undefined') {
@@ -53,8 +63,51 @@ class ControlManager extends EventEmitter {
         } else {
             console.warn('MediaControl not found');
         }
-        // this.registerControlType('icon', ICON);
-        // this.registerControlType('repeater', REPEATER);
+
+        // Register icon control
+        if (typeof ICON !== 'undefined') {
+            this.registerControlType('icon', ICON);
+        } else if (typeof window.ICON !== 'undefined') {
+            this.registerControlType('icon', window.ICON);
+        } else {
+            console.warn('ICON control not found');
+        }
+
+        if (typeof RepeaterControl !== 'undefined') {
+            this.registerControlType('repeater', RepeaterControl);
+        }
+
+        if (typeof MenuControl !== 'undefined') {
+            this.registerControlType('menu', MenuControl);
+        }
+
+        if (typeof URLControl !== 'undefined') {
+            this.registerControlType('url', URLControl);
+        } else if (typeof window.URLControl !== 'undefined') {
+            this.registerControlType('url', window.URLControl);
+        } else if (typeof URLinput !== 'undefined') { // Fallback for alias
+            this.registerControlType('url', URLinput);
+        }
+
+        if (typeof CKEditorControl !== 'undefined') {
+            this.registerControlType('ckeditor', CKEditorControl);
+        } else if (typeof window.CKEditorControl !== 'undefined') {
+            this.registerControlType('ckeditor', window.CKEditorControl);
+        }
+
+        // Register width and height controls
+        if (typeof WIDTH !== 'undefined') {
+            this.registerControlType('width', WIDTH);
+        } else if (typeof window.WIDTH !== 'undefined') {
+            this.registerControlType('width', window.WIDTH);
+        }
+
+        if (typeof HEIGHT !== 'undefined') {
+            this.registerControlType('height', HEIGHT);
+        } else if (typeof window.HEIGHT !== 'undefined') {
+            this.registerControlType('height', window.HEIGHT);
+        }
+
         // Add more as needed
     }
 
@@ -88,6 +141,8 @@ class ControlManager extends EventEmitter {
             return null;
         }
 
+        console.log(`Creating control "${id}" of type "${type}" using class "${ControlClass.name}"`);
+
         // Create instance
         const control = new ControlClass(id, options);
 
@@ -110,10 +165,14 @@ class ControlManager extends EventEmitter {
         this.controls.set(control.id, control);
         this.values[control.id] = control.getValue();
 
-        // Listen to control changes
-        control.on('change', (newValue, oldValue) => {
-            this.handleControlChange(control.id, newValue, oldValue);
-        });
+        // Listen to control changes (if control supports events)
+        if (control.on && typeof control.on === 'function') {
+            control.on('change', (newValue, oldValue) => {
+                this.handleControlChange(control.id, newValue, oldValue);
+            });
+        } else {
+            console.warn(`Control "${control.id}" does not support event emitter`);
+        }
 
         this.emit('control:added', control);
     }
@@ -379,6 +438,41 @@ class ControlManager extends EventEmitter {
      */
     getControlCount() {
         return this.controls.size;
+    }
+
+    /**
+     * Render a control and return HTML + control instance
+     * This is used by repeater and other complex controls
+     * @param {string} type - Control type
+     * @param {array} args - [id, options]
+     * @returns {string} HTML for the control
+     */
+    static renderControl(type, args) {
+        const [id, options] = args;
+        const manager = window.elementorControlManager;
+
+        if (!manager) {
+            console.error('ControlManager not initialized');
+            return '';
+        }
+
+        // Create the control instance
+        const control = manager.createControl(id, type, options);
+
+        if (!control) {
+            console.error(`Failed to create control of type "${type}"`);
+            return '';
+        }
+
+        // Return the HTML with wrapper
+        return control.renderWithWrapper();
+    }
+
+    /**
+     * Alias for backward compatibility
+     */
+    get(id) {
+        return this.getControl(id);
     }
 }
 

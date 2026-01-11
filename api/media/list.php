@@ -7,7 +7,7 @@ require_once __DIR__ . '/../../includes/db.php';
 try {
     $pdo = getDBConnection();
 
-    $stmt = $pdo->query("SELECT * FROM gallery ORDER BY created_at DESC");
+    $stmt = $pdo->query("SELECT * FROM gallery ORDER BY uploaded_at DESC");
     $images = $stmt->fetchAll();
 
     // Map to simplified structure if needed, or return as is
@@ -17,7 +17,7 @@ try {
             'id' => $img['id'],
             'url' => $img['file_path'], // Assuming relative path works from frontend
             'name' => $img['file_name'],
-            'created_at' => $img['created_at']
+            'created_at' => $img['uploaded_at']
         ];
     }, $images);
 

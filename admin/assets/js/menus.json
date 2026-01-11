@@ -1,0 +1,218 @@
+{
+  "ungrouped": [
+    {
+      "id": "dashboard",
+      "label": "Dashboard",
+      "icon": "fa-home",
+      "url": "/admin/",
+      "page_key": "dashboard"
+    },
+    {
+      "id": "users",
+      "label": "Users",
+      "icon": "fa-users",
+      "url": "/admin/users/",
+      "page_key": "users"
+    }
+  ],
+  "groups": [
+    {
+      "id": "pages",
+      "label": "PAGES",
+      "enabled_by_default": true,
+      "items": [
+        {
+          "id": "pages",
+          "label": "Pages",
+          "icon": "fa-file-alt",
+          "url": "/admin/pages/",
+          "page_key": "pages"
+        }
+      ]
+    },
+    {
+      "id": "blog",
+      "label": "BLOG",
+      "enabled_by_default": true,
+      "items": [
+        {
+          "id": "posts",
+          "label": "Posts",
+          "icon": "fa-newspaper",
+          "url": "/admin/posts/",
+          "page_key": "posts"
+        },
+        {
+          "id": "edit_blog",
+          "label": "Edit BLOG",
+          "icon": "fa-paint-brush",
+          "url": "/admin/builder.php?page=blog",
+          "page_key": null
+        },
+        {
+          "id": "single_blog",
+          "label": "Single Blog",
+          "icon": "fa-file-alt",
+          "url": "/admin/builder.php?page=single-blog",
+          "page_key": null
+        }
+      ]
+    },
+    {
+      "id": "static_sections",
+      "label": "STATIC SECTIONS",
+      "enabled_by_default": true,
+      "items": [
+        {
+          "id": "topbars",
+          "label": "Topbars",
+          "icon": "fa-window-maximize",
+          "url": "/admin/topbars/",
+          "page_key": "topbars"
+        },
+        {
+          "id": "headers",
+          "label": "Headers",
+          "icon": "fa-heading",
+          "url": "/admin/headers/",
+          "page_key": "headers"
+        },
+        {
+          "id": "mobile_menus",
+          "label": "Mobile Menus",
+          "icon": "fa-bars",
+          "url": "/admin/mobile-menus/",
+          "page_key": "mobile_menus"
+        },
+        {
+          "id": "footers",
+          "label": "Footers",
+          "icon": "fa-shoe-prints",
+          "url": "/admin/footers/",
+          "page_key": "footers"
+        }
+      ]
+    },
+    {
+      "id": "ecommerce",
+      "label": "ECOMMERCE",
+      "enabled_by_default": true,
+      "items": [
+        {
+          "id": "edit_shop",
+          "label": "Edit SHOP",
+          "icon": "fa-paint-brush",
+          "url": "/admin/builder.php?page=shop",
+          "page_key": null
+        },
+        {
+          "id": "single_product",
+          "label": "Single Product",
+          "icon": "fa-file-alt",
+          "url": "/admin/builder.php?page=single-product",
+          "page_key": null
+        },
+        {
+          "id": "products",
+          "label": "Products",
+          "icon": "fa-box",
+          "url": "/admin/products/",
+          "page_key": "products"
+        },
+        {
+          "id": "categories",
+          "label": "Categories",
+          "icon": "fa-folder",
+          "url": "/admin/categories/",
+          "page_key": "categories"
+        },
+        {
+          "id": "orders",
+          "label": "Orders",
+          "icon": "fa-shopping-cart",
+          "url": "/admin/orders/",
+          "page_key": "orders"
+        }
+      ]
+    },
+    {
+      "id": "real_estate",
+      "label": "REAL ESTATE PROJECTS",
+      "enabled_by_default": true,
+      "items": [
+        {
+          "id": "projects",
+          "label": "Projects",
+          "icon": "fa-building",
+          "url": "/admin/projects/",
+          "page_key": "projects"
+        },
+        {
+          "id": "project_categories",
+          "label": "Categories",
+          "icon": "fa-tags",
+          "url": "/admin/project-categories/",
+          "page_key": "project_categories"
+        },
+        {
+          "id": "edit_project",
+          "label": "Edit PROJECT",
+          "icon": "fa-paint-brush",
+          "url": "/admin/builder.php?page=projects",
+          "page_key": null
+        },
+        {
+          "id": "single_project",
+          "label": "Single Project",
+          "icon": "fa-file-alt",
+          "url": "/admin/builder.php?page=single-project",
+          "page_key": null
+        }
+      ]
+    },
+    {
+      "id": "system",
+      "label": "SYSTEM",
+      "enabled_by_default": true,
+      "items": [
+        {
+          "id": "env_editor",
+          "label": ".env Editor",
+          "icon": "fa-file-code",
+          "url": "/admin/file-editors/env.php",
+          "page_key": "env_editor"
+        },
+        {
+          "id": "htaccess_editor",
+          "label": ".htaccess Editor",
+          "icon": "fa-cog",
+          "url": "/admin/file-editors/htaccess.php",
+          "page_key": "htaccess_editor"
+        }
+      ]
+    }
+  ],
+  "footer": [
+    {
+      "id": "gallery",
+      "label": "Gallery",
+      "icon": "fa-images",
+      "url": "/admin/gallery/",
+      "page_key": "gallery"
+    },
+    {
+      "id": "settings",
+      "label": "Settings",
+      "icon": "fa-cog",
+      "url": "/admin/settings/",
+      "page_key": "settings"
+    },
+    {
+      "id": "git_version",
+      "label": "Git Version",
+      "icon": "fa-code-branch",
+      "url": "/admin/git-version/",
+      "page_key": "git_version"
+    }
+  ]
+}

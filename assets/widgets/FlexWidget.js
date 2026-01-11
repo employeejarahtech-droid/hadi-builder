@@ -30,12 +30,31 @@ class FlexWidget extends WidgetBase {
             type: 'select',
             label: 'Items (Slots)',
             options: [
-                { value: '1', label: '1 Item' },
-                { value: '2', label: '2 Items' },
-                { value: '3', label: '3 Items' },
-                { value: '4', label: '4 Items' }
+                { value: '1', label: '1 Item (100%)' },
+                { value: '2', label: '2 Items (50/50)' },
+                { value: '3', label: '3 Items (33/33/33)' },
+                { value: '4', label: '4 Items (25/25/25/25)' },
+                { value: '33-66', label: '1/3 - 2/3' },
+                { value: '66-33', label: '2/3 - 1/3' },
+                { value: '25-75', label: '1/4 - 3/4' },
+                { value: '75-25', label: '3/4 - 1/4' }
             ],
             default_value: '2'
+        });
+
+        this.addControl('html_tag', {
+            type: 'select',
+            label: 'HTML Tag',
+            options: [
+                { value: 'div', label: 'div' },
+                { value: 'section', label: 'section' },
+                { value: 'article', label: 'article' },
+                { value: 'aside', label: 'aside' },
+                { value: 'main', label: 'main' },
+                { value: 'header', label: 'header' },
+                { value: 'footer', label: 'footer' }
+            ],
+            default_value: 'div'
         });
 
         this.addControl('flex_direction', {
@@ -96,12 +115,37 @@ class FlexWidget extends WidgetBase {
             default_value: 10
         });
 
+        this.addControl('min_height', {
+            type: 'height',
+            label: 'Min Height',
+            default_value: { size: 0, unit: 'px' },
+            range: {
+                min: 0,
+                max: 1000,
+                step: 1
+            },
+            size_units: ['px', '%', 'vh']
+        });
+
         this.endControlsSection();
 
         // Style Section
         this.startControlsSection('style_section', {
             label: 'Style',
             tab: 'style'
+        });
+
+        this.addControl('width', {
+            type: 'width',
+            label: 'Width',
+            default_value: { size: '', unit: '%' },
+            range: {
+                min: 0,
+                max: 100,
+                step: 5
+            },
+            size_units: ['px', '%', 'vw'],
+            selector: '{{WRAPPER}}'
         });
 
         this.addControl('background_color', {
@@ -111,11 +155,18 @@ class FlexWidget extends WidgetBase {
         });
 
         this.addControl('padding', {
-            type: 'slider',
+            type: 'dimensions',
             label: 'Padding',
-            min: 0,
-            max: 100,
-            default_value: 20
+            default_value: { top: 20, right: 20, bottom: 20, left: 20, unit: 'px', isLinked: true },
+            size_units: ['px', '%', 'em']
+        });
+
+        this.addControl('margin', {
+            type: 'dimensions',
+            label: 'Margin',
+            default_value: { top: 0, right: 0, bottom: 0, left: 0, unit: 'px', isLinked: true },
+            size_units: ['px', '%', 'em'],
+            selector: '{{WRAPPER}}'
         });
 
         this.addControl('border_radius', {
@@ -130,45 +181,81 @@ class FlexWidget extends WidgetBase {
     }
 
     render() {
-        const items = parseInt(this.getSetting('items', '2'));
-        const direction = this.getSetting('flex_direction');
-        const justify = this.getSetting('justify_content');
-        const align = this.getSetting('align_items');
-        const wrap = this.getSetting('flex_wrap');
-        const gap = this.getSetting('gap');
+        const layout = this.getSetting('items', '2'); // Can be '1', '2', '33-66', etc.
+        const htmlTag = this.getSetting('html_tag', 'div');
 
-        const bg = this.getSetting('background_color');
-        const padding = this.getSetting('padding');
-        const radius = this.getSetting('border_radius');
+        // Layout
+        const direction = this.getSetting('flex_direction', 'row');
+        const justify = this.getSetting('justify_content', 'flex-start');
+        const align = this.getSetting('align_items', 'stretch');
+        const wrap = this.getSetting('flex_wrap', 'nowrap');
+        const gap = this.getSetting('gap', 10);
+        const minHeight = this.getSetting('min_height', { size: 0, unit: 'px' });
+
+        // Style
+        const bg = this.getSetting('background_color', '');
+        const padding = this.getSetting('padding', { top: 20, right: 20, bottom: 20, left: 20, unit: 'px' });
+        const radius = this.getSetting('border_radius', 0);
+
+        // Normalize Min Height
+        let minHeightVal = '';
+        if (minHeight && typeof minHeight === 'object' && minHeight.size !== '') {
+            minHeightVal = `min-height: ${minHeight.size}${minHeight.unit};`;
+        } else if (typeof minHeight === 'number') {
+            minHeightVal = `min-height: ${minHeight}px;`;
+        }
 
         const style = `
             display: flex;
+            width: 100%; /* Fill wrapper */
             flex-direction: ${direction};
             justify-content: ${justify};
             align-items: ${align};
             flex-wrap: ${wrap};
             gap: ${gap}px;
             background-color: ${bg};
-            padding: ${padding}px;
+            padding: ${padding.top}${padding.unit} ${padding.right}${padding.unit} ${padding.bottom}${padding.unit} ${padding.left}${padding.unit};
             border-radius: ${radius}px;
-        `;
+            ${minHeightVal}
+            box-sizing: border-box;
+        `.trim();
 
-        let html = `<div class="elementor-flex-widget" style="${style}">`;
+        let html = `<${htmlTag} class="elementor-flex-widget" style="${style}">`;
 
-        // Render slots (containers)
-        for (let i = 0; i < items; i++) {
-            // Flex items need some default behavior to be visible/usable
-            // flex: 1 ensure they share space, but might need adjustment for 'column' direction
-            const itemStyle = `
-                flex: 1; 
-                min-height: 50px; 
-                min-width: 50px; 
-                border: 1px dashed #e5e7eb;
-            `;
-            html += `<div class="flex-item elementor-container-slot" data-container-index="${i}" style="${itemStyle}"></div>`;
+        // Determine Columns (Standard or Custom Ratio)
+        let columns = [];
+        if (layout.includes('-')) {
+            // Asymmetric layout like "33-66"
+            const parts = layout.split('-');
+            parts.forEach(part => {
+                columns.push({ width: `${part}%` });
+            });
+        } else {
+            // Standard equal layout
+            const count = parseInt(layout);
+            for (let i = 0; i < count; i++) {
+                columns.push({ width: 'equal' });
+            }
         }
 
-        html += `</div>`;
+        // Render slots
+        columns.forEach((col, i) => {
+            let itemStyle = `
+                position: relative;
+                box-sizing: border-box;
+            `;
+
+            if (col.width === 'equal') {
+                itemStyle += `flex: 1; min-width: 50px;`;
+            } else {
+                // Fixed percentage width
+                itemStyle += `flex: 0 0 ${col.width}; max-width: ${col.width};`;
+            }
+
+            html += `<div class="flex-item elementor-container-slot" data-container-index="${i}" style="${itemStyle}"></div>`;
+        });
+
+        html += `</${htmlTag}>`;
 
         return html;
     }

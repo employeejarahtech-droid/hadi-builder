@@ -1,0 +1,25 @@
+/* ==============================
+Image Screen
+=================================*/
+
+.image_screen-1 .image_screen_single {
+    display: block;
+    height: 350px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 4px;
+    margin: 0 auto;
+    border: 2px solid var(--border-color);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: top center;
+    transition: all 1500ms ease;
+    margin-top: 20px;
+  }
+  
+  .image_screen-1 .image_screen_single:hover {
+    background-position: bottom center;
+  }
+  /* ==============================
+      Image Screen End
+  =================================*/

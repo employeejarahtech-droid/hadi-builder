@@ -1,0 +1,110 @@
+#tabs_wrapper {
+	width: 576px;
+}
+#tabs_container {
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #CC0033;
+}
+#tabs {
+	list-style: none;
+	padding: 5px 0 4px 0;
+	margin: 0 0 0 10px;
+	font: 0.75em arial;
+}
+#tabs li {
+	display: inline;
+}
+#tabs li a {
+	border: 1px solid #ccc;
+	padding: 4px 6px;
+	text-decoration: none;
+	background-color: #eeeeee;
+	border-bottom: none;
+	outline: none;
+	border-radius: 5px 5px 0 0;
+	-moz-border-radius: 5px 5px 0 0;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+}
+#tabs li a:hover {
+	background-color: #FFFFFF;
+	padding: 4px 6px;
+}
+#tabs li.activee a {
+	border-bottom: 1px solid #fff;
+	background-color: #CC0033;
+	padding: 4px 6px 5px 6px;
+	border-bottom: none;
+	color: #FFFFFF;
+}
+#tabs li.activee a:hover {
+	background-color: #FFFFFF;
+	padding: 4px 6px 5px 6px;
+	border-bottom: none;
+	color: #000000;
+}
+
+#tabs li a.icon_accept {
+	padding-left: 24px;
+}
+#tabs li a.icon_accept:hover {
+	padding-left: 24px;
+}
+
+#tabs_content_container {
+	/*padding: 10px;*/
+	width: 580px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+}
+.tab_content {
+	display: none;
+}
+.total_companydata {
+	float: left;
+	width: 300px;
+	height: 30px;
+}
+.company_pagination {
+	float: right;
+	width: 80px;
+	text-align: right;
+}
+.all_company_message {
+	height: 25px;
+	width: 400px;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 10px;
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	border-bottom-color: #CC3333;
+}
+
+.all_company{
+	/*height: 3800px;*/
+	height: auto;
+/*	overflow-y: auto;
+	overflow-x: hidden;*/
+	float: left;
+}
+
+/*::-webkit-scrollbar { /* required, although an apparent no-op */
+    color: inherit;
+}
+::-webkit-scrollbar-thumb { /* leave most bars alone */
+    background-color: grey;
+}
+.all_company::-webkit-scrollbar-thumb { /* this is the one we care about */
+    background-color: grey;
+}
+.all_company::-webkit-scrollbar-thumb { /* we apply the style to actually hide it*/
+    display: none; 
+}       
+.all_company { /* required, although an apparent no-op */
+    background-color: white;
+}
+

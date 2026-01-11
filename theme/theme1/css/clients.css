@@ -1,0 +1,20 @@
+/* ==============================
+    Clients 1
+=================================*/
+
+.clients-1 .client_list .client_logo img {
+    filter: grayscale(100%);
+    opacity: 20%;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .clients-1 .client_list .client_logo:hover img {
+    filter: grayscale(0);
+    opacity: 100%;
+  }
+  
+  @media(max-width: 991px){
+    .clients-1 .client_list figure{
+      text-align: center;
+    }
+  }

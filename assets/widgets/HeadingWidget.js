@@ -16,7 +16,7 @@ class HeadingWidget extends WidgetBase {
     }
 
     getCategories() {
-        return ['basic'];
+        return ['content'];
     }
 
     getKeywords() {
@@ -149,105 +149,12 @@ class HeadingWidget extends WidgetBase {
             ]
         });
 
-        this.endControlsSection();
-
-        // Advanced Section
-        this.startControlsSection('advanced_section', {
-            label: 'Advanced',
-            tab: 'advanced'
-        });
-
-        this.addControl('css_classes', {
-            type: 'text',
-            label: 'CSS Classes',
-            description: 'Add custom CSS classes to the widget wrapper',
-            placeholder: 'class-1 class-2',
-            label_block: true
-        });
-
-        this.addControl('css_id', {
-            type: 'text',
-            label: 'CSS ID',
-            description: 'Add custom ID to the widget wrapper',
-            placeholder: 'my-custom-id',
-            label_block: true
-        });
-
-        this.addControl('animation', {
-            type: 'select',
-            label: 'Entrance Animation',
-            default_value: 'none',
-            options: [
-                { value: 'none', label: 'None' },
-                { value: 'fadeIn', label: 'Fade In' },
-                { value: 'fadeInDown', label: 'Fade In Down' },
-                { value: 'fadeInUp', label: 'Fade In Up' },
-                { value: 'fadeInLeft', label: 'Fade In Left' },
-                { value: 'fadeInRight', label: 'Fade In Right' },
-                { value: 'slideInDown', label: 'Slide In Down' },
-                { value: 'slideInUp', label: 'Slide In Up' },
-                { value: 'slideInLeft', label: 'Slide In Left' },
-                { value: 'slideInRight', label: 'Slide In Right' },
-                { value: 'bounce', label: 'Bounce' },
-                { value: 'pulse', label: 'Pulse' },
-                { value: 'flash', label: 'Flash' },
-                { value: 'shake', label: 'Shake' },
-                { value: 'swing', label: 'Swing' },
-                { value: 'tada', label: 'Tada' },
-                { value: 'wobble', label: 'Wobble' },
-                { value: 'jello', label: 'Jello' },
-                { value: 'heartBeat', label: 'Heart Beat' }
-            ]
-        });
-
-        this.addControl('animation_duration', {
-            type: 'slider',
-            label: 'Animation Duration',
-            default_value: { size: 0.5, unit: 's' },
-            range: {
-                min: 0.1,
-                max: 5,
-                step: 0.1
-            },
-            condition: {
-                terms: [
-                    { name: 'animation', operator: '!=', value: 'none' }
-                ]
-            }
-        });
-
-        this.addControl('animation_delay', {
-            type: 'slider',
-            label: 'Animation Delay',
-            default_value: { size: 0, unit: 's' },
-            range: {
-                min: 0,
-                max: 5,
-                step: 0.1
-            },
-            condition: {
-                terms: [
-                    { name: 'animation', operator: '!=', value: 'none' }
-                ]
-            }
-        });
-
-        this.addControl('responsive_display', {
-            type: 'select',
-            label: 'Responsive Display',
-            default_value: 'show-all',
-            options: [
-                { value: 'show-all', label: 'Show on All Devices' },
-                { value: 'hide-desktop', label: 'Hide on Desktop' },
-                { value: 'hide-tablet', label: 'Hide on Tablet' },
-                { value: 'hide-mobile', label: 'Hide on Mobile' },
-                { value: 'show-desktop', label: 'Show only on Desktop' },
-                { value: 'show-tablet', label: 'Show only on Tablet' },
-                { value: 'show-mobile', label: 'Show only on Mobile' }
-            ]
-        });
+        // Width and height are now handled in WidgetBase global controls
 
         this.endControlsSection();
+
+        // Add Advanced tab
+        this.registerAdvancedControls();
     }
 
     render() {
@@ -258,6 +165,8 @@ class HeadingWidget extends WidgetBase {
         const color = this.getSetting('color', '#333333');
         const fontSize = this.getSetting('font_size', { size: 32, unit: 'px' });
         const fontWeight = this.getSetting('font_weight', '600');
+        const width = this.getSetting('width', { size: 100, unit: '%' });
+        const height = this.getSetting('height', { size: 0, unit: 'auto' });
 
         // Debug log to check what font size value we're getting
         console.log('HeadingWidget render - font_size:', {
@@ -325,12 +234,18 @@ class HeadingWidget extends WidgetBase {
             ? animationDelay
             : { size: 0, unit: 's' };
 
+        // Handle width and height
+        const widthValue = width.unit === 'auto' ? 'auto' : `${width.size}${width.unit}`;
+        const heightValue = height.unit === 'auto' || height.size === 0 ? 'auto' : `${height.size}${height.unit}`;
+
         // Build base styles
         const styles = [
             `text-align: ${align}`,
             `color: ${color}`,
             `font-size: ${safeFontSize.size}${safeFontSize.unit}`,
             `font-weight: ${fontWeight}`,
+            `width: ${widthValue}`,
+            `height: ${heightValue}`,
             `margin: ${margin.top}${margin.unit} ${margin.right}${margin.unit} ${margin.bottom}${margin.unit} ${margin.left}${margin.unit}`,
             `padding: ${padding.top}${padding.unit} ${padding.right}${padding.unit} ${padding.bottom}${padding.unit} ${padding.left}${padding.unit}`
         ].join('; ');
@@ -367,34 +282,7 @@ class HeadingWidget extends WidgetBase {
             content = `<a href="${this.escapeHtml(link)}" style="text-decoration: none; color: inherit;">${content}</a>`;
         }
 
-        // Build wrapper classes
-        let wrapperClasses = ['heading-widget'];
-        if (cssClasses) {
-            wrapperClasses.push(cssClasses);
-        }
-        if (animation !== 'none') {
-            wrapperClasses.push('animated', animation);
-        }
-
-        // Build wrapper attributes
-        let wrapperAttributes = '';
-        if (cssId) {
-            wrapperAttributes += ` id="${this.escapeHtml(cssId)}"`;
-        }
-
-        // Add animation styles if needed
-        let animationStyles = '';
-        if (animation !== 'none') {
-            // Format animation styles properly (no newlines, proper spacing)
-            const duration = `${safeAnimationDuration.size}${safeAnimationDuration.unit}`;
-            const delay = `${safeAnimationDelay.size}${safeAnimationDelay.unit}`;
-            animationStyles = `animation-name: ${animation}; animation-duration: ${duration}; animation-delay: ${delay}; animation-fill-mode: both;`;
-        }
-
-        // Combine all styles
-        const wrapperStyle = animationStyles ? ` style="${animationStyles.trim()}"` : '';
-
-        return `<div class="${wrapperClasses.join(' ')}"${wrapperAttributes}${wrapperStyle}>${content}</div>`;
+        return this.wrapWithAdvancedSettings(content, 'heading-widget');
     }
 
     escapeHtml(text) {

@@ -1,0 +1,84 @@
+/* ==============================
+    Team 1
+=================================*/
+
+.team-1 .team_wrap .team_member {
+}
+
+.team-1 .team_wrap .team_member_content {
+  overflow: hidden;
+  position: relative;
+}
+
+.team-1 .team_wrap .team_member_content:hover .team_member_social_icons {
+  opacity: 1;
+  visibility: visible;
+  right: 0;
+}
+
+.team-1 .team_wrap .team_member_img {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 1/1;
+}
+
+.team-1 .team_wrap .team_member_img img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.team-1 .team_wrap .team_member_social_icons {
+  position: absolute;
+  top: 40%;
+  right: -60px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-50%);
+  width: 60px;
+  transition: all ease 0.8s;
+}
+
+.team-1 .team_wrap .team_member_social_icons li > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-size: 18px;
+  transition: all ease 0.8s;
+}
+
+.team-1 .team_wrap .team_member_social_icons ul > li > a:hover {
+  background-color: #fff;
+  color: var(--color-primary);
+}
+
+.team-1 .team_member_info {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 15px;
+}
+
+.team-1 .team_member_info h3 a {
+  font-family: inherit;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 36px;
+  color: #000;
+  transition: all ease 0.3s;
+}
+
+.team-1 .team_member_info h3 a:hover {
+  color: var(--color-primary);
+}
+
+/* ==============================
+    Team 1 End
+=================================*/

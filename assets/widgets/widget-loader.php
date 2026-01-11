@@ -50,7 +50,7 @@ if (!isset($widgetBasePath)) {
 <script src="<?php echo $widgetBasePath; ?>/TeamSectionWidget.js"></script>
 
 <!-- Footer Section Widget -->
-<script src="<?php echo $widgetBasePath; ?>/FooterSectionWidget.js"></script>
+<script src="<?php echo $widgetBasePath; ?>/FooterSectionWidget.js?v=<?php echo time(); ?>"></script>
 
 <script src="<?php echo $widgetBasePath; ?>/FlexWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/TeamMemberWidget.js"></script>

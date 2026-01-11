@@ -56,6 +56,7 @@ class FooterSectionWidget extends WidgetBase {
       contact_address: '123 Main Street, City, State 12345',
       contact_phone: '+1 (234) 567-8900',
       contact_email: 'info@example.com',
+      contact_website: 'https://www.example.com',
       social_links: [
         { icon: 'fab fa-facebook-f', url: 'https://facebook.com', label: 'Facebook' },
         { icon: 'fab fa-twitter', url: 'https://twitter.com', label: 'Twitter' },
@@ -225,6 +226,13 @@ class FooterSectionWidget extends WidgetBase {
       placeholder: 'info@example.com'
     });
 
+    this.addControl('contact_website', {
+      type: 'url',
+      label: 'Website',
+      default_value: 'https://www.example.com',
+      placeholder: 'https://www.example.com'
+    });
+
     this.addControl('social_links', {
       type: 'repeater',
       label: 'Social Links',
@@ -383,6 +391,7 @@ class FooterSectionWidget extends WidgetBase {
     const contactAddress = this.getSetting('contact_address', '');
     const contactPhone = this.getSetting('contact_phone', '');
     const contactEmail = this.getSetting('contact_email', '');
+    const contactWebsite = this.getSetting('contact_website', '');
     const socialLinks = this.getSetting('social_links', []);
 
     const showBottomBar = this.getSetting('show_bottom_bar', true);
@@ -514,6 +523,16 @@ class FooterSectionWidget extends WidgetBase {
                   <path fill="none" stroke="${linkHoverColor}" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m2.357 7.714l6.98 4.654c.963.641 1.444.962 1.964 1.087c.46.11.939.11 1.398 0c.52-.125 1.001-.446 1.964-1.087l6.98-4.654M7.157 19.5h9.686c1.68 0 2.52 0 3.162-.327a3 3 0 0 0 1.31-1.311c.328-.642.328-1.482.328-3.162V9.3c0-1.68 0-2.52-.327-3.162a3 3 0 0 0-1.311-1.311c-.642-.327-1.482-.327-3.162-.327H7.157c-1.68 0-2.52 0-3.162.327a3 3 0 0 0-1.31 1.311c-.328.642-.328 1.482-.328 3.162v5.4c0 1.68 0 2.52.327 3.162a3 3 0 0 0 1.311 1.311c.642.327 1.482.327 3.162.327"></path>
                 </svg>
                 <span>${this.escapeHtml(contactEmail)}</span>
+              </a>
+            </li>
+            ` : ''}
+            ${contactWebsite ? `
+            <li>
+              <a href="${contactWebsite}" target="_blank" rel="noopener noreferrer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                  <path fill="${linkHoverColor}" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m-1 17.93c-3.95-.49-7-3.85-7-7.93c0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41c0 2.08-.8 3.97-2.1 5.39"></path>
+                </svg>
+                <span>${this.escapeHtml(contactWebsite)}</span>
               </a>
             </li>
             ` : ''}

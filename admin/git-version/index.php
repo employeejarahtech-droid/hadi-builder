@@ -546,10 +546,17 @@ require_once __DIR__ . '/../includes/header.php';
         hideRepoSetupModal();
         showConsole('Setting up repository...\n');
 
+        // Create FormData to ensure proper POST format
+        const formData = new FormData();
+        formData.append('repoUrl', repoUrl);
+        formData.append('branch', branch);
+
         $.ajax({
             url: 'api/setup-repository.php',
             method: 'POST',
-            data: { repoUrl: repoUrl, branch: branch },
+            data: formData,
+            processData: false,  // Important: tell jQuery not to process the data
+            contentType: false,  // Important: tell jQuery not to set contentType
             dataType: 'json',
             success: function (response) {
                 showConsole(response.output || response.message, true);
@@ -562,9 +569,10 @@ require_once __DIR__ . '/../includes/header.php';
                     showToast(response.message || 'Repository setup failed', 'error');
                 }
             },
-            error: function () {
-                showConsole('Error: Failed to setup repository', true);
-                showToast('Failed to setup repository', 'error');
+            error: function (xhr, status, error) {
+                const errorMsg = xhr.responseJSON ? xhr.responseJSON.message : 'Failed to setup repository';
+                showConsole('Error: ' + errorMsg, true);
+                showToast(errorMsg, 'error');
             }
         });
     }

@@ -134,6 +134,13 @@
           "page_key": "categories"
         },
         {
+          "id": "brands",
+          "label": "Brands",
+          "icon": "fa-tag",
+          "url": "/admin/brands/",
+          "page_key": "brands"
+        },
+        {
           "id": "orders",
           "label": "Orders",
           "icon": "fa-shopping-cart",

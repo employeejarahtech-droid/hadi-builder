@@ -62,6 +62,9 @@ try {
     if (!in_array('stock_quantity', $columns)) {
         $pdo->exec("ALTER TABLE products ADD COLUMN stock_quantity INT DEFAULT 0");
     }
+    if (!in_array('brand_id', $columns)) {
+        $pdo->exec("ALTER TABLE products ADD COLUMN brand_id INT NULL");
+    }
 
     // Create variations table
     $pdo->exec("CREATE TABLE IF NOT EXISTS product_variations (
@@ -98,6 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $category_id = isset($_POST['category_id']) && is_array($_POST['category_id'])
         ? json_encode(array_map('intval', $_POST['category_id']))
         : (isset($_POST['category_id']) && $_POST['category_id'] !== '' ? $_POST['category_id'] : null);
+    $brand_id = isset($_POST['brand_id']) && $_POST['brand_id'] !== '' ? intval($_POST['brand_id']) : null;
     $similar_products = $_POST['similar_products'] ?? '[]'; // JSON string of IDs
     $gallery_images = $_POST['gallery_images'] ?? '[]'; // JSON string of URLs
     $meta_title = $_POST['meta_title'] ?? null;
@@ -125,8 +129,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Check if column exists (migration safety)
                 // (Assuming schema update ran, but safe to allow fail if field missing in query if caught)
                 // We'll trust schema update ran.
-                $stmt = $pdo->prepare("UPDATE products SET name = ?, product_type = ?, slug = ?, description = ?, long_description = ?, price = ?, regular_price = ?, sku = ?, stock_quantity = ?, image_url = ?, status = ?, category_id = ?, similar_products = ?, gallery_images = ?, attributes = ?, meta_title = ?, meta_description = ?, meta_keywords = ?, meta_image = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?");
-                $stmt->execute([$name, $product_type, $slug, $description, $long_description, $price, $regular_price, $sku, $stock_quantity, $image_url, $status, $category_id, $similar_products, $gallery_images, $attributes, $meta_title, $meta_description, $meta_keywords, $meta_image, $productId]);
+                $stmt = $pdo->prepare("UPDATE products SET name = ?, product_type = ?, slug = ?, description = ?, long_description = ?, price = ?, regular_price = ?, sku = ?, stock_quantity = ?, image_url = ?, status = ?, category_id = ?, brand_id = ?, similar_products = ?, gallery_images = ?, attributes = ?, meta_title = ?, meta_description = ?, meta_keywords = ?, meta_image = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?");
+                $stmt->execute([$name, $product_type, $slug, $description, $long_description, $price, $regular_price, $sku, $stock_quantity, $image_url, $status, $category_id, $brand_id, $similar_products, $gallery_images, $attributes, $meta_title, $meta_description, $meta_keywords, $meta_image, $productId]);
 
                 // 2. Handle Variations (Simple: Delete all and Re-insert for now, or Upsert?)
                 // Re-inserting is safer for preventing orphans if ID logic is complex.
@@ -230,6 +234,13 @@ try {
 } catch (Exception $e) { /* ignore */
 }
 
+// Fetch all brands
+$brands = [];
+try {
+    $stmt = $pdo->query("SELECT id, name FROM brands ORDER BY name ASC");
+    $brands = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) { /* ignore */
+}
 
 // Fetch all other products for selection
 $allProducts = [];
@@ -560,6 +571,21 @@ require_once __DIR__ . '/../includes/header.php';
                         </select>
                         <small style="color: var(--secondary); display: block; margin-top: 5px;">
                             Search and select multiple categories
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="brand_id">Brand</label>
+                        <select id="brand_id" name="brand_id" class="form-input">
+                            <option value="">No Brand</option>
+                            <?php foreach ($brands as $brand): ?>
+                                <option value="<?php echo $brand['id']; ?>" <?php echo (isset($product['brand_id']) && $product['brand_id'] == $brand['id']) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($brand['name']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <small style="color: var(--secondary); display: block; margin-top: 5px;">
+                            Select the brand for this product
                         </small>
                     </div>
                 </div>

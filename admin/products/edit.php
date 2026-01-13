@@ -286,7 +286,145 @@ require_once __DIR__ . '/../includes/header.php';
 
 <!-- Media Modal CSS -->
 
+<style>
+    /* Select2 Custom Styling - Robust Fixes */
+    /* Ensure proper box sizing */
+    .select2-container,
+    .select2-container * {
+        box-sizing: border-box;
+    }
 
+    /* Target the container to ensure full width */
+    .select2-container {
+        width: 100% !important;
+        display: block;
+    }
+
+    /* Single Select Styling */
+    .select2-container--default .select2-selection--single {
+        height: 42px;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        padding: 0 12px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: normal;
+        color: #1e293b;
+        padding-left: 0;
+        flex-grow: 1;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 100%;
+        position: absolute;
+        top: 0;
+        right: 8px;
+        display: flex;
+        align-items: center;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+        border-color: #64748b transparent transparent transparent;
+        position: relative;
+        top: auto;
+        left: auto;
+        margin: 0;
+    }
+
+    /* Focus States */
+    .select2-container--default.select2-container--focus .select2-selection--single,
+    .select2-container--default.select2-container--open .select2-selection--single {
+        border-color: var(--primary, #3b82f6);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    /* Dropdown Styling */
+    .select2-dropdown {
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        z-index: 9999;
+    }
+
+    .select2-results__option {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: var(--primary, #3b82f6);
+    }
+
+    /* Search Field */
+    .select2-container--default .select2-search--dropdown {
+        padding: 8px;
+    }
+
+    .select2-container--default .select2-search--dropdown .select2-search__field {
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        padding: 6px 10px;
+        outline: none;
+    }
+
+    .select2-container--default .select2-search--dropdown .select2-search__field:focus {
+        border-color: var(--primary, #3b82f6);
+    }
+
+    /* Multiselect Styling */
+    .select2-container--default .select2-selection--multiple {
+        min-height: 42px;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        background-color: #fff;
+        padding: 4px 8px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .select2-container--default.select2-container--focus .select2-selection--multiple,
+    .select2-container--default.select2-container--open .select2-selection--multiple {
+        border-color: var(--primary, #3b82f6);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        background-color: var(--primary, #3b82f6);
+        border: none;
+        border-radius: 4px;
+        padding: 4px 8px;
+        color: white;
+        margin: 2px 4px 2px 0;
+        font-size: 0.875rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+        color: rgba(255, 255, 255, 0.8);
+        margin-right: 6px;
+        font-weight: bold;
+        border-right: 1px solid rgba(255, 255, 255, 0.3);
+        padding-right: 6px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+        color: #fff;
+        background: none;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-search__field {
+        margin: 2px 0;
+        line-height: 24px;
+    }
+</style>
 
 
 <div class="page-header">
@@ -546,8 +684,7 @@ require_once __DIR__ . '/../includes/header.php';
 
                     <div class="form-group">
                         <label class="form-label" for="category_id">Categories</label>
-                        <select id="category_id" name="category_id[]" class="form-input" multiple
-                            multiselect-search="true" multiselect-select-all="true" multiselect-max-items="3">
+                        <select id="category_id" name="category_id[]" class="form-input" multiple>
                             <?php
                             // Parse existing categories
                             $selectedCategories = [];
@@ -660,14 +797,14 @@ require_once __DIR__ . '/../includes/header.php';
 <?php endforeach; ?>
 
 
-<!-- Multiselect Dropdown Library -->
-<link rel="stylesheet"
-    href="https://cdn.jsdelivr.net/gh/admirhodzic/multiselect-dropdown@master/multiselect-dropdown.css">
-<script src="https://cdn.jsdelivr.net/gh/admirhodzic/multiselect-dropdown@master/multiselect-dropdown.js"></script>
-
-
-
+<!-- jQuery (must load first) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 Library -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<!-- Media Modal -->
 <script src="<?php echo base_url; ?>/admin/assets/js/media-modal.js?v=<?php echo time(); ?>"></script>
 
 
@@ -784,6 +921,29 @@ require_once __DIR__ . '/../includes/header.php';
         // Init similar products
         renderSimilarProducts();
 
+        // Initialize Select2 for Brand dropdown
+        if (typeof $.fn.select2 !== 'undefined') {
+            $('#brand_id').select2({
+                placeholder: 'Select a brand',
+                allowClear: true,
+                width: '100%',
+                theme: 'default'
+            });
+            console.log('Select2 initialized for brand dropdown');
+
+            // Initialize Select2 for Categories multiselect
+            $('#category_id').select2({
+                placeholder: 'Select categories',
+                allowClear: true,
+                width: '100%',
+                theme: 'default',
+                closeOnSelect: false,
+                maximumSelectionLength: 10
+            });
+            console.log('Select2 initialized for categories dropdown');
+        } else {
+            console.error('Select2 library not loaded!');
+        }
 
         // Universal Media Modal Logic
         const galleryData = <?php echo json_encode($galleryImages); ?>;

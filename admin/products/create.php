@@ -18,9 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $price = $_POST['price'] ?? 0;
     $image_url = $_POST['image_url'] ?? '';
     $status = $_POST['status'] ?? 'active';
-    $category_id = $_POST['category_id'] ?? null;
-    if ($category_id === '')
-        $category_id = null;
+    // Handle multiple category IDs
+    $category_id = isset($_POST['category_id']) && is_array($_POST['category_id'])
+        ? json_encode(array_map('intval', $_POST['category_id']))
+        : (isset($_POST['category_id']) && $_POST['category_id'] !== '' ? $_POST['category_id'] : null);
+    $brand_id = isset($_POST['brand_id']) && $_POST['brand_id'] !== '' ? intval($_POST['brand_id']) : null;
     $meta_title = $_POST['meta_title'] ?? null;
     $meta_description = $_POST['meta_description'] ?? null;
     $meta_keywords = $_POST['meta_keywords'] ?? null;
@@ -44,8 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($stmt->fetchColumn() > 0) {
                 $error = 'Slug already exists. Please choose a different slug.';
             } else {
-                $stmt = $pdo->prepare("INSERT INTO products (name, slug, description, price, image_url, status, category_id, meta_title, meta_description, meta_keywords, meta_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                $stmt->execute([$name, $slug, $description, $price, $image_url, $status, $category_id, $meta_title, $meta_description, $meta_keywords, $meta_image]);
+                $stmt = $pdo->prepare("INSERT INTO products (name, slug, description, price, image_url, status, category_id, brand_id, meta_title, meta_description, meta_keywords, meta_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->execute([$name, $slug, $description, $price, $image_url, $status, $category_id, $brand_id, $meta_title, $meta_description, $meta_keywords, $meta_image]);
 
                 header('Location: index.php');
                 exit;
@@ -84,6 +86,15 @@ try {
     }
 } catch (Exception $e) {
     // Ignore gallery errors
+}
+
+// Fetch all brands
+$brands = [];
+try {
+    $pdo = getDBConnection();
+    $stmt = $pdo->query("SELECT id, name FROM brands ORDER BY name ASC");
+    $brands = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) { /* ignore */
 }
 
 // Fetch all categories with parent_id
@@ -158,6 +169,149 @@ require_once __DIR__ . '/../includes/header.php';
     <h1 class="page-title">Add New Product</h1>
 </div>
 
+<!-- Select2 Library -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<style>
+    /* Select2 Custom Styling - Robust Fixes */
+    /* Ensure proper box sizing */
+    .select2-container,
+    .select2-container * {
+        box-sizing: border-box;
+    }
+
+    /* Target the container to ensure full width */
+    .select2-container {
+        width: 100% !important;
+        display: block;
+    }
+
+    /* Single Select Styling */
+    .select2-container--default .select2-selection--single {
+        height: 42px;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        padding: 0 12px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: normal;
+        color: #1e293b;
+        padding-left: 0;
+        flex-grow: 1;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 100%;
+        position: absolute;
+        top: 0;
+        right: 8px;
+        display: flex;
+        align-items: center;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+        border-color: #64748b transparent transparent transparent;
+        position: relative;
+        top: auto;
+        left: auto;
+        margin: 0;
+    }
+
+    /* Focus States */
+    .select2-container--default.select2-container--focus .select2-selection--single,
+    .select2-container--default.select2-container--open .select2-selection--single {
+        border-color: var(--primary, #3b82f6);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    /* Dropdown Styling */
+    .select2-dropdown {
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        z-index: 9999;
+    }
+
+    .select2-results__option {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: var(--primary, #3b82f6);
+    }
+
+    /* Search Field */
+    .select2-container--default .select2-search--dropdown {
+        padding: 8px;
+    }
+
+    .select2-container--default .select2-search--dropdown .select2-search__field {
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        padding: 6px 10px;
+        outline: none;
+    }
+
+    .select2-container--default .select2-search--dropdown .select2-search__field:focus {
+        border-color: var(--primary, #3b82f6);
+    }
+
+    /* Multiselect Styling */
+    .select2-container--default .select2-selection--multiple {
+        min-height: 42px;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        background-color: #fff;
+        padding: 4px 8px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .select2-container--default.select2-container--focus .select2-selection--multiple,
+    .select2-container--default.select2-container--open .select2-selection--multiple {
+        border-color: var(--primary, #3b82f6);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        background-color: var(--primary, #3b82f6);
+        border: none;
+        border-radius: 4px;
+        padding: 4px 8px;
+        color: white;
+        margin: 2px 4px 2px 0;
+        font-size: 0.875rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+        color: rgba(255, 255, 255, 0.8);
+        margin-right: 6px;
+        font-weight: bold;
+        border-right: 1px solid rgba(255, 255, 255, 0.3);
+        padding-right: 6px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+        color: #fff;
+        background: none;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-search__field {
+        margin: 2px 0;
+        line-height: 24px;
+    }
+</style>
+
 <div class="content-wrapper">
     <form method="POST" action="" class="form-container">
         <div class="card">
@@ -195,18 +349,29 @@ require_once __DIR__ . '/../includes/header.php';
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="category_id">Category</label>
-                <select id="category_id" name="category_id" class="form-input">
-                    <option value="">-- Select Category --</option>
+                <label class="form-label" for="category_id">Categories</label>
+                <select id="category_id" name="category_id[]" class="form-input" multiple>
                     <?php foreach ($categories as $category): ?>
-                        <option value="<?php echo $category['id']; ?>" <?php echo (isset($_POST['category_id']) && $_POST['category_id'] == $category['id']) ? 'selected' : ''; ?>>
+                        <option value="<?php echo $category['id']; ?>" <?php echo (isset($_POST['category_id']) && is_array($_POST['category_id']) && in_array($category['id'], $_POST['category_id'])) ? 'selected' : ''; ?>>
                             <?php echo str_repeat(' - ', $category['level']); ?>
                             <?php echo htmlspecialchars($category['name']); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
-                <small style="color: var(--secondary);">Assign this product to a category for better
-                    organization.</small>
+                <small style="color: var(--secondary);">Assign this product to one or more categories.</small>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="brand_id">Brand</label>
+                <select id="brand_id" name="brand_id" class="form-input">
+                    <option value="">No Brand</option>
+                    <?php foreach ($brands as $brand): ?>
+                        <option value="<?php echo $brand['id']; ?>" <?php echo (isset($_POST['brand_id']) && $_POST['brand_id'] == $brand['id']) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($brand['name']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <small style="color: var(--secondary);">Select the brand for this product.</small>
             </div>
 
             <div class="form-group">
@@ -319,8 +484,29 @@ require_once __DIR__ . '/../includes/header.php';
 <script src="<?php echo base_url; ?>/admin/assets/js/media-modal.js"></script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     $(document).ready(function () {
+        // Initialize Select2 for Brand dropdown
+        if (typeof $.fn.select2 !== 'undefined') {
+            $('#brand_id').select2({
+                placeholder: 'Select a brand',
+                allowClear: true,
+                width: '100%',
+                theme: 'default'
+            });
+
+            // Initialize Select2 for Categories multiselect
+            $('#category_id').select2({
+                placeholder: 'Select categories',
+                allowClear: true,
+                width: '100%',
+                theme: 'default',
+                closeOnSelect: false,
+                maximumSelectionLength: 10
+            });
+        }
+
         // Universal Media Modal Logic
         const galleryData = <?php echo json_encode($galleryImages); ?>;
         let activeInputId = null;

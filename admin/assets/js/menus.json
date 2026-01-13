@@ -27,6 +27,13 @@
           "icon": "fa-file-alt",
           "url": "/admin/pages/",
           "page_key": "pages"
+        },
+        {
+          "id": "edit_404",
+          "label": "Edit 404 Page",
+          "icon": "fa-exclamation-triangle",
+          "url": "/admin/builder.php?page=notfound",
+          "page_key": null
         }
       ]
     },

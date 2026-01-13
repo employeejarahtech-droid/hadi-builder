@@ -8,35 +8,6 @@
   margin: 0 auto;
 }
 
-#site-content h1 {
-  font-size: 2.5em;
-}
-
-#site-content h2 {
-  font-size: 2em;
-}
-
-#site-content h3 {
-  font-size: 1.75em;
-}
-
-#site-content h4 {
-  font-size: 1.5em;
-}
-
-#site-content h5 {
-  font-size: 1.25em;
-}
-
-#site-content h6 {
-  font-size: 1em;
-}
-
-#site-content p {
-  font-size: 1em;
-  line-height: 1.6;
-}
-
 #site-content a {
   text-decoration: none;
 }
@@ -45,24 +16,9 @@
   text-decoration: underline;
 }
 
-#site-content button,
-#site-content input,
-#site-content select,
-#site-content textarea {
-  font-family: inherit;
-  font-size: 100%;
-  margin: 0;
-}
-
-#site-content img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
 
 #site-content .container {
   margin: 0 auto;
-  padding: 20px;
 }
 
 .header,

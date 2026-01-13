@@ -48,7 +48,8 @@ class HeaderSectionWidget extends WidgetBase {
       justify_content: 'space-between',
       align_items: 'center',
       flex_wrap: 'nowrap',
-      flex_gap: { size: 20, unit: 'px' }
+      flex_gap: { size: 20, unit: 'px' },
+      logo_url: '/'
     };
   }
 
@@ -64,6 +65,14 @@ class HeaderSectionWidget extends WidgetBase {
       type: 'media',
       label: 'Logo',
       default_value: { url: 'https://placehold.elementor-bundle.com/180x80' }
+    });
+
+    // 1.5 Logo URL Control
+    this.addControl('logo_url', {
+      type: 'url',
+      label: 'Logo Link',
+      default_value: '/',
+      placeholder: 'https://your-site.com'
     });
 
     // 2. Menu Control
@@ -145,6 +154,7 @@ class HeaderSectionWidget extends WidgetBase {
   render() {
     // Get control values
     const logo = this.getSetting('logo', { url: 'https://placehold.elementor-bundle.com/180x80' });
+    const logoUrl = this.getSetting('logo_url', '/');
     const menu = this.getSetting('menu', []);
     const showSearch = this.getSetting('show_search', 'yes');
     const showCart = this.getSetting('show_cart', 'yes');
@@ -245,7 +255,7 @@ class HeaderSectionWidget extends WidgetBase {
         <div class="container">
           <div class="header-top-content">
             <div class="header-brand">
-              <a href="#" class="logo">
+              <a href="${logoUrl}" class="logo">
                 <img src="${logo.url || 'https://placehold.elementor-bundle.com/180x80'}" alt="">
               </a>
             </div>

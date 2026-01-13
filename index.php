@@ -246,11 +246,151 @@ if (!$page && $pageId) {
     $page = $stmt->fetch();
 }
 
-// 404
+// 404 - Check for custom 404 page first
 if (!$page) {
-    http_response_code(404);
-    echo "<h1>404 Not Found</h1>";
-    exit;
+    // Try to load a custom 404 page from database (slug: notfound)
+    $stmt = $pdo->prepare("SELECT * FROM pages WHERE slug = 'notfound' LIMIT 1");
+    $stmt->execute();
+    $custom404 = $stmt->fetch();
+
+    if ($custom404) {
+        // Use custom 404 page
+        $page = $custom404;
+        $pageId = $custom404['id'];
+        http_response_code(404);
+    } else {
+        // Fallback to basic 404
+        http_response_code(404);
+        ?>
+        <!DOCTYPE html>
+        <html lang="en">
+
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>404 - Page Not Found</title>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+            <style>
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+
+                body {
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    min-height: 100vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: #fff;
+                }
+
+                .error-container {
+                    text-align: center;
+                    padding: 2rem;
+                    max-width: 600px;
+                }
+
+                .error-code {
+                    font-size: 120px;
+                    font-weight: 900;
+                    line-height: 1;
+                    margin-bottom: 1rem;
+                    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+                }
+
+                .error-title {
+                    font-size: 2rem;
+                    margin-bottom: 1rem;
+                    font-weight: 600;
+                }
+
+                .error-message {
+                    font-size: 1.1rem;
+                    margin-bottom: 2rem;
+                    opacity: 0.9;
+                    line-height: 1.6;
+                }
+
+                .error-actions {
+                    display: flex;
+                    gap: 1rem;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                }
+
+                .btn {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    padding: 0.75rem 1.5rem;
+                    background: rgba(255, 255, 255, 0.2);
+                    color: #fff;
+                    text-decoration: none;
+                    border-radius: 8px;
+                    font-weight: 500;
+                    transition: all 0.3s;
+                    backdrop-filter: blur(10px);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                }
+
+                .btn:hover {
+                    background: rgba(255, 255, 255, 0.3);
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                }
+
+                .btn-primary {
+                    background: #fff;
+                    color: #667eea;
+                }
+
+                .btn-primary:hover {
+                    background: #f8f9fa;
+                }
+
+                @media (max-width: 768px) {
+                    .error-code {
+                        font-size: 80px;
+                    }
+
+                    .error-title {
+                        font-size: 1.5rem;
+                    }
+
+                    .error-message {
+                        font-size: 1rem;
+                    }
+                }
+            </style>
+        </head>
+
+        <body>
+            <div class="error-container">
+                <div class="error-code">404</div>
+                <h1 class="error-title">Page Not Found</h1>
+                <p class="error-message">
+                    Oops! The page you're looking for doesn't exist. It might have been moved or deleted.
+                </p>
+                <div class="error-actions">
+                    <a href="/" class="btn btn-primary">
+                        <i class="fa fa-home"></i>
+                        Go Home
+                    </a>
+                    <a href="javascript:history.back()" class="btn">
+                        <i class="fa fa-arrow-left"></i>
+                        Go Back
+                    </a>
+                </div>
+            </div>
+        </body>
+
+        </html>
+        <?php
+        exit;
+    }
 }
 
 // Fetch Header and Footer

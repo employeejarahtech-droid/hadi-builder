@@ -44,7 +44,7 @@ try {
         }
 
         // Reserved slugs that cannot be used
-        $reservedSlugs = ['admin', 'api', 'assets', 'includes', 'theme', 'uploads', 'post', 'posts', 'product', 'products', 'blog', 'category', 'tag', 'search'];
+        $reservedSlugs = ['admin', 'api', 'assets', 'includes', 'theme', 'uploads', 'post', 'posts', 'product', 'blog', 'category', 'tag', 'search'];
 
         if (empty($title)) {
             $error = 'Title is required';

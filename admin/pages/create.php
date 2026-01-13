@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Reserved slugs that cannot be used
-    $reservedSlugs = ['admin', 'api', 'assets', 'includes', 'theme', 'uploads', 'post', 'posts', 'product', 'products', 'blog', 'category', 'tag', 'search'];
+    $reservedSlugs = ['admin', 'api', 'assets', 'includes', 'theme', 'uploads', 'post', 'posts', 'product', 'blog', 'category', 'tag', 'search'];
 
     if (empty($title)) {
         $error = 'Title is required';
@@ -86,6 +86,15 @@ require_once __DIR__ . '/../includes/header.php';
 <div class="page-header">
     <h1 class="page-title">Create New Page</h1>
 </div>
+
+<?php if (!empty($error)): ?>
+    <div class="content-wrapper">
+        <div class="alert alert-danger"
+            style="max-width: 800px; margin: 0 auto 1rem auto; padding: 1rem; background: #fee2e2; border: 1px solid #fecaca; border-radius: 8px; color: #991b1b;">
+            <i class="fa fa-exclamation-circle"></i> <?php echo htmlspecialchars($error); ?>
+        </div>
+    </div>
+<?php endif; ?>
 
 <div class="content-wrapper">
     <form method="POST" action="" style="max-width: 800px; margin: 0 auto;">

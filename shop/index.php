@@ -93,18 +93,21 @@ $shopPage = $stmt->fetch();
 if ($shopPage && !empty($shopPage['content'])) {
     $pageContent = $shopPage['content'];
 } else {
-    // Fallback if not found in DB - simplified structure matching product page
+    // Fallback if not found in DB - use enhanced ProductGridWidget
     $pageContent = json_encode([
         [
             'id' => 'main-shop-grid',
             'type' => 'product_grid',
             'settings' => [
+                'title' => 'Shop All Products',
                 'source' => 'dynamic',
+                'columns' => '4',
+                'show_filters' => 'yes',
+                'show_categories' => 'yes',
+                'show_price_filter' => 'yes',
                 'posts_per_page' => 12,
-                'limit' => ['size' => 12],
-                'columns' => '3',
-                'pagination_type' => 'numbers',
-                'margin' => ['top' => '40', 'bottom' => '60', 'unit' => 'px']
+                'primary_color' => '#007EFC',
+                'discount_badge_color' => '#ff4444'
             ]
         ]
     ]);

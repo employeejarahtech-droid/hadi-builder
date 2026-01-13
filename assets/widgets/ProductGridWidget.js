@@ -3,11 +3,16 @@ class ProductGridWidget extends WidgetBase {
     getTitle() { return 'Product Grid'; }
     getIcon() { return 'fas fa-th'; }
     getCategories() { return ['ecommerce']; }
-    getKeywords() { return ['product', 'grid', 'catalog']; }
+    getKeywords() { return ['product', 'grid', 'catalog', 'shop']; }
+
     registerControls() {
         this.startControlsSection('content_section', { label: 'Content', tab: 'content' });
         this.addControl('title', { type: 'text', label: 'Title', default_value: 'Our Products', placeholder: 'Enter title', label_block: true });
-        this.addControl('columns', { type: 'select', label: 'Columns', default_value: '3', options: [{ value: '2', label: '2' }, { value: '3', label: '3' }, { value: '4', label: '4' }] });
+        this.addControl('columns', { type: 'select', label: 'Columns', default_value: '4', options: [{ value: '2', label: '2' }, { value: '3', label: '3' }, { value: '4', label: '4' }] });
+
+        this.addControl('show_filters', { type: 'switcher', label: 'Show Filters', default_value: 'yes' });
+        this.addControl('show_categories', { type: 'switcher', label: 'Show Categories', default_value: 'yes' });
+        this.addControl('show_price_filter', { type: 'switcher', label: 'Show Price Filter', default_value: 'yes' });
 
         this.addControl('source', {
             type: 'select',
@@ -19,328 +24,357 @@ class ProductGridWidget extends WidgetBase {
             ]
         });
 
-        this.addControl('details_page_url', {
-            type: 'text',
-            label: 'Details Page URL',
-            default_value: '',
-            placeholder: '/product-details',
-            label_block: true,
-            condition: {
-                terms: [{ name: 'source', operator: '==', value: 'dynamic' }]
-            }
-        });
-
-        this.addControl('limit', {
-            type: 'slider',
-            label: 'Products Limit',
-            default_value: { size: 6, unit: '' },
-            range: { min: 1, max: 50, step: 1 },
-            condition: {
-                terms: [{ name: 'source', operator: '==', value: 'dynamic' }]
-            }
-        });
-
         this.addControl('posts_per_page', {
             type: 'number',
-            label: 'Posts Per Page',
-            default_value: 6,
+            label: 'Products Per Page',
+            default_value: 12,
             min: 1,
-            max: 50,
-            condition: {
-                terms: [{ name: 'source', operator: '==', value: 'dynamic' }]
-            }
-        });
-
-        this.addControl('pagination_type', {
-            type: 'select',
-            label: 'Pagination',
-            default_value: 'numbers',
-            options: [
-                { value: 'none', label: 'None' },
-                { value: 'numbers', label: 'Numbers' },
-                { value: 'load_more', label: 'Load More' }
-            ],
-            condition: {
-                terms: [{ name: 'source', operator: '==', value: 'dynamic' }]
-            }
-        });
-
-        // Products Repeater (only for manual mode)
-        this.addControl('products', {
-            type: 'repeater',
-            label: 'Products',
-            fields: [
-                { name: 'name', label: 'Product Name', type: 'text', default_value: 'New Product' },
-                { name: 'price', label: 'Price (numeric value)', type: 'text', default_value: '10.00', placeholder: '10.00' },
-                { name: 'image', label: 'Image', type: 'media', default_value: { url: '' } },
-                { name: 'link', label: 'Link', type: 'text', default_value: '' }
-            ],
-            default_value: [
-                { name: 'Product 1', price: '10.00', image: { url: '' }, link: '' },
-                { name: 'Product 2', price: '20.00', image: { url: '' }, link: '' },
-                { name: 'Product 3', price: '30.00', image: { url: '' }, link: '' }
-            ],
-            condition: {
-                terms: [{ name: 'source', operator: '==', value: 'manual' }]
-            }
+            max: 50
         });
 
         this.endControlsSection();
+
         this.startControlsSection('style_section', { label: 'Style', tab: 'style' });
-        this.addControl('button_color', { type: 'color', label: 'Button Color', default_value: '#3b82f6' });
-        this.addControl('pagination_color', { type: 'color', label: 'Pagination Color', default_value: '#3b82f6' });
+        this.addControl('primary_color', { type: 'color', label: 'Primary Color', default_value: '#007EFC' });
+        this.addControl('discount_badge_color', { type: 'color', label: 'Discount Badge Color', default_value: '#ff4444' });
         this.endControlsSection();
+
         this.registerAdvancedControls();
     }
-    render() {
-        console.log('[ProductGrid] Render called!');
-        const title = this.getSetting('title', 'Our Products');
-        // ... (rest of settings) ...
-        const columns = this.getSetting('columns', '3');
-        const source = this.getSetting('source', 'dynamic');
-        // ... ensure you copy all settings ...
-        const limit = this.getSetting('limit', { size: 6 });
-        const postsPerPage = this.getSetting('posts_per_page', 6);
-        const paginationType = this.getSetting('pagination_type', 'numbers');
-        const productsList = this.getSetting('products', []);
-        const buttonColor = this.getSetting('button_color', '#3b82f6');
-        const paginationColor = this.getSetting('pagination_color', '#3b82f6');
-        const detailsPageUrl = this.getSetting('details_page_url', '');
-        const cssClasses = this.getSetting('css_classes', '');
-        const cssId = this.getSetting('css_id', '') || 'product-grid-' + Math.random().toString(36).substr(2, 9);
-        const animation = this.getSetting('animation', 'none');
-        const animationDuration = this.getSetting('animation_duration', { size: 0.5, unit: 's' });
-        const animationDelay = this.getSetting('animation_delay', { size: 0, unit: 's' });
-        const safeAnimationDuration = (animationDuration && typeof animationDuration === 'object' && animationDuration.size !== undefined && animationDuration.unit !== undefined) ? animationDuration : { size: 0.5, unit: 's' };
-        const safeAnimationDelay = (animationDelay && typeof animationDelay === 'object' && animationDelay.size !== undefined && animationDelay.unit !== undefined) ? animationDelay : { size: 0, unit: 's' };
 
-        // Store config for this instance
+    render() {
+        const title = this.getSetting('title', 'Our Products');
+        const columns = this.getSetting('columns', '4');
+        const showFilters = this.getSetting('show_filters', 'yes');
+        const showCategories = this.getSetting('show_categories', 'yes');
+        const showPriceFilter = this.getSetting('show_price_filter', 'yes');
+        const source = this.getSetting('source', 'dynamic');
+        const postsPerPage = this.getSetting('posts_per_page', 12);
+        const primaryColor = this.getSetting('primary_color', '#007EFC');
+        const discountBadgeColor = this.getSetting('discount_badge_color', '#ff4444');
+
+        const cssId = this.getSetting('css_id', '') || 'product-grid-' + Math.random().toString(36).substr(2, 9);
+
+        // Store config
         window[`productGrid_${cssId}`] = {
-            source, limit, manualProducts: productsList, buttonColor, columns, postsPerPage, paginationType, paginationColor, title, detailsPageUrl
+            source, columns, postsPerPage, primaryColor, discountBadgeColor, title,
+            showFilters, showCategories, showPriceFilter
         };
 
-        // Initialize with polling to ensure DOM is ready
         this.waitForContainer(cssId);
 
-        let wrapperClasses = ['product-grid-widget'];
-        if (cssClasses) wrapperClasses.push(cssClasses);
-        if (animation !== 'none') wrapperClasses.push('animated', animation);
-        let wrapperAttributes = ` data-widget-type="product_grid"`; // Debug attribute
-        if (cssId) wrapperAttributes += ` id="${this.escapeHtml(cssId)}"`;
-        // ... rest of wrapper setup ...
-        let animationStyles = '';
-        if (animation !== 'none') {
-            const duration = `${safeAnimationDuration.size}${safeAnimationDuration.unit}`;
-            const delay = `${safeAnimationDelay.size}${safeAnimationDelay.unit}`;
-            animationStyles = `animation-name: ${animation}; animation-duration: ${duration}; animation-delay: ${delay}; animation-fill-mode: both;`;
-        }
-        const wrapperStyle = animationStyles ? ` style="${animationStyles.trim()}"` : '';
+        const loadingHtml = `
+            <div style="padding: 40px; text-align: center;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 32px; color: ${primaryColor};"></i>
+                <div style="margin-top: 10px; color: #666;">Loading products...</div>
+            </div>`;
 
-        const loadingHtml = `<div><h3 style="font-size: 24px; font-weight: 700; margin: 0 0 20px 0;">${this.escapeHtml(title)}</h3><div style="display: grid; grid-template-columns: repeat(${columns}, 1fr); gap: 20px;"><div style="grid-column: 1/-1; padding: 40px; text-align: center; color: #666;"><i class="fas fa-spinner fa-spin" style="font-size: 32px;"></i><div style="margin-top: 10px;">Loading products... (Rendered)</div><div class="loading-status" style="margin-top:5px; font-size:12px; color:#999;">Initializing...</div></div></div></div>`;
-
-        return `<div class="${wrapperClasses.join(' ')}"${wrapperAttributes}${wrapperStyle}>${loadingHtml}</div>`;
+        return `<div class="container"><div class="product-grid-widget" id="${cssId}">${loadingHtml}</div></div>`;
     }
 
     waitForContainer(containerId, attempts = 0) {
         const container = document.getElementById(containerId);
         if (container) {
-            console.log(`[ProductGrid] Container ${containerId} found after ${attempts} attempts`);
             this.loadProducts(containerId, 1);
         } else if (attempts < 20) {
-            // Retry every 100ms for 2 seconds
             setTimeout(() => this.waitForContainer(containerId, attempts + 1), 100);
-        } else {
-            console.error(`[ProductGrid] timeout: Container ${containerId} not found in DOM`);
         }
     }
 
-    async loadProducts(containerId, page = 1) {
+    async loadProducts(containerId, page = 1, filters = {}) {
         const container = document.getElementById(containerId);
         if (!container) return;
 
-        // Helper to update status text
-        const setStatus = (msg) => {
-            const statusEl = container.querySelector('.loading-status');
-            if (statusEl) statusEl.textContent = msg;
-        };
-
-        setStatus('Container Found. Initializing...');
-
         const config = window[`productGrid_${containerId}`];
-        if (!config) {
-            setStatus('Error: Config missing');
-            return;
-        }
+        if (!config) return;
 
-        const { source, limit, manualProducts, buttonColor, columns, postsPerPage, paginationType, paginationColor, title, detailsPageUrl } = config;
+        const { source, columns, postsPerPage, primaryColor, discountBadgeColor, title, showFilters, showCategories, showPriceFilter } = config;
 
         let productsData = [];
         let totalPages = 1;
+        let totalCount = 0;
 
         if (source === 'dynamic') {
             try {
-                // Use posts_per_page for dynamic limit if set, otherwise use limit slider
-                let effectiveLimit = postsPerPage || (limit.size || 6);
+                const baseUrl = window.CMS_ROOT || '';
+                let fetchUrl = `${baseUrl}/api/get-products.php?page=${page}&limit=${postsPerPage}`;
 
-                // Apply global shop setting for products per page if available
-                if (window.CMS_SETTINGS && window.CMS_SETTINGS.products_per_page) {
-                    effectiveLimit = parseInt(window.CMS_SETTINGS.products_per_page);
-                }
-                const baseUrl = window.CMS_ROOT || ''; // Use CMS_ROOT for path resolution
-                const fetchUrl = `${baseUrl}/api/get-products.php?page=${page}&limit=${effectiveLimit}`;
-
-                setStatus(`Fetching: ${fetchUrl}`);
-                console.log('[ProductGrid] Fetching:', fetchUrl);
+                // Add filter parameters
+                if (filters.category) fetchUrl += `&category=${filters.category}`;
+                if (filters.minPrice) fetchUrl += `&min_price=${filters.minPrice}`;
+                if (filters.maxPrice) fetchUrl += `&max_price=${filters.maxPrice}`;
+                if (filters.sort) fetchUrl += `&sort=${filters.sort}`;
 
                 const response = await fetch(fetchUrl);
-                setStatus(`HTTP Status: ${response.status}`);
-                console.log('[ProductGrid] Response Status:', response.status);
+                if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
 
-                if (!response.ok) {
-                    throw new Error(`HTTP Error ${response.status}`);
-                }
-
-                const text = await response.text();
-                // setStatus('Parsing JSON...');
-
-                let data;
-                try {
-                    data = JSON.parse(text);
-                } catch (e) {
-                    console.error('[ProductGrid] JSON Parse Error:', e);
-                    throw new Error('Invalid JSON Response');
-                }
-
+                const data = await response.json();
                 if (data.success && data.products) {
                     productsData = data.products;
                     totalPages = data.total_pages || 1;
-                    setStatus(`Loaded ${productsData.length} products. Rendering...`);
-                    console.log('[ProductGrid] Loaded products (Full Data):', productsData);
-                } else {
-                    setStatus('API returned success=false');
-                    console.warn('[ProductGrid] API returned failed or empty:', data);
+                    totalCount = data.count || 0;
                 }
             } catch (e) {
                 console.error('[ProductGrid] Failed to load products:', e);
-                const errorHtml = `<div><h3 style="font-size: 24px; font-weight: 700; margin: 0 0 20px 0;">${this.escapeHtml(title)}</h3><div style="display: grid; grid-template-columns: repeat(${columns}, 1fr); gap: 20px;"><div style="grid-column: 1/-1; padding: 20px; text-align: center; color: #ef4444;">Failed to load products: ${e.message}</div></div></div>`;
-                container.innerHTML = errorHtml;
+                container.innerHTML = `<div style="padding: 20px; text-align: center; color: #ef4444;">Failed to load products</div>`;
                 return;
             }
-        } else {
-            productsData = Array.isArray(manualProducts) ? manualProducts : [];
-            totalPages = 1;
         }
 
-        try {
-            const products = productsData.map((item, i) => {
-                const imageUrl = source === 'dynamic'
-                    ? (item.image_url || '')
-                    : (item.image && item.image.url ? item.image.url : '');
+        this.renderProductGrid(containerId, productsData, page, totalPages, totalCount, filters);
 
-                // Format price using EcommerceManager for dynamic currency
-                // Sanitize price (remove currency symbols for parsing)
-                const rawPrice = String(item.price || '0').replace(/[^0-9.-]+/g, '');
-                const priceValue = parseFloat(rawPrice) || 0;
+        // Load categories if enabled
+        if (showCategories === 'yes' || showFilters === 'yes') {
+            this.loadCategories(containerId, filters);
+        }
+    }
 
-                let formattedPrice;
-                if (window.EcommerceManager) {
-                    formattedPrice = window.EcommerceManager.formatPrice(priceValue);
-                } else {
-                    formattedPrice = `$${priceValue.toFixed(2)}`;
-                }
+    renderProductGrid(containerId, productsData, page, totalPages, totalCount, filters = {}) {
+        const container = document.getElementById(containerId);
+        const config = window[`productGrid_${containerId}`];
+        const { columns, primaryColor, discountBadgeColor, title, showFilters, postsPerPage } = config;
 
-                const pData = {
-                    id: source === 'dynamic' ? item.id : `grid_prod_${i}_${Math.random().toString(36).substr(2, 5)}`,
-                    name: item.name || `Product ${i + 1}`,
-                    price: formattedPrice,
-                    image: imageUrl
-                };
-                const pJson = JSON.stringify(pData).replace(/"/g, '&quot;');
+        const startItem = ((page - 1) * postsPerPage) + 1;
+        const endItem = Math.min(page * postsPerPage, totalCount);
 
-                // Link logic
-                let linkUrl = '#';
-                if (source === 'dynamic') {
-                    const baseUrl = window.CMS_ROOT || '';
-                    if (item.slug) {
-                        linkUrl = `${baseUrl}/product/${item.slug}`;
-                    } else if (detailsPageUrl) {
-                        linkUrl = `${detailsPageUrl}?id=${item.id}`;
-                    } else {
-                        linkUrl = `${baseUrl}/product/${item.id}`;
-                    }
-                } else if (source === 'manual' && item.link) {
-                    linkUrl = item.link;
-                }
+        // Build products HTML
+        const productsHtml = productsData.map(item => {
+            const imageUrl = item.image_url || 'https://placehold.co/400x400?text=No+Image';
+            const price = parseFloat(item.price) || 0;
+            const originalPrice = parseFloat(item.original_price || item.price) || price;
+            const discount = originalPrice > price ? Math.round(((originalPrice - price) / originalPrice) * 100) : 0;
+            const rating = parseFloat(item.rating) || 0;
 
-                const imageStyle = imageUrl
-                    ? `background-image: url('${imageUrl}'); background-size: cover; background-position: center;`
-                    : `background: #f3f4f6; display: flex; align-items: center; justify-content: center; color: #666; font-size: 32px;`;
+            const baseUrl = window.CMS_ROOT || '';
+            const linkUrl = item.slug ? `${baseUrl}/product/${item.slug}` : `${baseUrl}/product/${item.id}`;
 
-                const imageContent = imageUrl ? '' : '<i class="fas fa-box"></i>';
-
-                const imageHtml = `<a href="${linkUrl}" style="display: block; aspect-ratio: 1; ${imageStyle} text-decoration: none;">${imageContent}</a>`;
-
-                return `<div style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column;">
-                    ${imageHtml}
-                    <div style="padding: 15px; flex: 1; display: flex; flex-direction: column;">
-                        <a href="${linkUrl}" style="font-size: 16px; font-weight: 700; margin-bottom: 5px; text-decoration: none; color: inherit; display: block;">${this.escapeHtml(pData.name)}</a>
-                        <div style="font-size: 18px; font-weight: 700; color: ${buttonColor}; margin-bottom: 10px;">${this.escapeHtml(pData.price)}</div>
-                        ${(!(window.CMS_SETTINGS && window.CMS_SETTINGS.enable_cart === '0')) ?
-                        `<button onclick="if(window.EcommerceManager) { window.EcommerceManager.addItem(${pJson}); }" style="margin-top: auto; width: 100%; background: ${buttonColor}15; color: ${buttonColor}; border: none; padding: 8px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">Add to Cart</button>` : ''}
+            return `
+                <div style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; background: #fff; transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+                    ${discount > 0 ? `<div style="position: absolute; top: 10px; left: 10px; background: ${discountBadgeColor}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 700; z-index: 1;">${discount}% OFF</div>` : ''}
+                    <a href="${linkUrl}" style="display: block; position: relative; aspect-ratio: 1; background: #f9fafb;">
+                        <img src="${imageUrl}" alt="${this.escapeHtml(item.name)}" style="width: 100%; height: 100%; object-fit: contain;" loading="lazy">
+                    </a>
+                    <div style="padding: 15px;">
+                        <a href="${linkUrl}" style="font-size: 14px; font-weight: 500; color: #1f2937; text-decoration: none; display: block; margin-bottom: 8px; line-height: 1.4; height: 40px; overflow: hidden;">${this.escapeHtml(item.name)}</a>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                            <div style="font-size: 18px; font-weight: 700; color: ${primaryColor};">
+                                ${window.EcommerceManager ? window.EcommerceManager.formatPrice(price) : `$${price.toFixed(2)}`}
+                            </div>
+                            ${discount > 0 ? `<div style="font-size: 14px; color: #9ca3af; text-decoration: line-through;">${window.EcommerceManager ? window.EcommerceManager.formatPrice(originalPrice) : `$${originalPrice.toFixed(2)}`}</div>` : ''}
+                        </div>
+                        ${this.renderStars(rating, primaryColor)}
+                        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #f3f4f6;">
+                            <div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">🚚 Free Delivery</div>
+                            <div style="font-size: 12px; color: #10b981;">✓ In Stock</div>
+                        </div>
                     </div>
                 </div>`;
-            }).join(''); // Ensure array is joined to string
+        }).join('');
 
-            const productsHtml = products || '<div style="grid-column: 1/-1; padding: 20px; text-align: center;">No products available</div>';
+        const paginationHtml = this.renderPagination(containerId, page, totalPages, primaryColor, filters);
 
-            // Generate Pagination HTML
-            let paginationHtml = '';
-            if (source === 'dynamic' && paginationType === 'numbers' && totalPages > 1) {
-                paginationHtml = `<div style="margin-top: 30px; display: flex; justify-content: center; gap: 8px;">`;
-
-                // Previous Button
-                if (page > 1) {
-                    paginationHtml += `<button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().changePage('${containerId}', ${page - 1})" style="padding: 8px 12px; border: 1px solid #e2e8f0; background: #fff; cursor: pointer; border-radius: 4px;">&laquo;</button>`;
-                }
-
-                // Page Numbers
-                for (let i = 1; i <= totalPages; i++) {
-                    const activeStyle = i === page ? `background: ${paginationColor}; color: #fff; border-color: ${paginationColor};` : `background: #fff; color: #333; border: 1px solid #e2e8f0;`;
-                    paginationHtml += `<button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().changePage('${containerId}', ${i})" style="padding: 8px 12px; cursor: pointer; border-radius: 4px; ${activeStyle}">${i}</button>`;
-                }
-
-                // Next Button
-                if (page < totalPages) {
-                    paginationHtml += `<button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().changePage('${containerId}', ${page + 1})" style="padding: 8px 12px; border: 1px solid #e2e8f0; background: #fff; cursor: pointer; border-radius: 4px;">&raquo;</button>`;
-                }
-
-                paginationHtml += `</div>`;
-            }
-
-            const finalHtml = `
-            <div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
-                <h3 style="font-size: 24px; font-weight: 700; margin: 0 0 20px 0;">${this.escapeHtml(title)}</h3>
-                <div style="display: grid; grid-template-columns: repeat(${columns}, 1fr); gap: 20px;">${productsHtml}</div>
-                ${paginationHtml}
+        const mainHtml = `
+            <div style="max-width: 1400px; margin: 0 auto; padding: 20px;">
+                <div style="display: flex; gap: 30px;">
+                    ${showFilters === 'yes' ? `<div id="filters-sidebar-${containerId}" style="flex: 0 0 280px;">
+                        <div style="background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; position: sticky; top: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                <h4 style="font-size: 18px; font-weight: 700; margin: 0; color: #1f2937;">Filters</h4>
+                                <button onclick="window.productGridResetFilters_${containerId}()" style="background: none; border: none; color: ${primaryColor}; cursor: pointer; font-size: 14px; font-weight: 600;">Reset</button>
+                            </div>
+                            <div id="categories-list-${containerId}">
+                                <div style="text-align: center; padding: 20px; color: #9ca3af;">
+                                    <i class="fas fa-spinner fa-spin"></i> Loading...
+                                </div>
+                            </div>
+                        </div>
+                    </div>` : ''}
+                    
+                    <div style="flex: 1;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <div style="font-size: 14px; color: #6b7280;">Showing ${startItem}-${endItem} of ${totalCount} items</div>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <select id="sort-select-${containerId}" onchange="window['productGridSort_${containerId}'](this.value)" style="padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 14px; cursor: pointer;">
+                                    <option value="" ${!filters.sort || filters.sort === 'newest' ? 'selected' : ''}>Sort by</option>
+                                    <option value="price_asc" ${filters.sort === 'price_asc' ? 'selected' : ''}>Price: Low to High</option>
+                                    <option value="price_desc" ${filters.sort === 'price_desc' ? 'selected' : ''}>Price: High to Low</option>
+                                    <option value="rating" ${filters.sort === 'rating' ? 'selected' : ''}>Top Rated</option>
+                                    <option value="newest" ${filters.sort === 'newest' ? 'selected' : ''}>Newest</option>
+                                </select>
+                                <select id="perpage-select-${containerId}" onchange="window['productGridPerPage_${containerId}'](this.value)" style="padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 14px; cursor: pointer;">
+                                    <option value="12" ${postsPerPage == 12 ? 'selected' : ''}>Show: 12</option>
+                                    <option value="24" ${postsPerPage == 24 ? 'selected' : ''}>Show: 24</option>
+                                    <option value="36" ${postsPerPage == 36 ? 'selected' : ''}>Show: 36</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(${columns}, 1fr); gap: 20px; margin-bottom: 30px;">
+                            ${productsHtml || '<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: #9ca3af;">No products found</div>'}
+                        </div>
+                        
+                        ${paginationHtml}
+                    </div>
+                </div>
             </div>`;
-            container.innerHTML = finalHtml;
-        } catch (renderError) {
-            console.error('[ProductGrid] Render Error:', renderError);
-            setStatus(`Render Error: ${renderError.message}`);
+
+        // Setup filter functions BEFORE rendering HTML
+        const self = this;
+        window[`productGridResetFilters_${containerId}`] = function () {
+            self.loadProducts(containerId, 1, {});
+        };
+        window[`productGridSort_${containerId}`] = function (sort) {
+            self.loadProducts(containerId, 1, { ...filters, sort });
+        };
+        window[`productGridPerPage_${containerId}`] = function (perPage) {
+            config.postsPerPage = parseInt(perPage);
+            self.loadProducts(containerId, 1, filters);
+        };
+
+        container.innerHTML = mainHtml;
+    }
+
+    renderStars(rating, color) {
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = rating % 1 >= 0.5;
+        let starsHtml = '';
+
+        for (let i = 0; i < 5; i++) {
+            if (i < fullStars) {
+                starsHtml += `<i class="fas fa-star" style="color: ${color}; font-size: 12px;"></i>`;
+            } else if (i === fullStars && hasHalfStar) {
+                starsHtml += `<i class="fas fa-star-half-alt" style="color: ${color}; font-size: 12px;"></i>`;
+            } else {
+                starsHtml += `<i class="far fa-star" style="color: #d1d5db; font-size: 12px;"></i>`;
+            }
+        }
+
+        return `<div style="display: flex; align-items: center; gap: 4px;">
+            ${starsHtml}
+            <span style="font-size: 12px; color: #6b7280; margin-left: 4px;">${rating.toFixed(1)}</span>
+        </div>`;
+    }
+
+    renderPagination(containerId, page, totalPages, color, filters) {
+        if (totalPages <= 1) return '';
+
+        let html = '<div style="display: flex; justify-content: center; gap: 8px;">';
+
+        // Previous button
+        if (page > 1) {
+            html += `<button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().loadProducts('${containerId}', ${page - 1}, ${JSON.stringify(filters).replace(/"/g, '&quot;')})" style="padding: 8px 12px; border: 1px solid #e5e7eb; background: #fff; cursor: pointer; border-radius: 6px; font-weight: 500;">&laquo;</button>`;
+        }
+
+        // Page numbers
+        const maxPages = 7;
+        let startPage = Math.max(1, page - Math.floor(maxPages / 2));
+        let endPage = Math.min(totalPages, startPage + maxPages - 1);
+
+        if (endPage - startPage < maxPages - 1) {
+            startPage = Math.max(1, endPage - maxPages + 1);
+        }
+
+        if (startPage > 1) {
+            html += `<button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().loadProducts('${containerId}', 1, ${JSON.stringify(filters).replace(/"/g, '&quot;')})" style="padding: 8px 12px; border: 1px solid #e5e7eb; background: #fff; cursor: pointer; border-radius: 6px;">1</button>`;
+            if (startPage > 2) html += '<span style="padding: 8px;">...</span>';
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            const isActive = i === page;
+            html += `<button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().loadProducts('${containerId}', ${i}, ${JSON.stringify(filters).replace(/"/g, '&quot;')})" style="padding: 8px 12px; border: 1px solid ${isActive ? color : '#e5e7eb'}; background: ${isActive ? color : '#fff'}; color: ${isActive ? '#fff' : '#1f2937'}; cursor: pointer; border-radius: 6px; font-weight: ${isActive ? '700' : '500'};">${i}</button>`;
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) html += '<span style="padding: 8px;">...</span>';
+            html += `<button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().loadProducts('${containerId}', ${totalPages}, ${JSON.stringify(filters).replace(/"/g, '&quot;')})" style="padding: 8px 12px; border: 1px solid #e5e7eb; background: #fff; cursor: pointer; border-radius: 6px;">${totalPages}</button>`;
+        }
+
+        // Next button
+        if (page < totalPages) {
+            html += `<button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().loadProducts('${containerId}', ${page + 1}, ${JSON.stringify(filters).replace(/"/g, '&quot;')})" style="padding: 8px 12px; border: 1px solid #e5e7eb; background: #fff; cursor: pointer; border-radius: 6px; font-weight: 500;">&raquo;</button>`;
+        }
+
+        html += '</div>';
+        return html;
+    }
+
+    async loadCategories(containerId, filters = {}) {
+        try {
+            const baseUrl = window.CMS_ROOT || '';
+            const response = await fetch(`${baseUrl}/api/get-categories.php`);
+            if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
+
+            const data = await response.json();
+            if (data.success && data.categories) {
+                const categoriesList = document.getElementById(`categories-list-${containerId}`);
+                if (!categoriesList) return;
+
+                const config = window[`productGrid_${containerId}`];
+                const { primaryColor } = config;
+
+                let html = `
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                            <i class="fas fa-th-large" style="color: ${primaryColor};"></i>
+                            <h5 style="font-size: 14px; font-weight: 700; margin: 0; color: #1f2937;">Categories</h5>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().loadProducts('${containerId}', 1, {})" style="padding: 10px 12px; background: ${!filters.category ? primaryColor + '15' : 'transparent'}; border: none; border-radius: 6px; text-align: left; cursor: pointer; font-size: 14px; color: ${!filters.category ? primaryColor : '#6b7280'}; font-weight: ${!filters.category ? '600' : '400'}; transition: all 0.2s;" onmouseover="if(!this.style.background.includes('${primaryColor}')) this.style.background='#f3f4f6'" onmouseout="if(!this.style.background.includes('${primaryColor}')) this.style.background='transparent'">
+                                All Products
+                            </button>`;
+
+                data.categories.forEach(category => {
+                    const isActive = filters.category == category.id;
+                    html += `
+                        <button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().loadProducts('${containerId}', 1, { category: ${category.id} })" style="padding: 10px 12px; background: ${isActive ? primaryColor + '15' : 'transparent'}; border: none; border-radius: 6px; text-align: left; cursor: pointer; font-size: 14px; color: ${isActive ? primaryColor : '#6b7280'}; font-weight: ${isActive ? '600' : '400'}; transition: all 0.2s;" onmouseover="if(!this.style.background.includes('${primaryColor}')) this.style.background='#f3f4f6'" onmouseout="if(!this.style.background.includes('${primaryColor}')) this.style.background='transparent'">
+                            ${this.escapeHtml(category.name)}
+                        </button>`;
+
+                    if (category.subcategories && category.subcategories.length > 0) {
+                        category.subcategories.forEach(sub => {
+                            const isSubActive = filters.category == sub.id;
+                            html += `
+                                <button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().loadProducts('${containerId}', 1, { category: ${sub.id} })" style="padding: 8px 12px; padding-left: 28px; background: ${isSubActive ? primaryColor + '15' : 'transparent'}; border: none; border-radius: 6px; text-align: left; cursor: pointer; font-size: 13px; color: ${isSubActive ? primaryColor : '#9ca3af'}; font-weight: ${isSubActive ? '600' : '400'}; transition: all 0.2s;" onmouseover="if(!this.style.background.includes('${primaryColor}')) this.style.background='#f3f4f6'" onmouseout="if(!this.style.background.includes('${primaryColor}')) this.style.background='transparent'">
+                                    ${this.escapeHtml(sub.name)}
+                                </button>`;
+                        });
+                    }
+                });
+
+                html += '</div></div>';
+
+                // Add price filter if enabled
+                if (config.showPriceFilter === 'yes') {
+                    html += `
+                        <div style="padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                                <i class="fas fa-tag" style="color: ${primaryColor};"></i>
+                                <h5 style="font-size: 14px; font-weight: 700; margin: 0; color: #1f2937;">Price Range</h5>
+                            </div>
+                            <div style="padding: 10px 0;">
+                                <input type="range" id="price-range-${containerId}" min="0" max="10000" step="100" value="${filters.maxPrice || 10000}" style="width: 100%; accent-color: ${primaryColor};" oninput="document.getElementById('price-value-${containerId}').textContent = this.value">
+                                <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: #6b7280;">
+                                    <span>$0</span>
+                                    <span id="price-value-${containerId}">$${filters.maxPrice || 10000}</span>
+                                </div>
+                                <button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().loadProducts('${containerId}', 1, { ...${JSON.stringify(filters).replace(/"/g, '&quot;')}, maxPrice: document.getElementById('price-range-${containerId}').value })" style="width: 100%; margin-top: 10px; padding: 8px; background: ${primaryColor}; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">Apply</button>
+                            </div>
+                        </div>`;
+                }
+
+                categoriesList.innerHTML = html;
+            }
+        } catch (error) {
+            console.error('[ProductGrid] Failed to load categories:', error);
         }
     }
 
-    changePage(containerId, page) {
-        this.loadProducts(containerId, page);
-        // Scroll to top of widget
-        const container = document.getElementById(containerId);
-        if (container) {
-            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
-
-    escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
 }
 
 window.elementorWidgetManager.registerWidget(ProductGridWidget);
-console.log('[ProductGrid] Script file executed and widget registered.');
+console.log('[ProductGrid] Enhanced widget registered.');

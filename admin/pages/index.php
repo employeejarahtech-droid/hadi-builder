@@ -9,6 +9,44 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 
 require_once __DIR__ . '/../../includes/db.php';
 
+// Auto-create 404 page if requested
+if (isset($_GET['create_404'])) {
+    try {
+        $pdo = getDBConnection();
+
+        // Check if 404 page already exists
+        $stmt = $pdo->prepare("SELECT id FROM pages WHERE slug = 'notfound' LIMIT 1");
+        $stmt->execute();
+        $existing = $stmt->fetch();
+
+        if ($existing) {
+            // Page exists, redirect to builder
+            header('Location: ../builder.php?type=page&id=' . $existing['id']);
+            exit;
+        }
+
+        // Create new 404 page
+        $stmt = $pdo->prepare("INSERT INTO pages (title, slug, content, status, created_at, updated_at, meta_title, meta_description) VALUES (?, ?, ?, ?, NOW(), NOW(), ?, ?)");
+        $stmt->execute([
+            '404 - Page Not Found',
+            'notfound',
+            '[]', // Empty content, user will design it
+            'published',
+            '404 - Page Not Found',
+            'The page you are looking for could not be found.'
+        ]);
+
+        $newId = $pdo->lastInsertId();
+
+        // Redirect to builder
+        header('Location: ../builder.php?type=page&id=' . $newId);
+        exit;
+    } catch (Exception $e) {
+        // If creation fails, continue to normal page list
+        error_log("Failed to create 404 page: " . $e->getMessage());
+    }
+}
+
 // Pagination settings
 $items_per_page = 10;
 $current_page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;

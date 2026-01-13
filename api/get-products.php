@@ -27,12 +27,25 @@ try {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )");
 
-    // Check if slug column exists
-    $columns = $pdo->query("SHOW COLUMNS FROM products LIKE 'slug'")->fetchAll();
-    if (empty($columns)) {
-        // Add slug column
+    // Check and add missing columns
+    $columns = $pdo->query("SHOW COLUMNS FROM products")->fetchAll(PDO::FETCH_ASSOC);
+    $columnNames = array_column($columns, 'Field');
+
+    if (!in_array('slug', $columnNames)) {
         $pdo->exec("ALTER TABLE products ADD COLUMN slug VARCHAR(255)");
         $pdo->exec("ALTER TABLE products ADD UNIQUE (slug)");
+    }
+
+    if (!in_array('category_id', $columnNames)) {
+        $pdo->exec("ALTER TABLE products ADD COLUMN category_id INT DEFAULT NULL");
+    }
+
+    if (!in_array('rating', $columnNames)) {
+        $pdo->exec("ALTER TABLE products ADD COLUMN rating DECIMAL(3, 2) DEFAULT 0");
+    }
+
+    if (!in_array('original_price', $columnNames)) {
+        $pdo->exec("ALTER TABLE products ADD COLUMN original_price DECIMAL(10, 2) DEFAULT NULL");
     }
 
     // Backfill empty slugs (run this always to ensure integrity)
@@ -133,17 +146,72 @@ try {
         exit;
     }
 
+
     // Get pagination parameters
     $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
     $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 10;
     $offset = ($page - 1) * $limit;
 
-    // Fetch total count of active products
-    $countStmt = $pdo->query("SELECT COUNT(*) FROM products WHERE status = 'active'");
+    // Get filter parameters
+    $category = isset($_GET['category']) ? (int) $_GET['category'] : null;
+    $minPrice = isset($_GET['min_price']) ? (float) $_GET['min_price'] : null;
+    $maxPrice = isset($_GET['max_price']) ? (float) $_GET['max_price'] : null;
+    $sort = isset($_GET['sort']) ? $_GET['sort'] : 'newest';
+
+    // Build WHERE clause
+    $whereConditions = ["status = 'active'"];
+    $params = [];
+
+    if ($category) {
+        $whereConditions[] = "category_id = :category";
+        $params[':category'] = $category;
+    }
+
+    if ($minPrice !== null) {
+        $whereConditions[] = "price >= :min_price";
+        $params[':min_price'] = $minPrice;
+    }
+
+    if ($maxPrice !== null) {
+        $whereConditions[] = "price <= :max_price";
+        $params[':max_price'] = $maxPrice;
+    }
+
+    $whereClause = implode(' AND ', $whereConditions);
+
+    // Build ORDER BY clause
+    $orderBy = 'created_at DESC'; // default
+    switch ($sort) {
+        case 'price_asc':
+            $orderBy = 'price ASC';
+            break;
+        case 'price_desc':
+            $orderBy = 'price DESC';
+            break;
+        case 'rating':
+            $orderBy = 'rating DESC, created_at DESC';
+            break;
+        case 'newest':
+            $orderBy = 'created_at DESC';
+            break;
+    }
+
+    // Fetch total count with filters
+    $countSql = "SELECT COUNT(*) FROM products WHERE $whereClause";
+    $countStmt = $pdo->prepare($countSql);
+    $countStmt->execute($params);
     $totalCount = $countStmt->fetchColumn();
 
-    // Fetch products with limit and offset
-    $stmt = $pdo->prepare("SELECT * FROM products WHERE status = 'active' ORDER BY created_at DESC LIMIT :limit OFFSET :offset");
+    // Fetch products with filters, sorting, limit and offset
+    $sql = "SELECT * FROM products WHERE $whereClause ORDER BY $orderBy LIMIT :limit OFFSET :offset";
+    $stmt = $pdo->prepare($sql);
+
+    // Bind filter parameters
+    foreach ($params as $key => $value) {
+        $stmt->bindValue($key, $value);
+    }
+
+    // Bind pagination parameters
     $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
     $stmt->execute();
@@ -155,7 +223,13 @@ try {
         'count' => (int) $totalCount,
         'page' => $page,
         'limit' => $limit,
-        'total_pages' => ceil($totalCount / $limit)
+        'total_pages' => ceil($totalCount / $limit),
+        'filters' => [
+            'category' => $category,
+            'min_price' => $minPrice,
+            'max_price' => $maxPrice,
+            'sort' => $sort
+        ]
     ]);
 } catch (Exception $e) {
     http_response_code(500);

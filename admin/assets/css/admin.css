@@ -992,3 +992,26 @@ body.login-body {
     display: flex;
     gap: 10px;
 }
+
+/* Canvas Responsive Grid - Device Button States */
+/* Desktop view (default) */
+.canvas-wrapper.desktop #canvas-area .jt-row .jt-col-3,
+#canvas-area .jt-row .jt-col-3 {
+    width: 25%;
+    flex: 0 0 25%;
+    max-width: 25%;
+}
+
+/* Tablet view - when tablet device button is active */
+.canvas-wrapper.tablet #canvas-area .jt-row .jt-col-3 {
+    width: 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+/* Mobile view - when mobile device button is active */
+.canvas-wrapper.mobile #canvas-area .jt-row .jt-col-3 {
+    width: 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}

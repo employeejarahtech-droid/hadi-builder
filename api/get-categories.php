@@ -85,6 +85,19 @@ try {
     $stmt = $pdo->query("SELECT * FROM categories WHERE status = 'active' ORDER BY display_order ASC, name ASC");
     $allCategories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // Initialize Cache Manager
+    require_once __DIR__ . '/../includes/CacheManager.php';
+    $cache = new CacheManager();
+
+    // Try cache first
+    $cacheKey = 'categories:tree';
+    $cachedData = $cache->get($cacheKey);
+
+    if ($cachedData !== null) {
+        echo json_encode($cachedData);
+        exit;
+    }
+
     // Organize into parent-child structure
     $categoriesTree = [];
     $categoriesById = [];
@@ -95,8 +108,28 @@ try {
         $categoriesById[$category['id']] = $category;
     }
 
-    // Second pass: build tree
+    // Second pass: build tree and add product counts
     foreach ($categoriesById as $id => $category) {
+        // Count products for this category
+        // Handle both single category_id and JSON array format
+        $stmt = $pdo->prepare("
+            SELECT COUNT(*) FROM products 
+            WHERE status = 'active' 
+            AND (
+                category_id = :cat_id 
+                OR category_id LIKE :cat_json_start
+                OR category_id LIKE :cat_json_mid
+                OR category_id LIKE :cat_json_end
+            )
+        ");
+        $stmt->execute([
+            ':cat_id' => $id,
+            ':cat_json_start' => '[' . $id . ',%',
+            ':cat_json_mid' => '%,' . $id . ',%',
+            ':cat_json_end' => '%,' . $id . ']'
+        ]);
+        $categoriesById[$id]['product_count'] = (int) $stmt->fetchColumn();
+
         if ($category['parent_id'] === null) {
             // Root category
             $categoriesTree[] = &$categoriesById[$id];
@@ -108,11 +141,16 @@ try {
         }
     }
 
+    // Get total product count
+    $stmt = $pdo->query("SELECT COUNT(*) FROM products WHERE status = 'active'");
+    $totalCount = (int) $stmt->fetchColumn();
+
     echo json_encode([
         'success' => true,
         'categories' => $categoriesTree,
         'all_categories' => $allCategories,
-        'count' => count($allCategories)
+        'count' => count($allCategories),
+        'total_count' => $totalCount
     ]);
 } catch (Exception $e) {
     http_response_code(500);

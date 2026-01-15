@@ -29,15 +29,15 @@ class HeroSectionWidget extends WidgetBase {
 
     getDefaultSettings() {
         return {
-            title: 'Welcome to Our Website',
-            subtitle: 'Your Success Starts Here',
+            title: 'Innovative Solutions for a Digital World',
+            subtitle: 'Global Innovation Network',
             description: 'We provide innovative solutions to help your business grow and succeed in the digital world.',
             primary_button_text: 'Get Started',
             primary_button_link: '#',
             secondary_button_text: 'Learn More',
             secondary_button_link: '#',
             show_secondary_button: 'yes',
-            background_image: { url: '' },
+            background_image: { url: 'assets/img/hero-innovative-solutions.png' },
             text_alignment: 'center'
         };
     }

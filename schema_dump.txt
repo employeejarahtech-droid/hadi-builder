@@ -1,0 +1,58 @@
+Table: products
+  id - int(11)
+  name - varchar(255)
+  slug - varchar(255)
+  description - text
+  price - decimal(10,2)
+  image_url - varchar(500)
+  status - enum('active','inactive')
+  is_featured - tinyint(1)
+  created_at - timestamp
+  updated_at - timestamp
+  similar_products - text
+  gallery_images - text
+  long_description - text
+  regular_price - decimal(10,2)
+  category_id - text
+  meta_title - varchar(255)
+  meta_description - text
+  meta_keywords - varchar(255)
+  meta_image - varchar(500)
+  attributes - text
+  product_type - varchar(50)
+  sku - varchar(100)
+  stock_quantity - int(11)
+  rating - decimal(3,2)
+  original_price - decimal(10,2)
+  brand_id - int(11)
+
+Table: categories
+  id - int(11)
+  parent_id - int(11)
+  name - varchar(255)
+  slug - varchar(255)
+  description - text
+  image - varchar(255)
+  created_at - timestamp
+  updated_at - timestamp
+  meta_title - varchar(255)
+  meta_description - text
+  meta_keywords - varchar(255)
+  meta_image - varchar(255)
+  status - enum('active','inactive')
+  display_order - int(11)
+  image_url - varchar(500)
+
+Table: brands
+  id - int(11)
+  name - varchar(255)
+  slug - varchar(255)
+  description - text
+  logo - varchar(255)
+  meta_title - varchar(255)
+  meta_description - text
+  meta_keywords - varchar(255)
+  meta_image - varchar(255)
+  created_at - timestamp
+  updated_at - timestamp
+

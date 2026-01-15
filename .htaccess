@@ -15,6 +15,9 @@
     # Shop clean URLs
     RewriteRule ^shop/?$ shop/index.php [L,QSA]
     
+    # Handle /products (alias for shop)
+    RewriteRule ^products/?$ shop/index.php [L,QSA]
+    
     # Handle /product (product listing)
     RewriteRule ^product/?$ index.php [L,QSA]
     

@@ -36,34 +36,44 @@ class ServicesSectionWidget extends WidgetBase {
             section_margin: { top: 0, right: 0, bottom: 0, left: 0, unit: 'px', isLinked: true },
             services: [
                 {
-                    image: { url: 'https://placehold.co/50' },
-                    icon: 'fa fa-file',
-                    title: 'Business Audit',
-                    description: 'Investment Planning Working with thousands of business companies around',
+                    image: { url: 'assets/img/service-web-development.png' },
+                    icon: 'fa fa-code',
+                    title: 'Website Development',
+                    description: 'Custom website development services tailored to your business needs, ensuring a robust and scalable online presence.',
                     link: '#',
                     button_text: 'Details',
-                    hover_title: 'Member Name',
-                    hover_description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+                    hover_title: 'Web Dev',
+                    hover_description: 'We build responsive, fast, and secure websites that drive growth and engagement.'
                 },
                 {
-                    image: { url: 'https://placehold.co/50' },
-                    icon: 'fa fa-file',
-                    title: 'Business Audit',
-                    description: 'Investment Planning Working with thousands of business companies around',
+                    image: { url: 'assets/img/service-domain-hosting.png' },
+                    icon: 'fa fa-server',
+                    title: 'Domain & Hosting',
+                    description: 'Reliable and secure domain registration and web hosting services with 99.9% uptime guarantee.',
                     link: '#',
                     button_text: 'Details',
-                    hover_title: 'Member Name',
-                    hover_description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+                    hover_title: 'Hosting',
+                    hover_description: 'Secure, fast, and scalable hosting solutions for businesses of all sizes.'
                 },
                 {
-                    image: { url: 'https://placehold.co/50' },
-                    icon: 'fa fa-file',
-                    title: 'Business Audit',
-                    description: 'Investment Planning Working with thousands of business companies around',
+                    image: { url: 'assets/img/service-ecommerce.png' },
+                    icon: 'fa fa-shopping-cart',
+                    title: 'E-Commerce Website Development',
+                    description: 'Comprehensive e-commerce solutions including custom online stores, payment gateway integration, and inventory management.',
                     link: '#',
                     button_text: 'Details',
-                    hover_title: 'Member Name',
-                    hover_description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+                    hover_title: 'E-Commerce',
+                    hover_description: 'Boost your sales with our high-performance e-commerce platforms designed for conversion and growth.'
+                },
+                {
+                    image: { url: 'assets/img/service-accounting.png' },
+                    icon: 'fa fa-calculator',
+                    title: 'Accounting Software Solutions',
+                    description: 'Streamline your financial management with our robust accounting software, featuring real-time reporting and tax automation.',
+                    link: '#',
+                    button_text: 'Details',
+                    hover_title: 'Accounting',
+                    hover_description: 'Simplify your finances with our intuitive accounting tools designed for accuracy and efficiency.'
                 }
             ]
         };

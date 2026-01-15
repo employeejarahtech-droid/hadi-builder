@@ -277,6 +277,16 @@ class AboutSectionWidget extends WidgetBase {
             default_value: 'right'
         });
 
+        this.addControl('flex_direction', {
+            type: 'select',
+            label: 'Flex Direction',
+            options: [
+                { value: 'row', label: 'Left to Right' },
+                { value: 'row-reverse', label: 'Right to Left' }
+            ],
+            default_value: 'row'
+        });
+
         this.endControlsSection();
     }
 
@@ -290,6 +300,7 @@ class AboutSectionWidget extends WidgetBase {
         const description = this.getSetting('description', '');
         const image = this.getSetting('image', { url: 'assets/img/team/1.jpg' });
         const imagePosition = this.getSetting('image_position', 'right');
+        const flexDirection = this.getSetting('flex_direction', 'row');
 
         // Get button settings
         const showPrimaryBtn = this.getSetting('show_primary_btn', 'yes');
@@ -437,7 +448,7 @@ class AboutSectionWidget extends WidgetBase {
         return `
 <div class="demo-block pt-60 pb-60">
     <div class="container">
-        <div class="row align-items-center">
+        <div class="row align-items-center" style="flex-direction: ${flexDirection};">
             ${imagePosition === 'left' ? imageColumn + contentColumn : contentColumn + imageColumn}
         </div>
     </div>

@@ -105,7 +105,7 @@ if ($shopPage && !empty($shopPage['content'])) {
                 'show_filters' => 'yes',
                 'show_categories' => 'yes',
                 'show_price_filter' => 'yes',
-                'posts_per_page' => 12,
+                'posts_per_page' => 20,
                 'primary_color' => '#007EFC',
                 'discount_badge_color' => '#ff4444'
             ]

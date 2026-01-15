@@ -65,6 +65,9 @@ try {
     if (!in_array('brand_id', $columns)) {
         $pdo->exec("ALTER TABLE products ADD COLUMN brand_id INT NULL");
     }
+    if (!in_array('model_number', $columns)) {
+        $pdo->exec("ALTER TABLE products ADD COLUMN model_number VARCHAR(100)");
+    }
 
     // Create variations table
     $pdo->exec("CREATE TABLE IF NOT EXISTS product_variations (
@@ -94,6 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($regular_price === '')
         $regular_price = null;
     $sku = $_POST['sku'] ?? '';
+    $model_number = $_POST['model_number'] ?? '';
     $stock_quantity = $_POST['stock_quantity'] ?? 0;
     $image_url = $_POST['image_url'] ?? '';
     $status = $_POST['status'] ?? 'active';
@@ -129,8 +133,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Check if column exists (migration safety)
                 // (Assuming schema update ran, but safe to allow fail if field missing in query if caught)
                 // We'll trust schema update ran.
-                $stmt = $pdo->prepare("UPDATE products SET name = ?, product_type = ?, slug = ?, description = ?, long_description = ?, price = ?, regular_price = ?, sku = ?, stock_quantity = ?, image_url = ?, status = ?, category_id = ?, brand_id = ?, similar_products = ?, gallery_images = ?, attributes = ?, meta_title = ?, meta_description = ?, meta_keywords = ?, meta_image = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?");
-                $stmt->execute([$name, $product_type, $slug, $description, $long_description, $price, $regular_price, $sku, $stock_quantity, $image_url, $status, $category_id, $brand_id, $similar_products, $gallery_images, $attributes, $meta_title, $meta_description, $meta_keywords, $meta_image, $productId]);
+                $stmt = $pdo->prepare("UPDATE products SET name = ?, product_type = ?, slug = ?, description = ?, long_description = ?, price = ?, regular_price = ?, sku = ?, model_number = ?, stock_quantity = ?, image_url = ?, status = ?, category_id = ?, brand_id = ?, similar_products = ?, gallery_images = ?, attributes = ?, meta_title = ?, meta_description = ?, meta_keywords = ?, meta_image = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?");
+                $stmt->execute([$name, $product_type, $slug, $description, $long_description, $price, $regular_price, $sku, $model_number, $stock_quantity, $image_url, $status, $category_id, $brand_id, $similar_products, $gallery_images, $attributes, $meta_title, $meta_description, $meta_keywords, $meta_image, $productId]);
 
                 // 2. Handle Variations (Simple: Delete all and Re-insert for now, or Upsert?)
                 // Re-inserting is safer for preventing orphans if ID logic is complex.
@@ -510,6 +514,15 @@ require_once __DIR__ . '/../includes/header.php';
                                 value="<?php echo htmlspecialchars($product['sku'] ?? ''); ?>"
                                 placeholder="Stock Keeping Unit">
                         </div>
+                        <div class="form-group">
+                            <label class="form-label" for="model_number">Model Number</label>
+                            <input type="text" id="model_number" name="model_number" class="form-input"
+                                value="<?php echo htmlspecialchars($product['model_number'] ?? ''); ?>"
+                                placeholder="e.g., U60 Pro">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 1rem;">
                         <div class="form-group">
                             <label class="form-label" for="stock_quantity">Stock Quantity</label>
                             <input type="number" id="stock_quantity" name="stock_quantity" class="form-input"

@@ -29,6 +29,8 @@ class FAQSectionWidget extends WidgetBase {
 
     getDefaultSettings() {
         return {
+            section_title: 'FAQ',
+            description: 'Frequently asked questions about our services and products.',
             faq_items: [
                 {
                     question: 'What is your return policy?',
@@ -53,8 +55,22 @@ class FAQSectionWidget extends WidgetBase {
     registerControls() {
         // Content Section
         this.startControlsSection('content_section', {
-            label: 'FAQ Items',
+            label: 'FAQ Content',
             tab: 'content'
+        });
+
+        this.addControl('section_title', {
+            type: 'text',
+            label: 'Section Title',
+            default_value: 'FAQ',
+            placeholder: 'Enter section title'
+        });
+
+        this.addControl('description', {
+            type: 'textarea',
+            label: 'Description',
+            default_value: 'Frequently asked questions about our services and products.',
+            placeholder: 'Enter description'
         });
 
         // FAQ Items Repeater
@@ -90,6 +106,8 @@ class FAQSectionWidget extends WidgetBase {
 
     render() {
         // Get control values
+        const sectionTitle = this.getSetting('section_title', 'FAQ');
+        const description = this.getSetting('description', 'Frequently asked questions about our services and products.');
         const faqItems = this.getSetting('faq_items', []);
 
         // Build FAQ Items HTML
@@ -103,7 +121,7 @@ class FAQSectionWidget extends WidgetBase {
             <li class="accordion-li-${index}">
               <h3>
                 <span>${this.escapeHtml(question)}</span>
-                <span><i class="jarrow-arrow-seventy-four-down"></i></span>
+                <span><i class="fa fa-chevron-down"></i></span>
               </h3>
               <div class="answer">
                 <p>${this.escapeHtml(answer)}</p>
@@ -116,19 +134,19 @@ class FAQSectionWidget extends WidgetBase {
         return `
 <div class="faq-block-2">
   <div class="container">
-    <div class="comingsoon-body-item block-item">
+    <div class="comingsoon-body-item text-center block-item">
       <div class="title title_1bececf">
         <h2>
           <span></span>
-          <span>FAQ</span>
+          <span>${this.escapeHtml(sectionTitle)}</span>
           <span></span>
         </h2>
       </div>
     </div>
-    <div class="comingsoon-body-item block-item">
+    <div class="comingsoon-body-item text-center block-item mb-4">
       <div class="plain_text plain_text_1bececf">
         <p>
-          Frequently asked questions about our services and products.
+          ${this.escapeHtml(description)}
         </p>
       </div>
     </div>

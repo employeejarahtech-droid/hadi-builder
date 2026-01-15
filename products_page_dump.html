@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Products - Techzone</title>
+        
+    <!-- Open Graph -->
+    <meta property="og:title" content="Products">
+    <meta property="og:description" content="">
+    <meta property="og:url" content="http://localhost:4000/products">
+    <meta property="og:type" content="website">
+    
+    <!-- Favicon -->
+            <link rel="icon" href="/images/img_695c6b80726db5.48568246.png">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Page Builder CSS -->
+    <link rel="stylesheet"
+        href="/assets/css/page-builder.css">
+
+    <!-- Theme CSS -->
+            <!-- Main theme stylesheet (includes header.css and footer.css via @import) -->
+        
+
+
+<style type="text/css">
+    :root {
+        --color-primary:
+            #1800ac        ;
+        --color-primary2:
+            #4633bc        ;
+        --color-primary3:
+            #7466cd        ;
+        --color-primary4:
+            #a299dd        ;
+
+        --color-secondary:
+            #000000        ;
+        --color-secondary2:
+            #333333        ;
+        --color-secondary3:
+            #666666        ;
+        --color-secondary4:
+            #999999        ;
+
+        --color-default: #000000;
+        --color-default2: #424242;
+        --color-default3: #9d9d9d;
+        --color-default4: #efefef;
+
+        --color-overlay: rgba(0, 0, 0, 0.4);
+
+        --color-white: #fff;
+        --color-black: #000;
+        --rgb--primary:
+            24, 0, 172        ;
+        --color-gray: rgb(156, 155, 155);
+        --color-primary--rgb:
+            24, 0, 172        ;
+        --h1-font-family: inherit;
+        --h2-font-family: inherit;
+        --h3-font-family: inherit;
+        --h4-font-family: inherit;
+        --h5-font-family: inherit;
+        --h6-font-family: inherit;
+        --menu-font-family: "Barlow", sans-serif;
+        --title-font-family: "Barlow", sans-serif;
+        --body-font-family: "Roboto", sans-serif;
+        --btn-font-family: "Barlow", sans-serif;
+        --subtitle-font-family: "Roboto", sans-serif;
+        --plain-text-font-family: inherit;
+        --blue: #007bff;
+        --indigo: #6610f2;
+        --purple: #6f42c1;
+        --pink: #e83e8c;
+        --red: #dc3545;
+        --orange: #fd7e14;
+        --yellow: #ffc107;
+        --green: #28a745;
+        --teal: #20c997;
+        --cyan: #17a2b8;
+        --white: #fff;
+        --gray: #6c757d;
+        --gray-dark: #343a40;
+        --primary: #007bff;
+        --secondary: #6c757d;
+        --success: #28a745;
+        --info: #17a2b8;
+        --warning: #ffc107;
+        --danger: #dc3545;
+        --light: #f8f9fa;
+        --dark: #343a40;
+        --p-color: #646464;
+        --title-color: #1f1f1f;
+        --input-color: #727679;
+        --gradient-color: linear-gradient(180deg,
+                var(--color-primary) 0%,
+                var(--color-secondary) 100%);
+    }
+</style>
+
+<!-- Theme CSS Files -->
+<link rel="stylesheet" href="/theme/theme1/css/bootstrap.min.css">
+<link rel="stylesheet" href="/theme/theme1/css/aos.css">
+<link rel="stylesheet" href="/theme/theme1/css/glightbox.min.css">
+<link rel="stylesheet" href="/theme/theme1/css/select2.min.css">
+<link rel="stylesheet" href="/theme/theme1/css/slick.css">
+<link rel="stylesheet" href="/theme/theme1/css/slick-theme.css">
+<link rel="stylesheet" href="/theme/theme1/css/swiper.min.css">
+<link rel="stylesheet" href="/theme/theme1/css/jsocial.css">
+
+<!-- Layout Styles -->
+<link rel="stylesheet" href="/theme/theme1/css/topbar.css">
+<link rel="stylesheet" href="/theme/theme1/css/header.css">
+<link rel="stylesheet" href="/theme/theme1/css/menu.css">
+<link rel="stylesheet" href="/theme/theme1/css/footer.css">
+
+<!-- Component Styles -->
+<link rel="stylesheet" href="/theme/theme1/css/buttons.css">
+<link rel="stylesheet" href="/theme/theme1/css/title.css">
+<link rel="stylesheet" href="/theme/theme1/css/subtitle.css">
+<link rel="stylesheet" href="/theme/theme1/css/newsletter.css">
+<link rel="stylesheet" href="/theme/theme1/css/clients.css">
+<link rel="stylesheet" href="/theme/theme1/css/teams.css">
+<link rel="stylesheet" href="/theme/theme1/css/testimonial.css">
+<link rel="stylesheet" href="/theme/theme1/css/services.css">
+<link rel="stylesheet" href="/theme/theme1/css/price-table.css">
+<link rel="stylesheet" href="/theme/theme1/css/faq.css">
+<link rel="stylesheet" href="/theme/theme1/css/contact.css">
+<link rel="stylesheet" href="/theme/theme1/css/about.css">
+<link rel="stylesheet" href="/theme/theme1/css/experience.css">
+
+<!-- Gallery & Media -->
+<link rel="stylesheet" href="/theme/theme1/css/gallery.css">
+<link rel="stylesheet" href="/theme/theme1/css/tab-gallery.css">
+<link rel="stylesheet" href="/theme/theme1/css/recent-work.css">
+
+<!-- Slider Styles -->
+<link rel="stylesheet" href="/theme/theme1/css/slider.css">
+<link rel="stylesheet" href="/theme/theme1/css/slider-navigation.css">
+<link rel="stylesheet" href="/theme/theme1/css/slider-pagination.css">
+<link rel="stylesheet" href="/theme/theme1/css/slider-social.css">
+<link rel="stylesheet" href="/theme/theme1/css/slide.css">
+
+<!-- Animation Styles -->
+<link rel="stylesheet" href="/theme/theme1/css/aos-text-animation.css">
+<link rel="stylesheet" href="/theme/theme1/css/onlyanimation.css">
+<link rel="stylesheet" href="/theme/theme1/css/image-hover-animation.css">
+<link rel="stylesheet" href="/theme/theme1/css/single-img-animation.css">
+<link rel="stylesheet" href="/theme/theme1/css/loop-hover-img-animation.css">
+<link rel="stylesheet" href="/theme/theme1/css/unique-animations-nav.css">
+
+<!-- Blog & Content -->
+<link rel="stylesheet" href="/theme/theme1/css/blog.css">
+<link rel="stylesheet" href="/theme/theme1/css/single-blog.css">
+
+<!-- E-commerce -->
+<link rel="stylesheet" href="/theme/theme1/css/products.css">
+<link rel="stylesheet" href="/theme/theme1/css/single-product.css">
+<link rel="stylesheet" href="/theme/theme1/css/cart.css">
+<link rel="stylesheet" href="/theme/theme1/css/checkout.css">
+
+<!-- Timeline -->
+<link rel="stylesheet" href="/theme/theme1/css/timeline.css">
+<link rel="stylesheet" href="/theme/theme1/css/timeline-2.css">
+
+<!-- Utility Styles -->
+<link rel="stylesheet" href="/theme/theme1/css/image-screen.css">
+<link rel="stylesheet" href="/theme/theme1/css/j-arrow-font.css">
+
+<!-- Main Theme Style -->
+<link rel="stylesheet" href="/theme/theme1/css/style.css">    
+    <!-- Generated CSS Files -->
+                <link rel="stylesheet" href="/assets/css/generated/header-1.css?v=1768232807">
+            
+    <style>
+        /* Frontend specific overrides */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+        }
+
+        .elementor-element {
+            position: relative;
+        }
+
+        /* Hide edit controls/empty placeholders if any leak through */
+        .empty-container-zone {
+            display: none !important;
+        }
+
+        /* Mobile Drawer Styles */
+        .mobile-drawer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 9999;
+            pointer-events: none;
+            /* Let clicks pass through when closed */
+        }
+
+        .drawer-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .drawer-panel {
+            position: absolute;
+            top: 0;
+            left: -300px;
+            /* Hidden off-screen */
+            width: 300px;
+            max-width: 80%;
+            height: 100%;
+            background: #fff;
+            transition: left 0.3s;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            pointer-events: auto;
+        }
+
+        .drawer-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .drawer-content {
+            padding-top: 50px;
+            /* Space for close button */
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        /* Open State */
+        .mobile-drawer.open .drawer-overlay {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .mobile-drawer.open .drawer-panel {
+            left: 0;
+        }
+
+        .mobile-drawer:not(.open) {
+            /* Ensure it doesn't block interactions when closed */
+            pointer-events: none;
+        }
+
+        .mobile-drawer:not(.open) .drawer-panel {
+            pointer-events: none;
+        }
+
+                    #site-header {
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+                background: #fff;
+                width: 100%;
+            }
+
+        
+        /* Responsive Visibility */
+        @media (max-width: 768px) {
+
+            #site-header,
+            #site-topbar {
+                display: none !important;
+            }
+
+            .mobile-header-bar {
+                display: flex !important;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-header-bar {
+                display: none !important;
+            }
+        }
+
+        /* Mobile Header Bar Styles */
+        .mobile-header-bar {
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .mobile-logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e293b;
+            text-decoration: none;
+        }
+
+        .mobile-toggle-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #334155;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <!-- Mobile Header Bar -->
+    <div class="mobile-header-bar">
+        <a href="/" class="mobile-logo">
+                            <img src="/images/img_695c6b80726db5.48568246.png"
+                    alt="Techzone" style="height: 40px; width: auto; object-fit: contain;">
+                    </a>
+        <button class="mobile-toggle-btn" onclick="toggleMobileDrawer()">
+            <i class="fa fa-bars"></i>
+        </button>
+    </div>
+
+    <div id="site-topbar"></div>
+    <div id="site-header"></div>
+
+    <div id="site-content"></div>
+    <div id="site-footer"></div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-drawer" class="mobile-drawer">
+        <div class="drawer-overlay" onclick="toggleMobileDrawer()"></div>
+        <div class="drawer-panel">
+            <button class="drawer-close" onclick="toggleMobileDrawer()">&times;</button>
+            <div id="mobile-drawer-content" class="drawer-content"></div>
+        </div>
+    </div>
+
+    
+    <!-- Core Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/assets/core/EventEmitter.js"></script>
+    <script src="/assets/core/EcommerceManager.js"></script>
+    <script src="/assets/core/WidgetManager.js"></script>
+    <script src="/assets/core/ElementManager.js"></script>
+
+    <!-- Widgets -->
+    <script src="/assets/widgets/WidgetBase.js"></script>
+<script src="/assets/widgets/HeadingWidget.js"></script>
+<script src="/assets/widgets/TextWidget.js"></script>
+<script src="/assets/widgets/ButtonWidget.js"></script>
+<script src="/assets/widgets/ImageWidget.js"></script>
+<script src="/assets/widgets/LogoWidget.js"></script>
+<script src="/assets/widgets/VideoWidget.js"></script>
+<script src="/assets/widgets/SpacerWidget.js"></script>
+<script src="/assets/widgets/IconWidget.js"></script>
+<script src="/assets/widgets/LinkWidget.js"></script>
+<script src="/assets/widgets/MenuWidget.js"></script>
+<script src="/assets/widgets/ListWidget.js"></script>
+<script src="/assets/widgets/QuoteWidget.js"></script>
+<script src="/assets/widgets/CodeWidget.js"></script>
+<script src="/assets/widgets/PreformattedWidget.js"></script>
+<script src="/assets/widgets/MarkdownWidget.js"></script>
+<script src="/assets/widgets/HTMLWidget.js"></script>
+<script src="/assets/widgets/ShortcodeWidget.js"></script>
+<script src="/assets/widgets/ScrollLinkWidget.js"></script>
+<script src="/assets/widgets/BreadcrumbWidget.js"></script>
+<script src="/assets/widgets/CopyrightWidget.js"></script>
+<script src="/assets/widgets/ColumnsWidget.js"></script>
+<script src="/assets/widgets/ContainerWidget.js"></script>
+<script src="/assets/widgets/HeaderSectionWidget.js"></script>
+<script src="/assets/widgets/MobileMenuSectionWidget.js"></script>
+<script src="/assets/widgets/TopbarSectionWidget.js"></script>
+<script src="/assets/widgets/FAQSectionWidget.js"></script>
+
+<!-- Homepage Section Widgets -->
+<script src="/assets/widgets/HeroSectionWidget.js"></script>
+<script src="/assets/widgets/FeaturesSectionWidget.js"></script>
+<script src="/assets/widgets/AboutSectionWidget.js"></script>
+<script src="/assets/widgets/ServicesSectionWidget.js"></script>
+<script src="/assets/widgets/TestimonialsSectionWidget.js"></script>
+<script src="/assets/widgets/StatsSectionWidget.js"></script>
+<script src="/assets/widgets/PartnersSectionWidget.js"></script>
+<script src="/assets/widgets/PricingSectionWidget.js"></script>
+<script src="/assets/widgets/CTASectionWidget.js"></script>
+<script src="/assets/widgets/ContactSectionWidget.js"></script>
+<script src="/assets/widgets/NewsletterSectionWidget.js"></script>
+<script src="/assets/widgets/BlogSectionWidget.js"></script>
+<script src="/assets/widgets/PortfolioSectionWidget.js"></script>
+<script src="/assets/widgets/TeamSectionWidget.js"></script>
+
+<!-- Footer Section Widget -->
+<script src="/assets/widgets/FooterSectionWidget.js?v=1768319138"></script>
+
+<script src="/assets/widgets/FlexWidget.js"></script>
+<script src="/assets/widgets/TeamMemberWidget.js"></script>
+<script src="/assets/widgets/TeamGridWidget.js"></script>
+<script src="/assets/widgets/TeamCarouselWidget.js"></script>
+<script src="/assets/widgets/TeamListWidget.js"></script>
+<script src="/assets/widgets/AuthorBoxWidget.js"></script>
+<script src="/assets/widgets/StaffDirectoryWidget.js"></script>
+<script src="/assets/widgets/EmployeeCardWidget.js"></script>
+<script src="/assets/widgets/OrganizationChartWidget.js"></script>
+<script src="/assets/widgets/DepartmentWidget.js"></script>
+<script src="/assets/widgets/ExecutiveTeamWidget.js"></script>
+<script src="/assets/widgets/BoardMembersWidget.js"></script>
+<script src="/assets/widgets/ContributorWidget.js"></script>
+<script src="/assets/widgets/SpeakerWidget.js"></script>
+<script src="/assets/widgets/InstructorWidget.js"></script>
+<script src="/assets/widgets/ExpertWidget.js"></script>
+<script src="/assets/widgets/TestimonialWidget.js"></script>
+<script src="/assets/widgets/TestimonialSliderWidget.js"></script>
+<script src="/assets/widgets/TestimonialGridWidget.js"></script>
+<script src="/assets/widgets/TestimonialWallWidget.js"></script>
+<script src="/assets/widgets/ReviewCardWidget.js"></script>
+<script src="/assets/widgets/RatingWidget.js"></script>
+<script src="/assets/widgets/CustomerStoryWidget.js"></script>
+<script src="/assets/widgets/SuccessStoryWidget.js"></script>
+<script src="/assets/widgets/FeedbackWidget.js"></script>
+<script src="/assets/widgets/QuoteSliderWidget.js"></script>
+<script src="/assets/widgets/VideoTestimonialWidget.js"></script>
+<script src="/assets/widgets/TrustBadgeWidget.js"></script>
+<script src="/assets/widgets/AwardWidget.js"></script>
+<script src="/assets/widgets/CertificationWidget.js"></script>
+<script src="/assets/widgets/EndorsementWidget.js"></script>
+<script src="/assets/widgets/IconBoxWidget.js"></script>
+<script src="/assets/widgets/IconListWidget.js"></script>
+<script src="/assets/widgets/TopbarCTAWidget.js"></script>
+<script src="/assets/widgets/ServiceBoxWidget.js"></script>
+<script src="/assets/widgets/ProcessStepWidget.js"></script>
+<script src="/assets/widgets/BenefitBoxWidget.js"></script>
+<script src="/assets/widgets/ValuePropositionWidget.js"></script>
+<script src="/assets/widgets/USPWidget.js"></script>
+<script src="/assets/widgets/IconGridWidget.js"></script>
+<script src="/assets/widgets/AnimatedIconWidget.js"></script>
+<script src="/assets/widgets/IconCounterWidget.js"></script>
+<script src="/assets/widgets/IconTimelineWidget.js"></script>
+<script src="/assets/widgets/ShapeWidget.js"></script>
+<script src="/assets/widgets/LottieWidget.js"></script>
+<script src="/assets/widgets/CounterWidget.js"></script>
+<script src="/assets/widgets/StatsCardWidget.js"></script>
+<script src="/assets/widgets/ProgressBarWidget.js"></script>
+<script src="/assets/widgets/CircularProgressWidget.js"></script>
+<script src="/assets/widgets/SkillBarWidget.js"></script>
+<script src="/assets/widgets/MilestoneWidget.js"></script>
+<script src="/assets/widgets/AchievementMetricKPIWidgets.js"></script>
+<script src="/assets/widgets/PercentageCompletionGoalWidgets.js"></script>
+<script src="/assets/widgets/FunFactStatisticDataWidgets.js"></script>
+<script src="/assets/widgets/PricingTableWidget.js"></script>
+<script src="/assets/widgets/PricingComparisonToggleDataWidgets.js"></script>
+<script src="/assets/widgets/ProductSchedulePricePackageWidgets.js"></script>
+<script src="/assets/widgets/MembershipQuoteInvoicePaymentWidgets.js"></script>
+<script src="/assets/widgets/CallToActionWidget.js"></script>
+<script src="/assets/widgets/CTACountdownAnnouncementBannerWidgets.js"></script>
+<script src="/assets/widgets/PromoOfferDealFlashLeadWidgets.js"></script>
+<script src="/assets/widgets/FreeTrialDemoDownloadSignupConversionWidgets.js"></script>
+<script src="/assets/widgets/AccordionWidget.js"></script>
+<script src="/assets/widgets/TabsToggleModalWidgets.js"></script>
+<script src="/assets/widgets/TooltipPopoverDropdownWidgets.js"></script>
+<script src="/assets/widgets/MegaOffcanvasDrawerCollapsibleWidgets.js"></script>
+<script src="/assets/widgets/InteractiveElementsWidgets.js"></script>
+<script src="/assets/widgets/GalleryWidget.js"></script>
+<script src="/assets/widgets/ImageCarouselWidget.js"></script>
+<script src="/assets/widgets/LightboxWidget.js"></script>
+<script src="/assets/widgets/MasonryGalleryWidget.js"></script>
+<script src="/assets/widgets/PortfolioWidget.js"></script>
+<script src="/assets/widgets/ProjectWidget.js"></script>
+<script src="/assets/widgets/SingleProjectWidget.js"></script>
+<script src="/assets/widgets/ProjectGridWidget.js"></script>
+<script src="/assets/widgets/CaseStudyWidget.js"></script>
+<script src="/assets/widgets/WorkWidget.js"></script>
+<script src="/assets/widgets/BeforeAfterWidget.js"></script>
+<script src="/assets/widgets/ImageComparisonWidget.js"></script>
+<script src="/assets/widgets/ImageHotspotWidget.js"></script>
+<script src="/assets/widgets/ImageTextWidget.js"></script>
+<script src="/assets/widgets/ParallaxImageWidget.js"></script>
+<script src="/assets/widgets/BackgroundVideoWidget.js"></script>
+<script src="/assets/widgets/VideoPopupWidget.js"></script>
+<script src="/assets/widgets/VideoPlaylistWidget.js"></script>
+<script src="/assets/widgets/AudioWidget.js"></script>
+<script src="/assets/widgets/PodcastWidget.js"></script>
+<script src="/assets/widgets/SlideShowWidget.js"></script>
+<script src="/assets/widgets/View360Widget.js"></script>
+<script src="/assets/widgets/SocialIconsWidget.js"></script>
+<script src="/assets/widgets/SocialShareWidget.js"></script>
+<script src="/assets/widgets/SocialFeedWidget.js"></script>
+<script src="/assets/widgets/InstagramFeedWidget.js"></script>
+<script src="/assets/widgets/TwitterFeedWidget.js"></script>
+<script src="/assets/widgets/FacebookPageWidget.js"></script>
+<script src="/assets/widgets/YouTubeChannelWidget.js"></script>
+<script src="/assets/widgets/LinkedInWidget.js"></script>
+<script src="/assets/widgets/PinterestWidget.js"></script>
+<script src="/assets/widgets/TikTokWidget.js"></script>
+<script src="/assets/widgets/GoogleReviewsWidget.js"></script>
+<script src="/assets/widgets/YelpReviewsWidget.js"></script>
+<script src="/assets/widgets/TrustpilotWidget.js"></script>
+<script src="/assets/widgets/FacebookCommentsWidget.js"></script>
+<script src="/assets/widgets/DisqusWidget.js"></script>
+<script src="/assets/widgets/ContactFormWidget.js"></script>
+<script src="/assets/widgets/NewsletterWidget.js"></script>
+<script src="/assets/widgets/SubscribeFormWidget.js"></script>
+<script src="/assets/widgets/SearchWidget.js"></script>
+<script src="/assets/widgets/LoginFormWidget.js"></script>
+<script src="/assets/widgets/RegisterFormWidget.js"></script>
+<script src="/assets/widgets/FeedbackFormWidget.js"></script>
+<script src="/assets/widgets/SurveyWidget.js"></script>
+<script src="/assets/widgets/QuizWidget.js"></script>
+<script src="/assets/widgets/CalculatorWidget.js"></script>
+<script src="/assets/widgets/BookingFormWidget.js"></script>
+<script src="/assets/widgets/ReservationWidget.js"></script>
+<script src="/assets/widgets/QuoteFormWidget.js"></script>
+<script src="/assets/widgets/ApplicationFormWidget.js"></script>
+<script src="/assets/widgets/UploadWidget.js"></script>
+<script src="/assets/widgets/MapsLocationWidgets.js"></script>
+<script src="/assets/widgets/TimelineWidget.js"></script>
+<script src="/assets/widgets/EventWidget.js"></script>
+<script src="/assets/widgets/EventListWidget.js"></script>
+<script src="/assets/widgets/CalendarWidget.js"></script>
+<script src="/assets/widgets/ScheduleWidget.js"></script>
+<script src="/assets/widgets/CountdownTimerWidget.js"></script>
+<script src="/assets/widgets/UpcomingEventsWidget.js"></script>
+<script src="/assets/widgets/PastEventsWidget.js"></script>
+<script src="/assets/widgets/EventRegistrationWidget.js"></script>
+<script src="/assets/widgets/WebinarWidget.js"></script>
+<script src="/assets/widgets/ProductWidget.js"></script>
+<script src="/assets/widgets/ProductGridWidget.js"></script>
+<script src="/assets/widgets/SingleProductWidget.js"></script>
+<script src="/assets/widgets/AddToCartWidget.js"></script>
+<script src="/assets/widgets/CartWidget.js"></script>
+<script src="/assets/widgets/CheckoutWidget.js"></script>
+<script src="/assets/widgets/ProductCategoryWidget.js"></script>
+<script src="/assets/widgets/ProductSearchWidget.js"></script>
+<script src="/assets/widgets/MiniCartWidget.js"></script>
+<script src="/assets/widgets/OrderConfirmationWidget.js"></script>
+<script src="/assets/widgets/ProductFilterWidget.js"></script>
+<script src="/assets/widgets/SocialLinks.js"></script>
+    <!-- Renderer -->
+    <script>
+        // Global toggle function
+        window.toggleMobileDrawer = function () {
+            var drawer = document.getElementById('mobile-drawer');
+            if (drawer) drawer.classList.toggle('open');
+        };
+
+        // Attach listeners to any element with class .js-toggle-mobile-menu
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('.js-toggle-mobile-menu')) {
+                e.preventDefault();
+                window.toggleMobileDrawer();
+            }
+        });
+
+        // Widgets self-register when their scripts load
+        // Initialize the widget manager
+        const widgetManager = window.elementorWidgetManager;
+        widgetManager.init();
+
+        window.CMS_ROOT = "";
+        window.SITE_DATA = {
+            topbar: [{"id":"elem_1","type":"topbar-section","settings":{"topbar_cta_links":[{"icon":"fa fa-phone","text":"Call Us: +97155 27 96 878 ","link":{"url":"tel:+971 55 27 96 878","is_external":true,"nofollow":false}},{"icon":"fa fa-envelope","text":"Email: sales@techzoneworld.com","link":{"url":"mailto:sales@techzoneworld.com","is_external":true,"nofollow":false}}],"social_icons":[{"icon":"fab fa-facebook-f","link":"https:\/\/facebook.com","label":"Facebook"},{"icon":"fab fa-twitter","link":"https:\/\/twitter.com","label":"Twitter"},{"icon":"fab fa-instagram","link":"https:\/\/instagram.com","label":"Instagram"},{"icon":"fab fa-linkedin-in","link":"https:\/\/linkedin.com","label":"LinkedIn"}]},"parentId":null,"containerIndex":0,"order":0}],
+            header: [{"id":"elem_1cbdcb0x6","type":"header-section","settings":{"html_tag":"header","min_height":{"size":80,"unit":"px"},"max_width":{"size":"","unit":"px"},"width":{"size":100,"unit":"%"},"background_color":"#ffffff","padding":{"top":0,"right":0,"bottom":0,"left":0,"unit":"px","isLinked":false},"margin":{"top":0,"right":0,"bottom":0,"left":0,"unit":"px","isLinked":true},"border_width":0,"border_color":"#e2e8f0","border_radius":0,"box_shadow":"sm","position":"relative","z_index":100,"flex_display":"flex","flex_direction":"row","justify_content":"space-between","align_items":"center","flex_wrap":"nowrap","flex_gap":{"size":20,"unit":"px"},"logo_url":"\/","logo":{"url":"\/images\/img_695f01dcd1dda5.73269842.png"},"menu":[{"text":"Home","url":"\/","icon":"","has_submenu":false,"submenu_items":[]},{"text":"About us","url":"\/about-us","icon":"","has_submenu":false,"submenu_items":[]},{"text":"Products","url":"\/products","icon":"","has_submenu":false,"submenu_items":[]},{"text":"Services","url":"\/services","icon":"","has_submenu":false,"submenu_items":[]},{"text":"Brands","url":"\/brands","icon":"","has_submenu":false,"submenu_items":[]},{"text":"Inquiry","url":"\/inquiry","icon":"","has_submenu":false,"submenu_items":[]}],"show_search":"no","show_cart":"no","button_text":"Comtact"},"parentId":null,"containerIndex":0,"order":0}],
+            page: [{"id":"elem_jwrylkhj8","type":"product_grid","settings":{"title":"Our Products","columns":"4","show_filters":"yes","show_categories":"yes","show_price_filter":"yes","source":"dynamic","posts_per_page":6,"primary_color":"#007EFC","discount_badge_color":"#ff4444","margin":{"top":"50","right":"","bottom":"50","left":"","unit":"px","isLinked":false},"padding":{"top":"","right":"","bottom":"","left":"","unit":"px","isLinked":true},"width":{"size":"","unit":"%"},"height":{"size":"","unit":"px"},"animation":"none","animation_duration":{"size":0.5,"unit":"s"},"animation_delay":{"size":0,"unit":"s"},"responsive_display":"show-all","details_page_url":"","limit":{"size":6,"unit":""},"pagination_type":"numbers","products":[{"name":"Product 1","price":"10.00","image":{"url":""},"link":""},{"name":"Product 2","price":"20.00","image":{"url":""},"link":""},{"name":"Product 3","price":"30.00","image":{"url":""},"link":""}],"button_color":"#3b82f6","pagination_color":"#3b82f6"},"parentId":null,"containerIndex":0,"order":0}],
+            footer: [{"id":"elem_4","type":"footer-section","settings":{"brand_logo":{"url":"\/images\/img_695f01dcd1dda5.73269842.png"},"brand_description":"Tech Zone \u2013 F.Z.C is a dynamic and fast-growing trading company specializing in providing complete technology, electronics, and mobility solutions to customers worldwide. With a strong presence in the global wholesale market, we supply premium-quality products from all leading brands, ensuring reliability, innovation, and value.","brand_read_more_text":"Read More","brand_read_more_url":"#","show_brand":"true","col1_title":"Quick Links","col1_menu":[{"text":"Home","url":"#","icon":"","has_submenu":false,"submenu_items":[]},{"text":"About Us","url":"#","icon":"","has_submenu":false,"submenu_items":[]},{"text":"Products","url":"#","icon":"","has_submenu":false,"submenu_items":[]},{"text":"Services","url":"#","icon":"","has_submenu":false,"submenu_items":[]},{"text":"Brand","url":"#","icon":"","has_submenu":false,"submenu_items":[]},{"text":"Inquiry","url":"#","icon":"","has_submenu":false,"submenu_items":[]},{"text":"Contact","url":"#","icon":"","has_submenu":false,"submenu_items":[]}],"show_arrow_icons":true,"col2_title":"Gallery","gallery_images":[{"image":{"url":"\/images\/img_695f01dcd1dda5.73269842.png"},"link":{"url":"#","is_external":false,"nofollow":false}},{"image":{"url":"\/images\/cropped-1768062485-d2eb7685.webp"},"link":{"url":"#","is_external":false,"nofollow":false}},{"image":"","link":{"url":"#","is_external":false,"nofollow":false}},{"image":"","link":{"url":"#","is_external":false,"nofollow":false}},{"image":"","link":"#"},{"image":"","link":"#"},{"image":"","link":"#"},{"image":"","link":"#"}],"col3_title":"Contact Information","contact_address":"123 Main Street, City, State 12345","contact_phone":"+971 55 27 96 878 ","contact_email":"sales@techzoneworld.com","contact_website":"https:\/\/www.example.com","social_links":[{"icon":"fab fa-facebook-f","url":"https:\/\/facebook.com","label":"Facebook"},{"icon":"fab fa-twitter","url":"https:\/\/twitter.com","label":"Twitter"},{"icon":"fab fa-instagram","url":"https:\/\/instagram.com","label":"Instagram"},{"icon":"fab fa-linkedin-in","url":"https:\/\/linkedin.com","label":"LinkedIn"}],"copyright_text":"Copyright \u00a9 {year} Techzoneworld. All rights reserved.","payment_text":"We're using safe payment for","payment_image":{"url":""},"show_bottom_bar":"true","background_color":"#000000","text_color":"#e2e8f0","heading_color":"#ffffff","link_hover_color":"#60a5fa","background_image_list":[{"image":{"url":"\/images\/img_695d4b205a2f60.65399127.webp"},"position":"bottom-left"}],"col1_content":"We are a leading company dedicated to providing exceptional services and solutions to our clients worldwide.","col2_links":"Home|\/\nAbout|\/about\nServices|\/services\nContact|\/contact","col3_links":"Blog|\/blog\nFAQ|\/faq\nSupport|\/support\nPrivacy|\/privacy","col4_title":"Get In Touch","col4_address":"123 Main Street\nCity, State 12345","col4_phone":"+1 (234) 567-8900","col4_email":"info@example.com","column_gap":"30","column1_type":"about","column1_title":"About Us","column1_logo":{"url":"https:\/\/placehold.co\/180x60"},"column1_description":"We are a leading company dedicated to providing exceptional services and solutions.","column1_social_links":"https:\/\/facebook.com\nhttps:\/\/twitter.com\nhttps:\/\/linkedin.com","column2_type":"menu","column2_title":"Quick Links","column2_menu_items":"Home|\/\nAbout|\/about\nServices|\/services\nContact|\/contact","column3_type":"menu","column3_title":"Resources","column3_menu_items":"Blog|\/blog\nFAQ|\/faq\nSupport|\/support\nPrivacy Policy|\/privacy","column4_type":"contact","column4_title":"Get In Touch","column4_address":"123 Main Street, City, State 12345","column4_phone":"+1 (234) 567-8900","column4_email":"info@example.com","col1_logo":{"url":"\/images\/img_695c6b80726db5.48568246.png"},"col2_menu":[{"text":"Home","url":"#","icon":"","has_submenu":false,"submenu_items":[]},{"text":"About Us","url":"#","icon":"","has_submenu":false,"submenu_items":[]},{"text":"Gallery","url":"#","icon":"","has_submenu":false,"submenu_items":[]},{"text":"Products","url":"#","icon":"","has_submenu":false,"submenu_items":[]},{"text":"Contact","url":"#","icon":"","has_submenu":false,"submenu_items":[]}],"col3_menu":[{"text":"Blog","url":"#","icon":"","has_submenu":false,"submenu_items":[]},{"text":"Gallery","url":"#","icon":"","has_submenu":false,"submenu_items":[]},{"text":"","url":"#","icon":"","has_submenu":false,"submenu_items":[]}],"margin":{"top":"","right":"","bottom":"","left":"","unit":"px","isLinked":false},"padding":{"top":"","right":"","bottom":"","left":"","unit":"px","isLinked":false}},"parentId":null,"containerIndex":0,"order":0}],
+            mobileMenu: [{"id":"elem_q1abdunw8","type":"mobile-menu-section","settings":{"html_tag":"div","min_height":{"size":100,"unit":"vh"},"width":{"size":100,"unit":"%"},"background_color":"#ffffff","padding":{"top":20,"right":20,"bottom":20,"left":20,"unit":"px","isLinked":true},"margin":{"top":0,"right":0,"bottom":0,"left":0,"unit":"px","isLinked":true},"border_width":0,"border_color":"#e2e8f0","border_radius":0,"box_shadow":"none","position":"relative","z_index":9999,"flex_display":"flex","flex_direction":"column","justify_content":"flex-start","align_items":"stretch","flex_gap":{"size":20,"unit":"px"},"logo":{"url":"\/images\/img_695f01dcd1dda5.73269842.png"},"menu":[{"text":"Home","url":"#","icon":"","has_submenu":false,"submenu_items":[]},{"text":"About us","url":"#","icon":"","has_submenu":false,"submenu_items":[]},{"text":"Products","url":"#","icon":"","has_submenu":false,"submenu_items":[]},{"text":"Service","url":"#","icon":"","has_submenu":false,"submenu_items":[]},{"text":"Brand","url":"#","icon":"","has_submenu":false,"submenu_items":[]},{"text":"Inquiry","url":"#","icon":"","has_submenu":false,"submenu_items":[]},{"text":"Contact us","url":"#","icon":"","has_submenu":false,"submenu_items":[]}]},"parentId":null,"containerIndex":0,"order":0}]        };
+
+        
+        window.CMS_SETTINGS = {
+            shopUrl: "/shop",
+            cartUrl: "/cart",
+            checkoutUrl: "/checkout",
+            successUrl: "/services",
+            currency: "৳"
+        };
+    </script>
+    <script src="/assets/core/PublicRenderer.js"></script>
+
+</body>
+
+</html>

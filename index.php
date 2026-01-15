@@ -109,33 +109,46 @@ if (empty($slug) || $slug === 'index.php') {
     }
 } else {
     // Check if it's a shop route
-    if ($slug === 'shop') {
-        // Shop page - create a virtual page for product grid
-        $page = [
-            'id' => 0,
-            'title' => 'Shop',
-            'slug' => 'shop',
-            'status' => 'published',
-            'content' => json_encode([
-                [
-                    'id' => 'product-grid-shop',
-                    'type' => 'ProductGridWidget',
-                    'settings' => [
-                        'columns' => 3,
-                        'show_price' => true,
-                        'show_add_to_cart' => true
+    if ($slug === 'shop' || $slug === 'products') {
+        // Try to fetch specific page from DB first
+        $targetSlug = ($slug === 'products') ? 'shop' : $slug;
+        $stmt = $pdo->prepare("SELECT * FROM pages WHERE slug = ? AND status = 'published'");
+        $stmt->execute([$targetSlug]);
+        $dbPage = $stmt->fetch();
+
+        if ($dbPage) {
+            $page = $dbPage;
+            $pageId = $page['id'];
+            $contentType = 'page';
+        } else {
+            // Fallback: Shop page - create a virtual page for product grid
+            $page = [
+                'id' => 0,
+                'title' => 'Shop',
+                'slug' => 'shop',
+                'status' => 'published',
+                'content' => json_encode([
+                    [
+                        'id' => 'product-grid-shop',
+                        'type' => 'ProductGridWidget',
+                        'settings' => [
+                            'columns' => 4,
+                            'show_price' => true,
+                            'show_add_to_cart' => true,
+                            'posts_per_page' => 20
+                        ]
                     ]
-                ]
-            ]),
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
-            'meta_title' => 'Shop',
-            'meta_description' => 'Browse our products',
-            'keywords' => '',
-            'og_image' => ''
-        ];
-        $contentType = 'page';
-        $pageId = 0;
+                ]),
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'meta_title' => 'Shop',
+                'meta_description' => 'Browse our products',
+                'keywords' => '',
+                'og_image' => ''
+            ];
+            $contentType = 'page';
+            $pageId = 0;
+        }
     } elseif ($slug === 'product') {
         // Product listing page - create a virtual page for product grid
         $page = [

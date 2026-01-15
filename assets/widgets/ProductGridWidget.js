@@ -27,7 +27,7 @@ class ProductGridWidget extends WidgetBase {
         this.addControl('posts_per_page', {
             type: 'number',
             label: 'Products Per Page',
-            default_value: 12,
+            default_value: 20,
             min: 1,
             max: 50
         });
@@ -49,7 +49,7 @@ class ProductGridWidget extends WidgetBase {
         const showCategories = this.getSetting('show_categories', 'yes');
         const showPriceFilter = this.getSetting('show_price_filter', 'yes');
         const source = this.getSetting('source', 'dynamic');
-        const postsPerPage = this.getSetting('posts_per_page', 12);
+        const postsPerPage = parseInt(this.getSetting('posts_per_page', 20)) || 20;
         const primaryColor = this.getSetting('primary_color', '#007EFC');
         const discountBadgeColor = this.getSetting('discount_badge_color', '#ff4444');
 
@@ -61,15 +61,16 @@ class ProductGridWidget extends WidgetBase {
             showFilters, showCategories, showPriceFilter
         };
 
+
         this.waitForContainer(cssId);
 
         const loadingHtml = `
-            <div style="padding: 40px; text-align: center;">
+            <div style="padding: 0px; text-align: center;">
                 <i class="fas fa-spinner fa-spin" style="font-size: 32px; color: ${primaryColor};"></i>
                 <div style="margin-top: 10px; color: #666;">Loading products...</div>
             </div>`;
 
-        return `<div class="container"><div class="product-grid-widget" id="${cssId}">${loadingHtml}</div></div>`;
+        return `<div class="product-grid-widget pt-5 pb-5" id="${cssId}">${loadingHtml}</div>`;
     }
 
     waitForContainer(containerId, attempts = 0) {
@@ -89,6 +90,19 @@ class ProductGridWidget extends WidgetBase {
         if (!config) return;
 
         const { source, columns, postsPerPage, primaryColor, discountBadgeColor, title, showFilters, showCategories, showPriceFilter } = config;
+
+        // Show loading indicator
+        const loadingHtml = `
+            <div class="container">
+                <div style="display: flex; gap: 30px;">
+                    ${showFilters === 'yes' ? `<div style="flex: 0 0 280px;"></div>` : ''}
+                    <div style="flex: 1; padding: 60px 20px; text-align: center;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: ${primaryColor}; margin-bottom: 20px;"></i>
+                        <div style="font-size: 16px; color: #6b7280;">Loading products...</div>
+                    </div>
+                </div>
+            </div>`;
+        container.innerHTML = loadingHtml;
 
         let productsData = [];
         let totalPages = 1;
@@ -174,7 +188,7 @@ class ProductGridWidget extends WidgetBase {
         const paginationHtml = this.renderPagination(containerId, page, totalPages, primaryColor, filters);
 
         const mainHtml = `
-            <div style="max-width: 1400px; margin: 0 auto; padding: 20px;">
+            <div class="container">
                 <div style="display: flex; gap: 30px;">
                     ${showFilters === 'yes' ? `<div id="filters-sidebar-${containerId}" style="flex: 0 0 280px;">
                         <div style="background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; position: sticky; top: 20px;">
@@ -202,9 +216,9 @@ class ProductGridWidget extends WidgetBase {
                                     <option value="newest" ${filters.sort === 'newest' ? 'selected' : ''}>Newest</option>
                                 </select>
                                 <select id="perpage-select-${containerId}" onchange="window['productGridPerPage_${containerId}'](this.value)" style="padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 14px; cursor: pointer;">
-                                    <option value="12" ${postsPerPage == 12 ? 'selected' : ''}>Show: 12</option>
-                                    <option value="24" ${postsPerPage == 24 ? 'selected' : ''}>Show: 24</option>
-                                    <option value="36" ${postsPerPage == 36 ? 'selected' : ''}>Show: 36</option>
+                                    <option value="20" ${postsPerPage == 20 ? 'selected' : ''}>Show: 20</option>
+                                    <option value="50" ${postsPerPage == 50 ? 'selected' : ''}>Show: 50</option>
+                                    <option value="100" ${postsPerPage == 100 ? 'selected' : ''}>Show: 100</option>
                                 </select>
                             </div>
                         </div>
@@ -319,23 +333,28 @@ class ProductGridWidget extends WidgetBase {
                             <h5 style="font-size: 14px; font-weight: 700; margin: 0; color: #1f2937;">Categories</h5>
                         </div>
                         <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().loadProducts('${containerId}', 1, {})" style="padding: 10px 12px; background: ${!filters.category ? primaryColor + '15' : 'transparent'}; border: none; border-radius: 6px; text-align: left; cursor: pointer; font-size: 14px; color: ${!filters.category ? primaryColor : '#6b7280'}; font-weight: ${!filters.category ? '600' : '400'}; transition: all 0.2s;" onmouseover="if(!this.style.background.includes('${primaryColor}')) this.style.background='#f3f4f6'" onmouseout="if(!this.style.background.includes('${primaryColor}')) this.style.background='transparent'">
-                                All Products
+                            <button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().loadProducts('${containerId}', 1, {})" style="padding: 10px 12px; background: ${!filters.category ? primaryColor + '15' : 'transparent'}; border: none; border-radius: 6px; text-align: left; cursor: pointer; font-size: 14px; color: ${!filters.category ? primaryColor : '#6b7280'}; font-weight: ${!filters.category ? '600' : '400'}; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;" onmouseover="if(!this.style.background.includes('${primaryColor}')) this.style.background='#f3f4f6'" onmouseout="if(!this.style.background.includes('${primaryColor}')) this.style.background='transparent'">
+                                <span>All Products</span>
+                                <span style="font-size: 12px; color: #94a3b8;">(${data.total_count || 0})</span>
                             </button>`;
 
                 data.categories.forEach(category => {
                     const isActive = filters.category == category.id;
+                    const count = category.product_count || 0;
                     html += `
-                        <button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().loadProducts('${containerId}', 1, { category: ${category.id} })" style="padding: 10px 12px; background: ${isActive ? primaryColor + '15' : 'transparent'}; border: none; border-radius: 6px; text-align: left; cursor: pointer; font-size: 14px; color: ${isActive ? primaryColor : '#6b7280'}; font-weight: ${isActive ? '600' : '400'}; transition: all 0.2s;" onmouseover="if(!this.style.background.includes('${primaryColor}')) this.style.background='#f3f4f6'" onmouseout="if(!this.style.background.includes('${primaryColor}')) this.style.background='transparent'">
-                            ${this.escapeHtml(category.name)}
+                        <button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().loadProducts('${containerId}', 1, { category: ${category.id} })" style="padding: 10px 12px; background: ${isActive ? primaryColor + '15' : 'transparent'}; border: none; border-radius: 6px; text-align: left; cursor: pointer; font-size: 14px; color: ${isActive ? primaryColor : '#6b7280'}; font-weight: ${isActive ? '600' : '400'}; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;" onmouseover="if(!this.style.background.includes('${primaryColor}')) this.style.background='#f3f4f6'" onmouseout="if(!this.style.background.includes('${primaryColor}')) this.style.background='transparent'">
+                            <span>${this.escapeHtml(category.name)}</span>
+                            <span style="font-size: 12px; color: #94a3b8;">(${count})</span>
                         </button>`;
 
                     if (category.subcategories && category.subcategories.length > 0) {
                         category.subcategories.forEach(sub => {
                             const isSubActive = filters.category == sub.id;
+                            const subCount = sub.product_count || 0;
                             html += `
-                                <button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().loadProducts('${containerId}', 1, { category: ${sub.id} })" style="padding: 8px 12px; padding-left: 28px; background: ${isSubActive ? primaryColor + '15' : 'transparent'}; border: none; border-radius: 6px; text-align: left; cursor: pointer; font-size: 13px; color: ${isSubActive ? primaryColor : '#9ca3af'}; font-weight: ${isSubActive ? '600' : '400'}; transition: all 0.2s;" onmouseover="if(!this.style.background.includes('${primaryColor}')) this.style.background='#f3f4f6'" onmouseout="if(!this.style.background.includes('${primaryColor}')) this.style.background='transparent'">
-                                    ${this.escapeHtml(sub.name)}
+                                <button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().loadProducts('${containerId}', 1, { category: ${sub.id} })" style="padding: 8px 12px; padding-left: 28px; background: ${isSubActive ? primaryColor + '15' : 'transparent'}; border: none; border-radius: 6px; text-align: left; cursor: pointer; font-size: 13px; color: ${isSubActive ? primaryColor : '#9ca3af'}; font-weight: ${isSubActive ? '600' : '400'}; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;" onmouseover="if(!this.style.background.includes('${primaryColor}')) this.style.background='#f3f4f6'" onmouseout="if(!this.style.background.includes('${primaryColor}')) this.style.background='transparent'">
+                                    <span>${this.escapeHtml(sub.name)}</span>
+                                    <span style="font-size: 11px; color: #cbd5e1;">(${subCount})</span>
                                 </button>`;
                         });
                     }
@@ -345,6 +364,9 @@ class ProductGridWidget extends WidgetBase {
 
                 // Add price filter if enabled
                 if (config.showPriceFilter === 'yes') {
+                    const currentMinPrice = filters.minPrice || 0;
+                    const currentMaxPrice = filters.maxPrice || 10000;
+
                     html += `
                         <div style="padding-top: 20px; border-top: 1px solid #e5e7eb;">
                             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
@@ -352,14 +374,104 @@ class ProductGridWidget extends WidgetBase {
                                 <h5 style="font-size: 14px; font-weight: 700; margin: 0; color: #1f2937;">Price Range</h5>
                             </div>
                             <div style="padding: 10px 0;">
-                                <input type="range" id="price-range-${containerId}" min="0" max="10000" step="100" value="${filters.maxPrice || 10000}" style="width: 100%; accent-color: ${primaryColor};" oninput="document.getElementById('price-value-${containerId}').textContent = this.value">
-                                <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: #6b7280;">
-                                    <span>$0</span>
-                                    <span id="price-value-${containerId}">$${filters.maxPrice || 10000}</span>
+                                <!-- Min Price -->
+                                <div style="margin-bottom: 15px;">
+                                    <label style="display: block; font-size: 12px; color: #6b7280; margin-bottom: 5px;">Minimum Price</label>
+                                    <div style="display: flex; gap: 10px; align-items: center;">
+                                        <input type="range" id="price-min-${containerId}" min="0" max="10000" step="100" value="${currentMinPrice}" 
+                                            style="flex: 1; accent-color: ${primaryColor};" 
+                                            oninput="
+                                                const maxSlider = document.getElementById('price-max-${containerId}');
+                                                const minInput = document.getElementById('price-min-input-${containerId}');
+                                                if (parseInt(this.value) > parseInt(maxSlider.value)) {
+                                                    this.value = maxSlider.value;
+                                                }
+                                                minInput.value = this.value;
+                                            ">
+                                        <input type="number" id="price-min-input-${containerId}" min="0" max="10000" step="100" value="${currentMinPrice}"
+                                            style="width: 80px; padding: 6px 8px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 13px; text-align: center;"
+                                            oninput="
+                                                const slider = document.getElementById('price-min-${containerId}');
+                                                const maxSlider = document.getElementById('price-max-${containerId}');
+                                                let val = parseInt(this.value) || 0;
+                                                if (val > parseInt(maxSlider.value)) val = parseInt(maxSlider.value);
+                                                if (val < 0) val = 0;
+                                                this.value = val;
+                                                slider.value = val;
+                                            ">
+                                    </div>
                                 </div>
-                                <button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().loadProducts('${containerId}', 1, { ...${JSON.stringify(filters).replace(/"/g, '&quot;')}, maxPrice: document.getElementById('price-range-${containerId}').value })" style="width: 100%; margin-top: 10px; padding: 8px; background: ${primaryColor}; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">Apply</button>
+                                
+                                <!-- Max Price -->
+                                <div style="margin-bottom: 15px;">
+                                    <label style="display: block; font-size: 12px; color: #6b7280; margin-bottom: 5px;">Maximum Price</label>
+                                    <div style="display: flex; gap: 10px; align-items: center;">
+                                        <input type="range" id="price-max-${containerId}" min="0" max="10000" step="100" value="${currentMaxPrice}" 
+                                            style="flex: 1; accent-color: ${primaryColor};" 
+                                            oninput="
+                                                const minSlider = document.getElementById('price-min-${containerId}');
+                                                const maxInput = document.getElementById('price-max-input-${containerId}');
+                                                if (parseInt(this.value) < parseInt(minSlider.value)) {
+                                                    this.value = minSlider.value;
+                                                }
+                                                maxInput.value = this.value;
+                                            ">
+                                        <input type="number" id="price-max-input-${containerId}" min="0" max="10000" step="100" value="${currentMaxPrice}"
+                                            style="width: 80px; padding: 6px 8px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 13px; text-align: center;"
+                                            oninput="
+                                                const slider = document.getElementById('price-max-${containerId}');
+                                                const minSlider = document.getElementById('price-min-${containerId}');
+                                                let val = parseInt(this.value) || 10000;
+                                                if (val < parseInt(minSlider.value)) val = parseInt(minSlider.value);
+                                                if (val > 10000) val = 10000;
+                                                this.value = val;
+                                                slider.value = val;
+                                            ">
+                                    </div>
+                                </div>
+                                
+                                <!-- Current Range Display -->
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; color: #1f2937; font-weight: 600; padding: 8px; background: #f8fafc; border-radius: 6px;">
+                                    <span>$<span id="price-display-min-${containerId}">${currentMinPrice}</span></span>
+                                    <span>-</span>
+                                    <span>$<span id="price-display-max-${containerId}">${currentMaxPrice}</span></span>
+                                </div>
+                                
+                                <button onclick="
+                                    const minPrice = document.getElementById('price-min-${containerId}').value;
+                                    const maxPrice = document.getElementById('price-max-${containerId}').value;
+                                    const currentFilters = ${JSON.stringify(filters).replace(/"/g, '&quot;')};
+                                    const newFilters = { ...currentFilters, minPrice: minPrice, maxPrice: maxPrice };
+                                    new (window.elementorWidgetManager.getWidgetClass('product_grid'))().loadProducts('${containerId}', 1, newFilters);
+                                " style="width: 100%; margin-top: 10px; padding: 10px; background: ${primaryColor}; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; transition: opacity 0.2s;" 
+                                onmouseover="this.style.opacity='0.9'" 
+                                onmouseout="this.style.opacity='1'">
+                                    Apply Price Filter
+                                </button>
                             </div>
-                        </div>`;
+                        </div>
+                        <script>
+                            // Sync display values with sliders
+                            (function() {
+                                const minSlider = document.getElementById('price-min-${containerId}');
+                                const maxSlider = document.getElementById('price-max-${containerId}');
+                                const minInput = document.getElementById('price-min-input-${containerId}');
+                                const maxInput = document.getElementById('price-max-input-${containerId}');
+                                const displayMin = document.getElementById('price-display-min-${containerId}');
+                                const displayMax = document.getElementById('price-display-max-${containerId}');
+                                
+                                function updateDisplay() {
+                                    if (displayMin) displayMin.textContent = minSlider.value;
+                                    if (displayMax) displayMax.textContent = maxSlider.value;
+                                }
+                                
+                                if (minSlider) minSlider.addEventListener('input', updateDisplay);
+                                if (maxSlider) maxSlider.addEventListener('input', updateDisplay);
+                                if (minInput) minInput.addEventListener('input', updateDisplay);
+                                if (maxInput) maxInput.addEventListener('input', updateDisplay);
+                            })();
+                        </script>
+                    `;
                 }
 
                 categoriesList.innerHTML = html;

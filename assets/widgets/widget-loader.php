@@ -37,9 +37,12 @@ if (!isset($widgetBasePath)) {
 <script src="<?php echo $widgetBasePath; ?>/HeroSectionWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/FeaturesSectionWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/AboutSectionWidget.js"></script>
+<script src="<?php echo $widgetBasePath; ?>/CompanyProfileSection.js?v=1.0.1"></script>
+<script src="<?php echo $widgetBasePath; ?>/TrendingCategorySectionWidget.js?v=1.0.3"></script>
 <script src="<?php echo $widgetBasePath; ?>/ServicesSectionWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/TestimonialsSectionWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/StatsSectionWidget.js"></script>
+<script src="<?php echo $widgetBasePath; ?>/BrandsSectionWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/PartnersSectionWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/PricingSectionWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/CTASectionWidget.js"></script>

@@ -115,14 +115,31 @@ try {
         return $product;
     };
 
+    // Initialize Cache Manager
+    require_once __DIR__ . '/../includes/CacheManager.php';
+    $cache = new CacheManager();
+
     // Check for single product fetch
     if (isset($_GET['id'])) {
+        // Try cache first
+        $cacheKey = 'product:id:' . $_GET['id'];
+        $cachedProduct = $cache->get($cacheKey);
+
+        if ($cachedProduct !== null) {
+            echo json_encode(['success' => true, 'product' => $cachedProduct, 'cached' => true]);
+            exit;
+        }
+
         $stmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
         $stmt->execute([$_GET['id']]);
         $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($product) {
             $product = $enrichProduct($product);
+
+            // Cache for 15 minutes
+            $cache->set($cacheKey, $product, 900);
+
             echo json_encode(['success' => true, 'product' => $product]);
         } else {
             http_response_code(404);
@@ -132,12 +149,25 @@ try {
     }
 
     if (isset($_GET['slug'])) {
+        // Try cache first
+        $cacheKey = 'product:slug:' . $_GET['slug'];
+        $cachedProduct = $cache->get($cacheKey);
+
+        if ($cachedProduct !== null) {
+            echo json_encode(['success' => true, 'product' => $cachedProduct, 'cached' => true]);
+            exit;
+        }
+
         $stmt = $pdo->prepare("SELECT * FROM products WHERE slug = ?");
         $stmt->execute([$_GET['slug']]);
         $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($product) {
             $product = $enrichProduct($product);
+
+            // Cache for 15 minutes
+            $cache->set($cacheKey, $product, 900);
+
             echo json_encode(['success' => true, 'product' => $product]);
         } else {
             http_response_code(404);
@@ -158,13 +188,25 @@ try {
     $maxPrice = isset($_GET['max_price']) ? (float) $_GET['max_price'] : null;
     $sort = isset($_GET['sort']) ? $_GET['sort'] : 'newest';
 
+    // Generate cache key based on all parameters
+    $cacheParams = compact('page', 'limit', 'category', 'minPrice', 'maxPrice', 'sort');
+    $cacheKey = CacheManager::generateKey('products:list', $cacheParams);
+
+    // Try cache first
+    $cachedData = $cache->get($cacheKey);
+    if ($cachedData !== null) {
+        echo json_encode($cachedData);
+        exit;
+    }
+
     // Build WHERE clause
     $whereConditions = ["status = 'active'"];
     $params = [];
 
     if ($category) {
-        $whereConditions[] = "category_id = :category";
-        $params[':category'] = $category;
+        $whereConditions[] = "(category_id = :cat_id OR (category_id LIKE '[%]' AND JSON_CONTAINS(category_id, :cat_json)))";
+        $params[':cat_id'] = $category;
+        $params[':cat_json'] = (string) $category;
     }
 
     if ($minPrice !== null) {
@@ -217,7 +259,7 @@ try {
     $stmt->execute();
     $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    echo json_encode([
+    $response = [
         'success' => true,
         'products' => $products,
         'count' => (int) $totalCount,
@@ -230,7 +272,12 @@ try {
             'max_price' => $maxPrice,
             'sort' => $sort
         ]
-    ]);
+    ];
+
+    // Cache the response for 5 minutes
+    $cache->set($cacheKey, $response, 300);
+
+    echo json_encode($response);
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);

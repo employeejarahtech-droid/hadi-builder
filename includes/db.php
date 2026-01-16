@@ -50,3 +50,11 @@ function getDBConnection()
         throw new \PDOException($e->getMessage(), (int) $e->getCode());
     }
 }
+
+// Initialize Bandwidth Monitor
+require_once __DIR__ . '/BandwidthMonitor.php';
+try {
+    BandwidthMonitor::start();
+} catch (Exception $e) {
+    // Ignore errors during monitor start to prevent site breakage
+}

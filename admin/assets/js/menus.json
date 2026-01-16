@@ -202,6 +202,20 @@
           "icon": "fa-cog",
           "url": "/admin/file-editors/htaccess.php",
           "page_key": "htaccess_editor"
+        },
+        {
+          "id": "cache_manager",
+          "label": "Cache Manager",
+          "icon": "fa-archive",
+          "url": "/admin/cache/",
+          "page_key": "cache_manager"
+        },
+        {
+          "id": "bandwidth_monitor",
+          "label": "Bandwidth Monitor",
+          "icon": "fa-chart-line",
+          "url": "/admin/settings/bandwidth-monitor.php",
+          "page_key": "bandwidth_monitor"
         }
       ]
     }

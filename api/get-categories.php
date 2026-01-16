@@ -145,13 +145,18 @@ try {
     $stmt = $pdo->query("SELECT COUNT(*) FROM products WHERE status = 'active'");
     $totalCount = (int) $stmt->fetchColumn();
 
-    echo json_encode([
+    $response = [
         'success' => true,
         'categories' => $categoriesTree,
         'all_categories' => $allCategories,
         'count' => count($allCategories),
         'total_count' => $totalCount
-    ]);
+    ];
+
+    // Cache for default TTL
+    $cache->set($cacheKey, $response);
+
+    echo json_encode($response);
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);

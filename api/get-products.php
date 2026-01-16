@@ -137,8 +137,8 @@ try {
         if ($product) {
             $product = $enrichProduct($product);
 
-            // Cache for 15 minutes
-            $cache->set($cacheKey, $product, 900);
+            // Cache for default TTL
+            $cache->set($cacheKey, $product);
 
             echo json_encode(['success' => true, 'product' => $product]);
         } else {
@@ -165,8 +165,8 @@ try {
         if ($product) {
             $product = $enrichProduct($product);
 
-            // Cache for 15 minutes
-            $cache->set($cacheKey, $product, 900);
+            // Cache for default TTL
+            $cache->set($cacheKey, $product);
 
             echo json_encode(['success' => true, 'product' => $product]);
         } else {
@@ -274,8 +274,8 @@ try {
         ]
     ];
 
-    // Cache the response for 5 minutes
-    $cache->set($cacheKey, $response, 300);
+    // Cache for default TTL
+    $cache->set($cacheKey, $response);
 
     echo json_encode($response);
 } catch (Exception $e) {

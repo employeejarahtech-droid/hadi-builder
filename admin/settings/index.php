@@ -680,6 +680,13 @@ require_once __DIR__ . '/../includes/header.php';
                             </select>
                             <small style="color: var(--secondary);">Select your site's timezone</small>
                         </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="cache_ttl">Cache Duration (Minutes)</label>
+                            <input type="number" id="cache_ttl" name="settings[cache_ttl]" class="form-input"
+                                value="<?php echo htmlspecialchars($currentSettings['cache_ttl'] ?? '5'); ?>" min="1">
+                            <small style="color: var(--secondary);">Set the global cache time-to-live in minutes (default: 5)</small>
+                        </div>
                     </div>
                 </div>
 

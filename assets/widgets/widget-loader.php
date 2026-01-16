@@ -197,3 +197,6 @@ if (!isset($widgetBasePath)) {
 <script src="<?php echo $widgetBasePath; ?>/OrderConfirmationWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/ProductFilterWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/SocialLinks.js"></script>
+
+<script src="<?php echo $widgetBasePath; ?>/WhatsAppChatWidget.js"></script>
+<script src="<?php echo $widgetBasePath; ?>/AIChatBoxWidget.js"></script>

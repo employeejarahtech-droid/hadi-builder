@@ -741,6 +741,7 @@ if ($id) {
     <script src="../assets/core/CSSGenerator.js?v=<?php echo time(); ?>"></script>
     <script src="../assets/core/ElementManager.js?v=<?php echo time(); ?>"></script>
     <script src="../assets/core/DragDropManager.js?v=<?php echo time(); ?>"></script>
+    <script src="../assets/core/register-widgets.js?v=<?php echo time(); ?>"></script>
 
     <!-- Load Widgets -->
     <?php
@@ -789,212 +790,20 @@ if ($id) {
             dragDropManager.init();
 
             // Register widgets
-            if (typeof HeadingWidget !== 'undefined') widgetManager.registerWidget(HeadingWidget);
-            if (typeof TextWidget !== 'undefined') widgetManager.registerWidget(TextWidget);
-            if (typeof ButtonWidget !== 'undefined') widgetManager.registerWidget(ButtonWidget);
-            if (typeof ImageWidget !== 'undefined') widgetManager.registerWidget(ImageWidget);
-            if (typeof VideoWidget !== 'undefined') widgetManager.registerWidget(VideoWidget);
-            if (typeof DividerWidget !== 'undefined') widgetManager.registerWidget(DividerWidget);
-            if (typeof ColumnsWidget !== 'undefined') widgetManager.registerWidget(ColumnsWidget);
-            if (typeof FlexWidget !== 'undefined') widgetManager.registerWidget(FlexWidget);
-            if (typeof LogoWidget !== 'undefined') widgetManager.registerWidget(LogoWidget);
-            if (typeof SocialLinksWidget !== 'undefined') widgetManager.registerWidget(SocialLinksWidget);
-            if (typeof SpacerWidget !== 'undefined') widgetManager.registerWidget(SpacerWidget);
-            if (typeof IconWidget !== 'undefined') widgetManager.registerWidget(IconWidget);
-            if (typeof LinkWidget !== 'undefined') widgetManager.registerWidget(LinkWidget);
-            if (typeof MenuWidget !== 'undefined') widgetManager.registerWidget(MenuWidget);
-            if (typeof ListWidget !== 'undefined') widgetManager.registerWidget(ListWidget);
-            if (typeof QuoteWidget !== 'undefined') widgetManager.registerWidget(QuoteWidget);
-            if (typeof CodeWidget !== 'undefined') widgetManager.registerWidget(CodeWidget);
-            if (typeof PreformattedWidget !== 'undefined') widgetManager.registerWidget(PreformattedWidget);
-            if (typeof MarkdownWidget !== 'undefined') widgetManager.registerWidget(MarkdownWidget);
-            if (typeof HTMLWidget !== 'undefined') widgetManager.registerWidget(HTMLWidget);
-            if (typeof ShortcodeWidget !== 'undefined') widgetManager.registerWidget(ShortcodeWidget);
-            if (typeof AnchorWidget !== 'undefined') widgetManager.registerWidget(AnchorWidget);
-            if (typeof BreadcrumbWidget !== 'undefined') widgetManager.registerWidget(BreadcrumbWidget);
-            if (typeof CopyrightWidget !== 'undefined') widgetManager.registerWidget(CopyrightWidget);
-            if (typeof TeamMemberWidget !== 'undefined') widgetManager.registerWidget(TeamMemberWidget);
-            if (typeof TeamGridWidget !== 'undefined') widgetManager.registerWidget(TeamGridWidget);
-            if (typeof TeamCarouselWidget !== 'undefined') widgetManager.registerWidget(TeamCarouselWidget);
-            if (typeof TeamListWidget !== 'undefined') widgetManager.registerWidget(TeamListWidget);
-            if (typeof AuthorBoxWidget !== 'undefined') widgetManager.registerWidget(AuthorBoxWidget);
-            if (typeof StaffDirectoryWidget !== 'undefined') widgetManager.registerWidget(StaffDirectoryWidget);
-            if (typeof EmployeeCardWidget !== 'undefined') widgetManager.registerWidget(EmployeeCardWidget);
-            if (typeof OrganizationChartWidget !== 'undefined') widgetManager.registerWidget(OrganizationChartWidget);
-            if (typeof DepartmentWidget !== 'undefined') widgetManager.registerWidget(DepartmentWidget);
-            if (typeof ExecutiveTeamWidget !== 'undefined') widgetManager.registerWidget(ExecutiveTeamWidget);
-            if (typeof AdvisoryBoardWidget !== 'undefined') widgetManager.registerWidget(AdvisoryBoardWidget);
-            if (typeof ContributorWidget !== 'undefined') widgetManager.registerWidget(ContributorWidget);
-            if (typeof SpeakerWidget !== 'undefined') widgetManager.registerWidget(SpeakerWidget);
-            if (typeof InstructorWidget !== 'undefined') widgetManager.registerWidget(InstructorWidget);
-            if (typeof ExpertWidget !== 'undefined') widgetManager.registerWidget(ExpertWidget);
-            if (typeof TestimonialWidget !== 'undefined') widgetManager.registerWidget(TestimonialWidget);
-            if (typeof TestimonialSliderWidget !== 'undefined') widgetManager.registerWidget(TestimonialSliderWidget);
-            if (typeof TestimonialGridWidget !== 'undefined') widgetManager.registerWidget(TestimonialGridWidget);
-            if (typeof TestimonialWallWidget !== 'undefined') widgetManager.registerWidget(TestimonialWallWidget);
-            if (typeof ReviewCardWidget !== 'undefined') widgetManager.registerWidget(ReviewCardWidget);
-            if (typeof RatingWidget !== 'undefined') widgetManager.registerWidget(RatingWidget);
-            if (typeof CustomerStoryWidget !== 'undefined') widgetManager.registerWidget(CustomerStoryWidget);
-            if (typeof SuccessStoryWidget !== 'undefined') widgetManager.registerWidget(SuccessStoryWidget);
-            if (typeof FeedbackWidget !== 'undefined') widgetManager.registerWidget(FeedbackWidget);
-            if (typeof QuoteSliderWidget !== 'undefined') widgetManager.registerWidget(QuoteSliderWidget);
-            if (typeof VideoTestimonialWidget !== 'undefined') widgetManager.registerWidget(VideoTestimonialWidget);
-            if (typeof TrustBadgeWidget !== 'undefined') widgetManager.registerWidget(TrustBadgeWidget);
-            if (typeof AwardWidget !== 'undefined') widgetManager.registerWidget(AwardWidget);
-            if (typeof CertificationWidget !== 'undefined') widgetManager.registerWidget(CertificationWidget);
-            if (typeof EndorsementWidget !== 'undefined') widgetManager.registerWidget(EndorsementWidget);
-            if (typeof IconBoxWidget !== 'undefined') widgetManager.registerWidget(IconBoxWidget);
-            if (typeof IconListWidget !== 'undefined') widgetManager.registerWidget(IconListWidget);
-            if (typeof ServiceBoxWidget !== 'undefined') widgetManager.registerWidget(ServiceBoxWidget);
-            if (typeof ProcessStepWidget !== 'undefined') widgetManager.registerWidget(ProcessStepWidget);
-            if (typeof BenefitBoxWidget !== 'undefined') widgetManager.registerWidget(BenefitBoxWidget);
-            if (typeof ValuePropositionWidget !== 'undefined') widgetManager.registerWidget(ValuePropositionWidget);
-            if (typeof USPWidget !== 'undefined') widgetManager.registerWidget(USPWidget);
-            if (typeof IconGridWidget !== 'undefined') widgetManager.registerWidget(IconGridWidget);
-            if (typeof AnimatedIconWidget !== 'undefined') widgetManager.registerWidget(AnimatedIconWidget);
-            if (typeof IconCounterWidget !== 'undefined') widgetManager.registerWidget(IconCounterWidget);
-            if (typeof IconTimelineWidget !== 'undefined') widgetManager.registerWidget(IconTimelineWidget);
-            if (typeof ShapeWidget !== 'undefined') widgetManager.registerWidget(ShapeWidget);
-            if (typeof LottieWidget !== 'undefined') widgetManager.registerWidget(LottieWidget);
-            if (typeof CounterWidget !== 'undefined') widgetManager.registerWidget(CounterWidget);
-            if (typeof StatsCardWidget !== 'undefined') widgetManager.registerWidget(StatsCardWidget);
-            if (typeof ProgressBarWidget !== 'undefined') widgetManager.registerWidget(ProgressBarWidget);
-            if (typeof CircularProgressWidget !== 'undefined') widgetManager.registerWidget(CircularProgressWidget);
-            if (typeof SkillBarWidget !== 'undefined') widgetManager.registerWidget(SkillBarWidget);
-            if (typeof MilestoneWidget !== 'undefined') widgetManager.registerWidget(MilestoneWidget);
-            if (typeof AchievementWidget !== 'undefined') widgetManager.registerWidget(AchievementWidget);
-            if (typeof MetricWidget !== 'undefined') widgetManager.registerWidget(MetricWidget);
-            if (typeof KPIWidget !== 'undefined') widgetManager.registerWidget(KPIWidget);
-            if (typeof PercentageWidget !== 'undefined') widgetManager.registerWidget(PercentageWidget);
-            if (typeof CompletionWidget !== 'undefined') widgetManager.registerWidget(CompletionWidget);
-            if (typeof GoalTrackerWidget !== 'undefined') widgetManager.registerWidget(GoalTrackerWidget);
-            if (typeof FunFactWidget !== 'undefined') widgetManager.registerWidget(FunFactWidget);
-            if (typeof StatisticBarWidget !== 'undefined') widgetManager.registerWidget(StatisticBarWidget);
-            if (typeof DataVisualizationWidget !== 'undefined') widgetManager.registerWidget(DataVisualizationWidget);
-            if (typeof PricingTableWidget !== 'undefined') widgetManager.registerWidget(PricingTableWidget);
-            if (typeof PricingComparisonWidget !== 'undefined') widgetManager.registerWidget(PricingComparisonWidget);
-            if (typeof PricingToggleWidget !== 'undefined') widgetManager.registerWidget(PricingToggleWidget);
-            if (typeof DataTableWidget !== 'undefined') widgetManager.registerWidget(DataTableWidget);
-            if (typeof FeatureComparisonWidget !== 'undefined') widgetManager.registerWidget(FeatureComparisonWidget);
-            if (typeof ProductTableWidget !== 'undefined') widgetManager.registerWidget(ProductTableWidget);
-            if (typeof ScheduleTableWidget !== 'undefined') widgetManager.registerWidget(ScheduleTableWidget);
-            if (typeof PriceListWidget !== 'undefined') widgetManager.registerWidget(PriceListWidget);
-            if (typeof PackageWidget !== 'undefined') widgetManager.registerWidget(PackageWidget);
-            if (typeof SubscriptionWidget !== 'undefined') widgetManager.registerWidget(SubscriptionWidget);
-            if (typeof MembershipWidget !== 'undefined') widgetManager.registerWidget(MembershipWidget);
-            if (typeof CostCalculatorWidget !== 'undefined') widgetManager.registerWidget(CostCalculatorWidget);
-            if (typeof QuoteTableWidget !== 'undefined') widgetManager.registerWidget(QuoteTableWidget);
-            if (typeof InvoiceWidget !== 'undefined') widgetManager.registerWidget(InvoiceWidget);
-            if (typeof PaymentMethodsWidget !== 'undefined') widgetManager.registerWidget(PaymentMethodsWidget);
-            if (typeof CallToActionWidget !== 'undefined') widgetManager.registerWidget(CallToActionWidget);
-            if (typeof CTABoxWidget !== 'undefined') widgetManager.registerWidget(CTABoxWidget);
-            if (typeof CountdownWidget !== 'undefined') widgetManager.registerWidget(CountdownWidget);
-            if (typeof AnnouncementBarWidget !== 'undefined') widgetManager.registerWidget(AnnouncementBarWidget);
-            if (typeof BannerWidget !== 'undefined') widgetManager.registerWidget(BannerWidget);
-            if (typeof PromoBoxWidget !== 'undefined') widgetManager.registerWidget(PromoBoxWidget);
-            if (typeof OfferWidget !== 'undefined') widgetManager.registerWidget(OfferWidget);
-            if (typeof DealWidget !== 'undefined') widgetManager.registerWidget(DealWidget);
-            if (typeof FlashSaleWidget !== 'undefined') widgetManager.registerWidget(FlashSaleWidget);
-            if (typeof LeadMagnetWidget !== 'undefined') widgetManager.registerWidget(LeadMagnetWidget);
-            if (typeof FreeTrialWidget !== 'undefined') widgetManager.registerWidget(FreeTrialWidget);
-            if (typeof DemoRequestWidget !== 'undefined') widgetManager.registerWidget(DemoRequestWidget);
-            if (typeof DownloadWidget !== 'undefined') widgetManager.registerWidget(DownloadWidget);
-            if (typeof SignupWidget !== 'undefined') widgetManager.registerWidget(SignupWidget);
-            if (typeof ConversionWidget !== 'undefined') widgetManager.registerWidget(ConversionWidget);
-            if (typeof AccordionWidget !== 'undefined') widgetManager.registerWidget(AccordionWidget);
-            if (typeof TabsWidget !== 'undefined') widgetManager.registerWidget(TabsWidget);
-            if (typeof ToggleWidget !== 'undefined') widgetManager.registerWidget(ToggleWidget);
-            if (typeof ModalWidget !== 'undefined') widgetManager.registerWidget(ModalWidget);
-            if (typeof TooltipWidget !== 'undefined') widgetManager.registerWidget(TooltipWidget);
-            if (typeof PopoverWidget !== 'undefined') widgetManager.registerWidget(PopoverWidget);
-            if (typeof DropdownWidget !== 'undefined') widgetManager.registerWidget(DropdownWidget);
-            if (typeof MegaMenuWidget !== 'undefined') widgetManager.registerWidget(MegaMenuWidget);
-            if (typeof OffcanvasWidget !== 'undefined') widgetManager.registerWidget(OffcanvasWidget);
-            if (typeof DrawerWidget !== 'undefined') widgetManager.registerWidget(DrawerWidget);
-            if (typeof CollapsibleWidget !== 'undefined') widgetManager.registerWidget(CollapsibleWidget);
-            if (typeof ExpandableWidget !== 'undefined') widgetManager.registerWidget(ExpandableWidget);
-            if (typeof ReadMoreWidget !== 'undefined') widgetManager.registerWidget(ReadMoreWidget);
-            if (typeof ShowHideWidget !== 'undefined') widgetManager.registerWidget(ShowHideWidget);
-            if (typeof FilterWidget !== 'undefined') widgetManager.registerWidget(FilterWidget);
-            if (typeof SortWidget !== 'undefined') widgetManager.registerWidget(SortWidget);
-            if (typeof SearchFilterWidget !== 'undefined') widgetManager.registerWidget(SearchFilterWidget);
-            if (typeof CompareWidget !== 'undefined') widgetManager.registerWidget(CompareWidget);
-            if (typeof WishlistWidget !== 'undefined') widgetManager.registerWidget(WishlistWidget);
-            if (typeof FavoritesWidget !== 'undefined') widgetManager.registerWidget(FavoritesWidget);
-            if (typeof GalleryWidget !== 'undefined') widgetManager.registerWidget(GalleryWidget);
-            if (typeof ImageCarouselWidget !== 'undefined') widgetManager.registerWidget(ImageCarouselWidget);
-            if (typeof LightboxWidget !== 'undefined') widgetManager.registerWidget(LightboxWidget);
-            if (typeof MasonryGalleryWidget !== 'undefined') widgetManager.registerWidget(MasonryGalleryWidget);
-            if (typeof PortfolioWidget !== 'undefined') widgetManager.registerWidget(PortfolioWidget);
-            if (typeof ProjectWidget !== 'undefined') widgetManager.registerWidget(ProjectWidget);
-            if (typeof CaseStudyWidget !== 'undefined') widgetManager.registerWidget(CaseStudyWidget);
-            if (typeof WorkWidget !== 'undefined') widgetManager.registerWidget(WorkWidget);
-            if (typeof BeforeAfterWidget !== 'undefined') widgetManager.registerWidget(BeforeAfterWidget);
-            if (typeof ImageComparisonWidget !== 'undefined') widgetManager.registerWidget(ImageComparisonWidget);
-            if (typeof ImageHotspotWidget !== 'undefined') widgetManager.registerWidget(ImageHotspotWidget);
-            if (typeof ImageTextWidget !== 'undefined') widgetManager.registerWidget(ImageTextWidget);
-            if (typeof ParallaxImageWidget !== 'undefined') widgetManager.registerWidget(ParallaxImageWidget);
-            if (typeof BackgroundVideoWidget !== 'undefined') widgetManager.registerWidget(BackgroundVideoWidget);
-            if (typeof VideoPopupWidget !== 'undefined') widgetManager.registerWidget(VideoPopupWidget);
-            if (typeof VideoPlaylistWidget !== 'undefined') widgetManager.registerWidget(VideoPlaylistWidget);
-            if (typeof AudioWidget !== 'undefined') widgetManager.registerWidget(AudioWidget);
-            if (typeof PodcastWidget !== 'undefined') widgetManager.registerWidget(PodcastWidget);
-            if (typeof SlideShowWidget !== 'undefined') widgetManager.registerWidget(SlideShowWidget);
-            if (typeof View360Widget !== 'undefined') widgetManager.registerWidget(View360Widget);
-            if (typeof SocialIconsWidget !== 'undefined') widgetManager.registerWidget(SocialIconsWidget);
-            if (typeof SocialShareWidget !== 'undefined') widgetManager.registerWidget(SocialShareWidget);
-            if (typeof SocialFeedWidget !== 'undefined') widgetManager.registerWidget(SocialFeedWidget);
-            if (typeof InstagramFeedWidget !== 'undefined') widgetManager.registerWidget(InstagramFeedWidget);
-            if (typeof TwitterFeedWidget !== 'undefined') widgetManager.registerWidget(TwitterFeedWidget);
-            if (typeof FacebookPageWidget !== 'undefined') widgetManager.registerWidget(FacebookPageWidget);
-            if (typeof YouTubeChannelWidget !== 'undefined') widgetManager.registerWidget(YouTubeChannelWidget);
-            if (typeof LinkedInWidget !== 'undefined') widgetManager.registerWidget(LinkedInWidget);
-            if (typeof PinterestWidget !== 'undefined') widgetManager.registerWidget(PinterestWidget);
-            if (typeof TikTokWidget !== 'undefined') widgetManager.registerWidget(TikTokWidget);
-            if (typeof GoogleReviewsWidget !== 'undefined') widgetManager.registerWidget(GoogleReviewsWidget);
-            if (typeof YelpReviewsWidget !== 'undefined') widgetManager.registerWidget(YelpReviewsWidget);
-            if (typeof TrustpilotWidget !== 'undefined') widgetManager.registerWidget(TrustpilotWidget);
-            if (typeof FacebookCommentsWidget !== 'undefined') widgetManager.registerWidget(FacebookCommentsWidget);
-            if (typeof DisqusWidget !== 'undefined') widgetManager.registerWidget(DisqusWidget);
-            if (typeof ContactFormWidget !== 'undefined') widgetManager.registerWidget(ContactFormWidget);
-            if (typeof NewsletterWidget !== 'undefined') widgetManager.registerWidget(NewsletterWidget);
-            if (typeof SubscribeFormWidget !== 'undefined') widgetManager.registerWidget(SubscribeFormWidget);
-            if (typeof SearchWidget !== 'undefined') widgetManager.registerWidget(SearchWidget);
-            if (typeof LoginFormWidget !== 'undefined') widgetManager.registerWidget(LoginFormWidget);
-            if (typeof RegisterFormWidget !== 'undefined') widgetManager.registerWidget(RegisterFormWidget);
-            if (typeof FeedbackFormWidget !== 'undefined') widgetManager.registerWidget(FeedbackFormWidget);
-            if (typeof SurveyWidget !== 'undefined') widgetManager.registerWidget(SurveyWidget);
-            if (typeof QuizWidget !== 'undefined') widgetManager.registerWidget(QuizWidget);
-            if (typeof CalculatorWidget !== 'undefined') widgetManager.registerWidget(CalculatorWidget);
-            if (typeof BookingFormWidget !== 'undefined') widgetManager.registerWidget(BookingFormWidget);
-            if (typeof ReservationWidget !== 'undefined') widgetManager.registerWidget(ReservationWidget);
-            if (typeof QuoteFormWidget !== 'undefined') widgetManager.registerWidget(QuoteFormWidget);
-            if (typeof ApplicationFormWidget !== 'undefined') widgetManager.registerWidget(ApplicationFormWidget);
-            if (typeof UploadWidget !== 'undefined') widgetManager.registerWidget(UploadWidget);
-            if (typeof GoogleMapWidget !== 'undefined') widgetManager.registerWidget(GoogleMapWidget);
-            if (typeof MapboxWidget !== 'undefined') widgetManager.registerWidget(MapboxWidget);
-            if (typeof LocationWidget !== 'undefined') widgetManager.registerWidget(LocationWidget);
-            if (typeof StoreLocatorWidget !== 'undefined') widgetManager.registerWidget(StoreLocatorWidget);
-            if (typeof DirectionsWidget !== 'undefined') widgetManager.registerWidget(DirectionsWidget);
-            if (typeof TimelineWidget !== 'undefined') widgetManager.registerWidget(TimelineWidget);
-            if (typeof EventWidget !== 'undefined') widgetManager.registerWidget(EventWidget);
-            if (typeof EventListWidget !== 'undefined') widgetManager.registerWidget(EventListWidget);
-            if (typeof CalendarWidget !== 'undefined') widgetManager.registerWidget(CalendarWidget);
-            if (typeof ScheduleWidget !== 'undefined') widgetManager.registerWidget(ScheduleWidget);
-            if (typeof CountdownTimerWidget !== 'undefined') widgetManager.registerWidget(CountdownTimerWidget);
-            if (typeof UpcomingEventsWidget !== 'undefined') widgetManager.registerWidget(UpcomingEventsWidget);
-            if (typeof PastEventsWidget !== 'undefined') widgetManager.registerWidget(PastEventsWidget);
-            if (typeof EventRegistrationWidget !== 'undefined') widgetManager.registerWidget(EventRegistrationWidget);
-            if (typeof WebinarWidget !== 'undefined') widgetManager.registerWidget(WebinarWidget);
-            if (typeof ProductWidget !== 'undefined') widgetManager.registerWidget(ProductWidget);
-            if (typeof ProductGridWidget !== 'undefined') widgetManager.registerWidget(ProductGridWidget);
-            if (typeof AddToCartWidget !== 'undefined') widgetManager.registerWidget(AddToCartWidget);
-            if (typeof CartWidget !== 'undefined') widgetManager.registerWidget(CartWidget);
-            if (typeof CheckoutWidget !== 'undefined') widgetManager.registerWidget(CheckoutWidget);
+
+            // Load and Register all widgets from shared file
+            if (typeof registerAllWidgets === 'function') {
+                registerAllWidgets(widgetManager);
+            } else {
+                console.error("registerAllWidgets function not found!");
+                Toast.error("Failed to register widgets");
+            }
+
         } catch (e) {
             Toast.error("Init Error: " + e.message);
             console.error(e);
         }
+
 
         // Render widgets panel
         function renderWidgetsPanel() {

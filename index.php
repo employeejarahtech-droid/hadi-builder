@@ -66,7 +66,21 @@ if (!empty($settings['site_name'])) {
 // Route Logic
 $slug = trim($route, '/');
 
-// DEBUG: Remove in production
+// Initialize Cache Manager
+require_once __DIR__ . '/includes/CacheManager.php';
+$cache = new CacheManager();
+$cacheKey = 'page:slug:' . ($slug ?: 'home');
+$page = $cache->get($cacheKey);
+$isCached = false;
+
+if ($page !== null) {
+    $pageId = $page['id'];
+    $contentType = $page['content_type'] ?? 'page';
+    $isCached = true;
+} else {
+
+
+    // DEBUG: Remove in production
 // echo "DEBUG: REQUEST_URI: $requestUri <br>";
 // echo "DEBUG: SCRIPT_NAME: $scriptName <br>";
 // echo "DEBUG: BASE_PATH: $basePath <br>";
@@ -77,186 +91,193 @@ $slug = trim($route, '/');
 // echo "DEBUG: DB Count: " . $stmt->fetchColumn() . "<br>";
 
 
-// Determine Page/Post ID
-$pageId = null;
-$page = null;
-$contentType = 'page'; // 'page' or 'post'
+    // Determine Page/Post ID
+    $pageId = null;
+    $page = null;
+    $contentType = 'page'; // 'page' or 'post'
 
-if (empty($slug) || $slug === 'index.php') {
-    // Home Page
-    $pageId = $settings['home_page'] ?? null;
-} else if ($slug === 'admin' || strpos($slug, 'admin/') === 0) {
-    // Admin Redirect
-    header("Location: admin/");
-    exit;
-} else if (isset($_GET['page_id']) && is_numeric($_GET['page_id'])) {
-    // Preview page by ID (allow draft status for preview)
-    $stmt = $pdo->prepare("SELECT * FROM pages WHERE id = ?");
-    $stmt->execute([$_GET['page_id']]);
-    $page = $stmt->fetch();
-    if ($page) {
-        $contentType = 'page';
-        $pageId = $page['id'];
-    }
-} else if (isset($_GET['post_id']) && is_numeric($_GET['post_id'])) {
-    // Preview post by ID (allow draft status for preview)
-    $stmt = $pdo->prepare("SELECT * FROM posts WHERE id = ?");
-    $stmt->execute([$_GET['post_id']]);
-    $page = $stmt->fetch();
-    if ($page) {
-        $contentType = 'post';
-        $pageId = $page['id'];
-    }
-} else {
-    // Check if it's a shop route
-    if ($slug === 'shop' || $slug === 'products') {
-        // Try to fetch specific page from DB first
-        $targetSlug = ($slug === 'products') ? 'shop' : $slug;
-        $stmt = $pdo->prepare("SELECT * FROM pages WHERE slug = ? AND status = 'published'");
-        $stmt->execute([$targetSlug]);
-        $dbPage = $stmt->fetch();
-
-        if ($dbPage) {
-            $page = $dbPage;
-            $pageId = $page['id'];
+    if (empty($slug) || $slug === 'index.php') {
+        // Home Page
+        $pageId = $settings['home_page'] ?? null;
+    } else if ($slug === 'admin' || strpos($slug, 'admin/') === 0) {
+        // Admin Redirect
+        header("Location: admin/");
+        exit;
+    } else if (isset($_GET['page_id']) && is_numeric($_GET['page_id'])) {
+        // Preview page by ID (allow draft status for preview)
+        $stmt = $pdo->prepare("SELECT * FROM pages WHERE id = ?");
+        $stmt->execute([$_GET['page_id']]);
+        $page = $stmt->fetch();
+        if ($page) {
             $contentType = 'page';
-        } else {
-            // Fallback: Shop page - create a virtual page for product grid
+            $pageId = $page['id'];
+        }
+    } else if (isset($_GET['post_id']) && is_numeric($_GET['post_id'])) {
+        // Preview post by ID (allow draft status for preview)
+        $stmt = $pdo->prepare("SELECT * FROM posts WHERE id = ?");
+        $stmt->execute([$_GET['post_id']]);
+        $page = $stmt->fetch();
+        if ($page) {
+            $contentType = 'post';
+            $pageId = $page['id'];
+        }
+    } else {
+        // Check if it's a shop route
+        if ($slug === 'shop' || $slug === 'products') {
+            // Try to fetch specific page from DB first
+            $targetSlug = ($slug === 'products') ? 'shop' : $slug;
+            $stmt = $pdo->prepare("SELECT * FROM pages WHERE slug = ? AND status = 'published'");
+            $stmt->execute([$targetSlug]);
+            $dbPage = $stmt->fetch();
+
+            if ($dbPage) {
+                $page = $dbPage;
+                $pageId = $page['id'];
+                $contentType = 'page';
+            } else {
+                // Fallback: Shop page - create a virtual page for product grid
+                $page = [
+                    'id' => 0,
+                    'title' => 'Shop',
+                    'slug' => 'shop',
+                    'status' => 'published',
+                    'content' => json_encode([
+                        [
+                            'id' => 'product-grid-shop',
+                            'type' => 'ProductGridWidget',
+                            'settings' => [
+                                'columns' => 4,
+                                'show_price' => true,
+                                'show_add_to_cart' => true,
+                                'posts_per_page' => 20
+                            ]
+                        ]
+                    ]),
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                    'meta_title' => 'Shop',
+                    'meta_description' => 'Browse our products',
+                    'keywords' => '',
+                    'og_image' => ''
+                ];
+                $contentType = 'page';
+                $pageId = 0;
+            }
+        } elseif ($slug === 'product') {
+            // Product listing page - create a virtual page for product grid
             $page = [
                 'id' => 0,
-                'title' => 'Shop',
-                'slug' => 'shop',
+                'title' => 'Products',
+                'slug' => 'product',
                 'status' => 'published',
                 'content' => json_encode([
                     [
-                        'id' => 'product-grid-shop',
+                        'id' => 'product-grid-1',
                         'type' => 'ProductGridWidget',
                         'settings' => [
-                            'columns' => 4,
+                            'columns' => 3,
                             'show_price' => true,
-                            'show_add_to_cart' => true,
-                            'posts_per_page' => 20
+                            'show_add_to_cart' => true
                         ]
                     ]
                 ]),
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
-                'meta_title' => 'Shop',
+                'meta_title' => 'Products',
                 'meta_description' => 'Browse our products',
                 'keywords' => '',
                 'og_image' => ''
             ];
             $contentType = 'page';
             $pageId = 0;
-        }
-    } elseif ($slug === 'product') {
-        // Product listing page - create a virtual page for product grid
-        $page = [
-            'id' => 0,
-            'title' => 'Products',
-            'slug' => 'product',
-            'status' => 'published',
-            'content' => json_encode([
-                [
-                    'id' => 'product-grid-1',
-                    'type' => 'ProductGridWidget',
-                    'settings' => [
-                        'columns' => 3,
-                        'show_price' => true,
-                        'show_add_to_cart' => true
-                    ]
-                ]
-            ]),
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
-            'meta_title' => 'Products',
-            'meta_description' => 'Browse our products',
-            'keywords' => '',
-            'og_image' => ''
-        ];
-        $contentType = 'page';
-        $pageId = 0;
-    } elseif (strpos($slug, 'product/') === 0) {
-        // Single product page - /product/{slug}
-        $productSlug = substr($slug, 8); // Remove 'product/'
+        } elseif (strpos($slug, 'product/') === 0) {
+            // Single product page - /product/{slug}
+            $productSlug = substr($slug, 8); // Remove 'product/'
 
-        // Create a virtual page for single product
-        $page = [
-            'id' => 0,
-            'title' => 'Product',
-            'slug' => 'product/' . $productSlug,
-            'status' => 'published',
-            'content' => json_encode([
-                [
-                    'id' => 'single-product-1',
-                    'type' => 'SingleProductWidget',
-                    'settings' => [
-                        'product_slug' => $productSlug
+            // Create a virtual page for single product
+            $page = [
+                'id' => 0,
+                'title' => 'Product',
+                'slug' => 'product/' . $productSlug,
+                'status' => 'published',
+                'content' => json_encode([
+                    [
+                        'id' => 'single-product-1',
+                        'type' => 'SingleProductWidget',
+                        'settings' => [
+                            'product_slug' => $productSlug
+                        ]
                     ]
-                ]
-            ]),
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
-            'meta_title' => 'Product',
-            'meta_description' => '',
-            'keywords' => '',
-            'og_image' => ''
-        ];
-        $contentType = 'page';
-        $pageId = 0;
-    } elseif ($slug === 'blog') {
-        // Blog listing page - create a virtual page
-        $page = [
-            'id' => 0,
-            'title' => 'Blog',
-            'slug' => 'blog',
-            'status' => 'published',
-            'content' => '[]', // You can add a blog listing widget here
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
-            'meta_title' => 'Blog',
-            'meta_description' => 'Read our latest blog posts',
-            'keywords' => '',
-            'og_image' => ''
-        ];
-        $contentType = 'page';
-        $pageId = 0;
-    } elseif (strpos($slug, 'blog/') === 0) {
-        $postSlug = substr($slug, 5); // Remove 'blog/'
-        // Try exact match in posts table
-        $stmt = $pdo->prepare("SELECT * FROM posts WHERE slug = ? AND status = 'published'");
-        $stmt->execute([$postSlug]);
-        $page = $stmt->fetch();
-        if ($page) {
-            $contentType = 'post';
-            $pageId = $page['id'];
-        } else {
-            // Fallback: Check if it's a page that just happens to have 'blog/' in URL? 
-            // Or maybe user wants /blog/my-page to map to my-page?
-            // As per plan, let's also check if the slug exists in pages (without blog/ prefix)
-            // or treat it as 404 for blog if strict. 
-            // Let's stick to the plan: matching pages might be useful for migration.
-            $stmt = $pdo->prepare("SELECT * FROM pages WHERE slug = ? AND status = 'published'");
+                ]),
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'meta_title' => 'Product',
+                'meta_description' => '',
+                'keywords' => '',
+                'og_image' => ''
+            ];
+            $contentType = 'page';
+            $pageId = 0;
+        } elseif ($slug === 'blog') {
+            // Blog listing page - create a virtual page
+            $page = [
+                'id' => 0,
+                'title' => 'Blog',
+                'slug' => 'blog',
+                'status' => 'published',
+                'content' => '[]', // You can add a blog listing widget here
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'meta_title' => 'Blog',
+                'meta_description' => 'Read our latest blog posts',
+                'keywords' => '',
+                'og_image' => ''
+            ];
+            $contentType = 'page';
+            $pageId = 0;
+        } elseif (strpos($slug, 'blog/') === 0) {
+            $postSlug = substr($slug, 5); // Remove 'blog/'
+            // Try exact match in posts table
+            $stmt = $pdo->prepare("SELECT * FROM posts WHERE slug = ? AND status = 'published'");
             $stmt->execute([$postSlug]);
+            $page = $stmt->fetch();
+            if ($page) {
+                $contentType = 'post';
+                $pageId = $page['id'];
+            } else {
+                // Fallback: Check if it's a page that just happens to have 'blog/' in URL? 
+                // Or maybe user wants /blog/my-page to map to my-page?
+                // As per plan, let's also check if the slug exists in pages (without blog/ prefix)
+                // or treat it as 404 for blog if strict. 
+                // Let's stick to the plan: matching pages might be useful for migration.
+                $stmt = $pdo->prepare("SELECT * FROM pages WHERE slug = ? AND status = 'published'");
+                $stmt->execute([$postSlug]);
+                $page = $stmt->fetch();
+                if ($page)
+                    $pageId = $page['id'];
+            }
+        } else {
+            // Standard Page
+            $stmt = $pdo->prepare("SELECT * FROM pages WHERE slug = ? AND status = 'published'");
+            $stmt->execute([$slug]);
             $page = $stmt->fetch();
             if ($page)
                 $pageId = $page['id'];
         }
-    } else {
-        // Standard Page
-        $stmt = $pdo->prepare("SELECT * FROM pages WHERE slug = ? AND status = 'published'");
-        $stmt->execute([$slug]);
-        $page = $stmt->fetch();
-        if ($page)
-            $pageId = $page['id'];
     }
-}
 
-// If looking for home page by ID
-if (!$page && $pageId) {
-    $stmt = $pdo->prepare("SELECT * FROM pages WHERE id = ?");
-    $stmt->execute([$pageId]);
-    $page = $stmt->fetch();
+    // If looking for home page by ID
+    if (!$page && $pageId) {
+        $stmt = $pdo->prepare("SELECT * FROM pages WHERE id = ?");
+        $stmt->execute([$pageId]);
+        $page = $stmt->fetch();
+    }
+
+    // Cache the result if found and active
+    if ($page && isset($page['status']) && $page['status'] === 'published') {
+        $page['content_type'] = $contentType;
+        $cache->set($cacheKey, $page);
+    }
 }
 
 // 404 - Check for custom 404 page first
@@ -380,7 +401,7 @@ if (!$page) {
             </style>
         </head>
 
-        <body>
+        <body class="client-preview">
             <div class="error-container">
                 <div class="error-code">404</div>
                 <h1 class="error-title">Page Not Found</h1>
@@ -724,7 +745,7 @@ $pageContent = $page['content'] ?? '[]';
     </style>
 </head>
 
-<body>
+<body class="client-preview">
 
 
     <!-- Mobile Header Bar -->
@@ -767,6 +788,7 @@ $pageContent = $page['content'] ?? '[]';
     <script src="<?php echo $root; ?>/assets/core/EcommerceManager.js"></script>
     <script src="<?php echo $root; ?>/assets/core/WidgetManager.js"></script>
     <script src="<?php echo $root; ?>/assets/core/ElementManager.js"></script>
+    <script src="<?php echo $root; ?>/assets/core/register-widgets.js"></script>
 
     <!-- Widgets -->
     <?php
@@ -792,7 +814,14 @@ $pageContent = $page['content'] ?? '[]';
 
         // Widgets self-register when their scripts load
         // Initialize the widget manager
+        // Initialize the widget manager
         const widgetManager = window.elementorWidgetManager;
+
+        // Register widgets using shared logic
+        if (typeof registerAllWidgets === 'function') {
+            registerAllWidgets(widgetManager);
+        }
+
         widgetManager.init();
 
         window.CMS_ROOT = "<?php echo $root; ?>";

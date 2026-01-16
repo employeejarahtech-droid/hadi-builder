@@ -84,13 +84,26 @@ try {
         }
     }
 
+    // Initialize Cache Manager
+    require_once __DIR__ . '/../includes/CacheManager.php';
+    $cache = new CacheManager();
+
     // Check for single project fetch
     if (isset($_GET['id'])) {
+        $cacheKey = 'project:id:' . $_GET['id'];
+        $cachedProject = $cache->get($cacheKey);
+
+        if ($cachedProject !== null) {
+            echo json_encode(['success' => true, 'project' => $cachedProject, 'cached' => true]);
+            exit;
+        }
+
         $stmt = $pdo->prepare("SELECT p.*, pc.name as category_name, pc.slug as category_slug FROM projects p LEFT JOIN project_categories pc ON p.category_id = pc.id WHERE p.id = ?");
         $stmt->execute([$_GET['id']]);
         $project = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($project) {
+            $cache->set($cacheKey, $project);
             echo json_encode(['success' => true, 'project' => $project]);
         } else {
             http_response_code(404);
@@ -100,11 +113,20 @@ try {
     }
 
     if (isset($_GET['slug'])) {
+        $cacheKey = 'project:slug:' . $_GET['slug'];
+        $cachedProject = $cache->get($cacheKey);
+
+        if ($cachedProject !== null) {
+            echo json_encode(['success' => true, 'project' => $cachedProject, 'cached' => true]);
+            exit;
+        }
+
         $stmt = $pdo->prepare("SELECT p.*, pc.name as category_name, pc.slug as category_slug FROM projects p LEFT JOIN project_categories pc ON p.category_id = pc.id WHERE p.slug = ?");
         $stmt->execute([$_GET['slug']]);
         $project = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($project) {
+            $cache->set($cacheKey, $project);
             echo json_encode(['success' => true, 'project' => $project]);
         } else {
             http_response_code(404);
@@ -118,6 +140,15 @@ try {
     $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 10;
     $offset = ($page - 1) * $limit;
 
+    $cacheParams = compact('page', 'limit');
+    $cacheKey = CacheManager::generateKey('projects:list', $cacheParams);
+    $cachedList = $cache->get($cacheKey);
+
+    if ($cachedList !== null) {
+        echo json_encode($cachedList);
+        exit;
+    }
+
     // Fetch total count of published projects
     $countStmt = $pdo->query("SELECT COUNT(*) FROM projects WHERE status = 'published'");
     $totalCount = $countStmt->fetchColumn();
@@ -130,14 +161,17 @@ try {
     $stmt->execute();
     $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    echo json_encode([
+    $response = [
         'success' => true,
         'projects' => $projects,
         'count' => (int) $totalCount,
         'page' => $page,
         'limit' => $limit,
         'total_pages' => ceil($totalCount / $limit)
-    ]);
+    ];
+
+    $cache->set($cacheKey, $response);
+    echo json_encode($response);
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);

@@ -90,7 +90,7 @@ try {
     $cache = new CacheManager();
 
     // Try cache first
-    $cacheKey = 'categories:tree';
+    $cacheKey = 'categories:tree:v2';
     $cachedData = $cache->get($cacheKey);
 
     if ($cachedData !== null) {
@@ -120,13 +120,15 @@ try {
                 OR category_id LIKE :cat_json_start
                 OR category_id LIKE :cat_json_mid
                 OR category_id LIKE :cat_json_end
+                OR category_id = :cat_json_exact
             )
         ");
         $stmt->execute([
             ':cat_id' => $id,
             ':cat_json_start' => '[' . $id . ',%',
             ':cat_json_mid' => '%,' . $id . ',%',
-            ':cat_json_end' => '%,' . $id . ']'
+            ':cat_json_end' => '%,' . $id . ']',
+            ':cat_json_exact' => '[' . $id . ']'
         ]);
         $categoriesById[$id]['product_count'] = (int) $stmt->fetchColumn();
 

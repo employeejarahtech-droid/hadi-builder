@@ -158,7 +158,7 @@ if ($slug) {
     <style>
         body {
             margin: 0;
-            font-family: sans-serif;
+            font-family: "Basier Square", sans-serif;
             background-color: #fff;
         }
 
@@ -216,7 +216,7 @@ if ($slug) {
         }
 
         .drawer-content {
-            padding-top: 50px;
+            padding-top: 20px;
             overflow-y: auto;
             height: 100%;
         }
@@ -238,7 +238,7 @@ if ($slug) {
             display: none;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
+            padding: 5px 20px;
             background: #fff;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             position: sticky;
@@ -317,9 +317,9 @@ if ($slug) {
         window.SITE_DATA = {
             topbar: <?php echo $topbarContent; ?>,
             header: <?php echo $headerContent; ?>,
-                footer: <?php echo $footerContent; ?>,
-                    page: <?php echo $pageContent; ?>,
-                        mobileMenu: <?php echo $mobileMenuContent ?: '[]'; ?>
+            footer: <?php echo $footerContent; ?>,
+            page: <?php echo $pageContent; ?>,
+            mobileMenu: <?php echo $mobileMenuContent ?: '[]'; ?>
         };
         window.toggleMobileDrawer = function () {
             var drawer = document.getElementById('mobile-drawer');

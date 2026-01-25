@@ -8,6 +8,16 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 
 require_once __DIR__ . '/../../includes/db.php';
 
+// Access Control - Only Administrators can access settings
+if (($_SESSION['admin_role'] ?? 'user') !== 'admin') {
+    $currentPage = 'settings';
+    $pageTitle = 'Settings';
+    require_once __DIR__ . '/../includes/header.php';
+    echo '<div class="content-wrapper"><div class="card" style="text-align: center; padding: 40px; color: #ef4444;"><i class="fa fa-lock" style="font-size: 48px; margin-bottom: 20px;"></i><h2>Access Denied</h2><p>Only Administrators can access settings.</p></div></div>';
+    require_once __DIR__ . '/../includes/footer.php';
+    exit;
+}
+
 $message = '';
 $error = '';
 

@@ -7,6 +7,9 @@ if (!isset($widgetBasePath)) {
 ?>
 <script src="<?php echo $widgetBasePath; ?>/WidgetBase.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/HeadingWidget.js"></script>
+<script src="<?php echo $widgetBasePath; ?>/SubtitleWidget.js?v=<?php echo time(); ?>"></script>
+<script src="<?php echo $widgetBasePath; ?>/TitleWidget.js?v=<?php echo time(); ?>"></script>
+<script src="<?php echo $widgetBasePath; ?>/PlainTextWidget.js?v=<?php echo time(); ?>"></script>
 <script src="<?php echo $widgetBasePath; ?>/TextWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/ButtonWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/ImageWidget.js"></script>
@@ -15,6 +18,7 @@ if (!isset($widgetBasePath)) {
 <script src="<?php echo $widgetBasePath; ?>/SpacerWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/IconWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/LinkWidget.js"></script>
+<script src="<?php echo $widgetBasePath; ?>/PageLinkWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/MenuWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/ListWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/QuoteWidget.js"></script>
@@ -38,6 +42,7 @@ if (!isset($widgetBasePath)) {
 <script src="<?php echo $widgetBasePath; ?>/FeaturesSectionWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/AboutSectionWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/CompanyProfileSection.js?v=1.0.1"></script>
+<script src="<?php echo $widgetBasePath; ?>/NotfoundSectionWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/TrendingCategorySectionWidget.js?v=1.0.3"></script>
 <script src="<?php echo $widgetBasePath; ?>/ServicesSectionWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/TestimonialsSectionWidget.js"></script>
@@ -47,6 +52,7 @@ if (!isset($widgetBasePath)) {
 <script src="<?php echo $widgetBasePath; ?>/PricingSectionWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/CTASectionWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/ContactSectionWidget.js"></script>
+<script src="<?php echo $widgetBasePath; ?>/ContactMapSectionWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/NewsletterSectionWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/BlogSectionWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/PortfolioSectionWidget.js"></script>
@@ -54,6 +60,7 @@ if (!isset($widgetBasePath)) {
 
 <!-- Footer Section Widget -->
 <script src="<?php echo $widgetBasePath; ?>/FooterSectionWidget.js?v=<?php echo time(); ?>"></script>
+<script src="<?php echo $widgetBasePath; ?>/FooterSectionWidgetFiveColumn.js?v=<?php echo time(); ?>"></script>
 
 <script src="<?php echo $widgetBasePath; ?>/FlexWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/TeamMemberWidget.js"></script>
@@ -187,6 +194,7 @@ if (!isset($widgetBasePath)) {
 <script src="<?php echo $widgetBasePath; ?>/WebinarWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/ProductWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/ProductGridWidget.js"></script>
+<script src="<?php echo $widgetBasePath; ?>/SimpleProductGallery.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/SingleProductWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/AddToCartWidget.js"></script>
 <script src="<?php echo $widgetBasePath; ?>/CartWidget.js"></script>

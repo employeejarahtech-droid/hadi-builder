@@ -52,16 +52,7 @@ class TrendingCategorySectionWidget extends WidgetBase {
             tab: 'content'
         });
 
-        this.addControl('grid_columns', {
-            type: 'select',
-            label: 'Grid Columns',
-            default_value: '3',
-            options: [
-                { value: '2', label: '2 Columns' },
-                { value: '3', label: '3 Columns' },
-                { value: '4', label: '4 Columns' }
-            ]
-        });
+
 
         this.addControl('categories', {
             type: 'repeater',
@@ -118,6 +109,102 @@ class TrendingCategorySectionWidget extends WidgetBase {
         });
 
         this.endControlsSection();
+
+        // Style Section - Layout
+        this.startControlsSection('style_section', {
+            label: 'Layout',
+            tab: 'style'
+        });
+
+        this.addControl('grid_columns', {
+            type: 'select',
+            label: 'Grid Columns (Desktop)',
+            default_value: '3',
+            options: [
+                { value: '2', label: '2 Columns' },
+                { value: '3', label: '3 Columns' },
+                { value: '4', label: '4 Columns' },
+                { value: '5', label: '5 Columns' },
+                { value: '6', label: '6 Columns' }
+            ]
+        });
+
+        this.addControl('grid_columns_tablet', {
+            type: 'select',
+            label: 'Grid Columns (Tablet)',
+            default_value: '2',
+            options: [
+                { value: '1', label: '1 Column' },
+                { value: '2', label: '2 Columns' },
+                { value: '3', label: '3 Columns' },
+                { value: '4', label: '4 Columns' }
+            ]
+        });
+
+        this.addControl('grid_columns_mobile', {
+            type: 'select',
+            label: 'Grid Columns (Mobile)',
+            default_value: '1',
+            options: [
+                { value: '1', label: '1 Column' },
+                { value: '2', label: '2 Columns' }
+            ]
+        });
+
+        this.addControl('grid_gap', {
+            type: 'slider',
+            label: 'Grid Gap',
+            default_value: { size: 28, unit: 'px' },
+            range: {
+                min: 0,
+                max: 100,
+                step: 1
+            }
+        });
+
+        this.endControlsSection();
+
+        // Section Style Controls
+        this.startControlsSection('section_style_controls', {
+            label: 'Section Style',
+            tab: 'style'
+        });
+
+        this.addControl('section_padding_top', {
+            type: 'slider',
+            label: 'Padding Top',
+            default_value: { size: 90, unit: 'px' },
+            range: {
+                min: 0,
+                max: 200,
+                step: 5
+            }
+        });
+
+        this.addControl('section_padding_bottom', {
+            type: 'slider',
+            label: 'Padding Bottom',
+            default_value: { size: 90, unit: 'px' },
+            range: {
+                min: 0,
+                max: 200,
+                step: 5
+            }
+        });
+
+        this.addControl('section_background', {
+            type: 'color',
+            label: 'Background Color',
+            default_value: ''
+        });
+
+        this.addControl('section_text_color', {
+            type: 'color',
+            label: 'Text Color',
+            default_value: ''
+        });
+
+        this.endControlsSection();
     }
 
     render() {
@@ -125,7 +212,15 @@ class TrendingCategorySectionWidget extends WidgetBase {
         const title = this.getSetting('section_title', 'Our Trading Categories');
         const description = this.getSetting('section_description', 'We supply a wide range of technology and electronic products tailored for wholesale, retail, and enterprise distribution.');
         const gridColumns = parseInt(this.getSetting('grid_columns', '3'));
+        const gridColumnsTablet = parseInt(this.getSetting('grid_columns_tablet', '2'));
+        const gridColumnsMobile = parseInt(this.getSetting('grid_columns_mobile', '1'));
+        const gridGap = this.getSetting('grid_gap', { size: 28, unit: 'px' });
         const categories = this.getSetting('categories', []);
+
+        const paddingTop = this.getSetting('section_padding_top', { size: 90, unit: 'px' });
+        const paddingBottom = this.getSetting('section_padding_bottom', { size: 90, unit: 'px' });
+        const bgColor = this.getSetting('section_background', '');
+        const textColor = this.getSetting('section_text_color', '');
 
         // Generate a unique Class for scoping styles (ID gets overwritten by CMS)
         const uid = 'trending_' + Math.floor(Math.random() * 100000);
@@ -162,18 +257,18 @@ class TrendingCategorySectionWidget extends WidgetBase {
                B2B Product Categories (Scoped: .${uid})
                ========================= */
             .${uid} {
-                padding: 90px 20px;
+                padding-top: ${paddingTop.size}${paddingTop.unit};
+                padding-bottom: ${paddingBottom.size}${paddingBottom.unit};
+                padding-left: 20px;
+                padding-right: 20px;
                 font-family: "Inter", sans-serif;
+                background-color: ${bgColor};
+                color: ${textColor};
             }
 
-            .${uid} .container {
-                max-width: 1200px;
-                margin: auto;
-            }
 
             .${uid} .section-header {
                 text-align: center;
-                margin-bottom: 60px;
             }
 
             .${uid} .section-header span {
@@ -186,7 +281,6 @@ class TrendingCategorySectionWidget extends WidgetBase {
             .${uid} .section-header h2 {
                 font-size: 38px;
                 font-weight: 700;
-                margin: 12px 0;
             }
 
             .${uid} .section-header p {
@@ -201,25 +295,24 @@ class TrendingCategorySectionWidget extends WidgetBase {
                 font-weight: 600;
                 letter-spacing: 1px;
                 text-transform: uppercase;
-                margin-bottom: 10px;
+                margin-bottom: 0;
             }
             
             .${uid} .ebl-data-blocks .title h2 {
                 font-size: 38px;
                 font-weight: 700;
-                margin: 12px 0;
                 line-height: 1.2;
             }
             
             .${uid} .ebl-data-blocks .plain_text p {
                 font-size: 16px;
-                margin-bottom: 25px;
+                margin-bottom: 0;
                 line-height: 1.6;
             }
 
             .${uid} .b2b-grid {
                 display: grid;
-                gap: 28px;
+                gap: ${gridGap.size}${gridGap.unit};
             }
 
             .${uid} .b2b-card {
@@ -264,21 +357,30 @@ class TrendingCategorySectionWidget extends WidgetBase {
                 color: #cbd5f5;
             }
 
-            /* Responsive */
-            @media (max-width: 992px) {
+            /* Responsive - Standard Media Queries */
+            @media (max-width: 1024px) {
                 .${uid} .b2b-grid {
-                    grid-template-columns: repeat(2, 1fr) !important;
+                    grid-template-columns: repeat(${gridColumnsTablet}, 1fr) !important;
                 }
             }
 
-            @media (max-width: 600px) {
+            @media (max-width: 767px) {
                 .${uid} .b2b-grid {
-                    grid-template-columns: 1fr !important;
+                    grid-template-columns: repeat(${gridColumnsMobile}, 1fr) !important;
                 }
 
                 .${uid} .section-header h2 {
                     font-size: 30px;
                 }
+            }
+
+            /* Responsive - Builder View Support */
+            .canvas-wrapper.tablet .${uid} .b2b-grid {
+                grid-template-columns: repeat(${gridColumnsTablet}, 1fr) !important;
+            }
+
+            .canvas-wrapper.mobile .${uid} .b2b-grid {
+                grid-template-columns: repeat(${gridColumnsMobile}, 1fr) !important;
             }
             </style>
 

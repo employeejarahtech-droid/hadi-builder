@@ -345,9 +345,48 @@ class AIChatBoxWidget extends WidgetBase {
                     font-size: 18px;
                 }
                 
+                
                 .ai-chat-input-area.disabled {
                     opacity: 0.5;
                     pointer-events: none;
+                }
+                
+                /* Typing Indicator */
+                .typing-indicator {
+                    display: flex;
+                    gap: 4px;
+                    padding: 10px 15px;
+                }
+                
+                .typing-indicator .dot {
+                    width: 8px;
+                    height: 8px;
+                    background: #9ca3af;
+                    border-radius: 50%;
+                    animation: typing 1.4s infinite;
+                }
+                
+                .typing-indicator .dot:nth-child(2) {
+                    animation-delay: 0.2s;
+                }
+                
+                .typing-indicator .dot:nth-child(3) {
+                    animation-delay: 0.4s;
+                }
+                
+                @keyframes typing {
+                    0%, 60%, 100% { transform: translateY(0); opacity: 0.7; }
+                    30% { transform: translateY(-10px); opacity: 1; }
+                }
+                
+                /* Suggestions */
+                .ai-suggestions {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+                    margin-top: 5px;
+                    align-self: flex-start;
+                    width: 100%;
                 }
             </style>
         `;
@@ -485,7 +524,21 @@ class AIChatBoxWidget extends WidgetBase {
         const addBotMessage = (text, save = true) => {
             const bMsg = document.createElement('div');
             bMsg.className = 'ai-message bot-message';
-            bMsg.textContent = text;
+
+            // Support markdown-style formatting
+            let formattedText = text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
+                .replace(/~~(.*?)~~/g, '<del>$1</del>') // Strikethrough
+                .replace(/\n/g, '<br>'); // Line breaks
+
+            // Detect and render images (format: "🖼️ **Image:** URL")
+            formattedText = formattedText.replace(
+                /🖼️\s*<strong>Image:<\/strong>\s*(https?:\/\/[^\s<]+)/gi,
+                '<br><img src="$1" alt="Product Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-top: 10px;">'
+            );
+
+            bMsg.innerHTML = formattedText;
+            bMsg.style.whiteSpace = 'pre-wrap'; // Preserve whitespace
             msgs.appendChild(bMsg);
             scrollToBottom();
             if (save) saveHistory(text, 'bot');
@@ -496,9 +549,72 @@ class AIChatBoxWidget extends WidgetBase {
             if (!txt) return;
             addUserMessage(txt);
             input.value = '';
-            setTimeout(() => {
-                addBotMessage("I'm a simulated AI response.");
-            }, 1000);
+
+            // Show typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'ai-message bot-message typing-indicator';
+            typingDiv.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+            msgs.appendChild(typingDiv);
+            scrollToBottom();
+
+            // Call AI API
+            fetch('/api/ai-chat-response.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question: txt })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    typingDiv.remove();
+                    if (data.success && data.response) {
+                        addBotMessage(data.response);
+
+                        // Add suggestions as clickable buttons
+                        if (data.suggestions && data.suggestions.length > 0) {
+                            const suggestionsDiv = document.createElement('div');
+                            suggestionsDiv.className = 'ai-suggestions';
+                            data.suggestions.forEach(suggestion => {
+                                const btn = document.createElement('button');
+                                btn.className = 'ai-suggestion-btn';
+                                btn.textContent = suggestion;
+                                btn.style.background = 'white';
+                                btn.style.border = `1px solid ${themeColor}`;
+                                btn.style.color = themeColor;
+                                btn.style.padding = '8px 12px';
+                                btn.style.borderRadius = '15px';
+                                btn.style.cursor = 'pointer';
+                                btn.style.fontSize = '13px';
+                                btn.style.marginBottom = '5px';
+                                btn.style.width = '100%';
+                                btn.style.textAlign = 'left';
+                                btn.style.transition = 'all 0.2s';
+
+                                btn.onmouseover = () => {
+                                    btn.style.background = themeColor;
+                                    btn.style.color = 'white';
+                                };
+                                btn.onmouseout = () => {
+                                    btn.style.background = 'white';
+                                    btn.style.color = themeColor;
+                                };
+                                btn.onclick = () => {
+                                    input.value = suggestion;
+                                    sendMessage();
+                                };
+                                suggestionsDiv.appendChild(btn);
+                            });
+                            msgs.appendChild(suggestionsDiv);
+                            scrollToBottom();
+                        }
+                    } else {
+                        addBotMessage("Sorry, I'm having trouble processing that. Please try again.");
+                    }
+                })
+                .catch(err => {
+                    console.error('AI API Error:', err);
+                    typingDiv.remove();
+                    addBotMessage("Sorry, I'm experiencing technical difficulties. Please try again later.");
+                });
         };
 
         // DOM Listeners

@@ -13,6 +13,13 @@
       "icon": "fa-users",
       "url": "/admin/users/",
       "page_key": "users"
+    },
+    {
+      "id": "custom_page",
+      "label": "Widget List",
+      "icon": "fa-star",
+      "url": "/admin/widget-list/",
+      "page_key": "custom_page"
     }
   ],
   "groups": [

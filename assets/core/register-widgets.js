@@ -5,6 +5,9 @@
  */
 function registerAllWidgets(widgetManager) {
     if (typeof HeadingWidget !== 'undefined') widgetManager.registerWidget(HeadingWidget);
+    if (typeof TitleWidget !== 'undefined') widgetManager.registerWidget(TitleWidget);
+    if (typeof SubtitleWidget !== 'undefined') widgetManager.registerWidget(SubtitleWidget);
+    if (typeof PlainTextWidget !== 'undefined') widgetManager.registerWidget(PlainTextWidget);
     if (typeof TextWidget !== 'undefined') widgetManager.registerWidget(TextWidget);
     if (typeof ButtonWidget !== 'undefined') widgetManager.registerWidget(ButtonWidget);
     if (typeof ImageWidget !== 'undefined') widgetManager.registerWidget(ImageWidget);
@@ -17,6 +20,7 @@ function registerAllWidgets(widgetManager) {
     if (typeof SpacerWidget !== 'undefined') widgetManager.registerWidget(SpacerWidget);
     if (typeof IconWidget !== 'undefined') widgetManager.registerWidget(IconWidget);
     if (typeof LinkWidget !== 'undefined') widgetManager.registerWidget(LinkWidget);
+    if (typeof PageLinkWidget !== 'undefined') widgetManager.registerWidget(PageLinkWidget);
     if (typeof MenuWidget !== 'undefined') widgetManager.registerWidget(MenuWidget);
     if (typeof ListWidget !== 'undefined') widgetManager.registerWidget(ListWidget);
     if (typeof QuoteWidget !== 'undefined') widgetManager.registerWidget(QuoteWidget);

@@ -190,49 +190,52 @@ if ($page !== null) {
             ];
             $contentType = 'page';
             $pageId = 0;
-        } elseif (strpos($slug, 'product/') === 0) {
-            // Single product page - /product/{slug}
-            $productSlug = substr($slug, 8); // Remove 'product/'
+        } elseif ($slug === 'blog') {
+            // Check for 'blog' builder page
+            $blogPage = null;
+            $stmtBP = $pdo->prepare("SELECT * FROM pages WHERE slug = 'blog' AND status = 'published'");
+            $stmtBP->execute();
+            $fetchedPage = $stmtBP->fetch();
 
-            // Create a virtual page for single product
-            $page = [
-                'id' => 0,
-                'title' => 'Product',
-                'slug' => 'product/' . $productSlug,
-                'status' => 'published',
-                'content' => json_encode([
-                    [
-                        'id' => 'single-product-1',
-                        'type' => 'SingleProductWidget',
-                        'settings' => [
-                            'product_slug' => $productSlug
+            $hasBuilderContent = false;
+            if ($fetchedPage && !empty($fetchedPage['content'])) {
+                $decoded = json_decode($fetchedPage['content'], true);
+                if (is_array($decoded) && count($decoded) > 0) {
+                    $hasBuilderContent = true;
+                    $blogPage = $fetchedPage;
+                }
+            }
+
+            if ($hasBuilderContent) {
+                $page = $blogPage;
+            } else {
+                // Blog listing page - fallback virtual page
+                $page = [
+                    'id' => 0,
+                    'title' => 'Blog',
+                    'slug' => 'blog',
+                    'status' => 'published',
+                    // Use BlogSectionWidget as default if not customized
+                    'content' => json_encode([
+                        [
+                            'id' => 'blog-section-1',
+                            'type' => 'BlogSectionWidget',
+                            'settings' => [
+                                'title' => 'Our Latest News',
+                                'posts_per_page' => 6
+                            ]
                         ]
-                    ]
-                ]),
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-                'meta_title' => 'Product',
-                'meta_description' => '',
-                'keywords' => '',
-                'og_image' => ''
-            ];
+                    ]),
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                    'meta_title' => 'Blog',
+                    'meta_description' => 'Read our latest blog posts',
+                    'keywords' => '',
+                    'og_image' => ''
+                ];
+            }
             $contentType = 'page';
             $pageId = 0;
-        } elseif ($slug === 'blog') {
-            // Blog listing page - create a virtual page
-            $page = [
-                'id' => 0,
-                'title' => 'Blog',
-                'slug' => 'blog',
-                'status' => 'published',
-                'content' => '[]', // You can add a blog listing widget here
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-                'meta_title' => 'Blog',
-                'meta_description' => 'Read our latest blog posts',
-                'keywords' => '',
-                'og_image' => ''
-            ];
             $contentType = 'page';
             $pageId = 0;
         } elseif (strpos($slug, 'blog/') === 0) {
@@ -312,7 +315,7 @@ if (!$page) {
                 }
 
                 body {
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+                    font-family: "Basier Square", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                     min-height: 100vh;
                     display: flex;
@@ -595,7 +598,7 @@ $pageContent = $page['content'] ?? '[]';
         body {
             margin: 0;
             padding: 0;
-            font-family: sans-serif;
+            font-family: "Basier Square", sans-serif;
         }
 
         .elementor-element {
@@ -659,7 +662,7 @@ $pageContent = $page['content'] ?? '[]';
         }
 
         .drawer-content {
-            padding-top: 50px;
+            padding-top: 20px;
             /* Space for close button */
             overflow-y: auto;
             height: 100%;
@@ -719,7 +722,7 @@ $pageContent = $page['content'] ?? '[]';
             display: none;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
+            padding: 5px 20px;
             background: #fff;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             position: sticky;
@@ -753,7 +756,8 @@ $pageContent = $page['content'] ?? '[]';
         <a href="/" class="mobile-logo">
             <?php if (!empty($settings['site_logo'])): ?>
                 <img src="<?php echo htmlspecialchars($settings['site_logo']); ?>"
-                    alt="<?php echo htmlspecialchars($appName); ?>" style="height: 40px; width: auto; object-fit: contain;">
+                    alt="<?php echo htmlspecialchars($appName); ?>"
+                    style="width: 140px; height: auto; object-fit: contain;">
             <?php else: ?>
                 <?php echo htmlspecialchars($appName); ?>
             <?php endif; ?>

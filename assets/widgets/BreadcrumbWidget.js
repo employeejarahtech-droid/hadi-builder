@@ -257,9 +257,13 @@ class BreadcrumbWidget extends WidgetBase {
 
         const content = `
             ${styles}
-            <nav class="${uniqueId}" aria-label="Breadcrumb">
-                ${breadcrumbItems}
-            </nav>
+            <div class="section-breadcrumb">
+                <div class="container">
+                    <nav class="${uniqueId}" aria-label="Breadcrumb">
+                        ${breadcrumbItems}
+                    </nav>
+                </div>
+            </div>
         `;
 
         // Build wrapper classes

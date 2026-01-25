@@ -14,6 +14,10 @@ class ProductGridWidget extends WidgetBase {
         this.addControl('show_categories', { type: 'switcher', label: 'Show Categories', default_value: 'yes' });
         this.addControl('show_price_filter', { type: 'switcher', label: 'Show Price Filter', default_value: 'yes' });
 
+        this.addControl('show_price', { type: 'switcher', label: 'Show Price', default_value: 'yes' });
+        this.addControl('show_free_delivery', { type: 'switcher', label: 'Show Free Delivery Text', default_value: 'yes' });
+        this.addControl('show_rating', { type: 'switcher', label: 'Show Rating', default_value: 'yes' });
+
         this.addControl('source', {
             type: 'select',
             label: 'Product Source',
@@ -49,6 +53,9 @@ class ProductGridWidget extends WidgetBase {
         const showCategories = this.getSetting('show_categories', 'yes');
         const showPriceFilter = this.getSetting('show_price_filter', 'yes');
         const source = this.getSetting('source', 'dynamic');
+        const showPrice = this.getSetting('show_price', 'yes');
+        const showFreeDelivery = this.getSetting('show_free_delivery', 'yes');
+        const showRating = this.getSetting('show_rating', 'yes');
         const postsPerPage = parseInt(this.getSetting('posts_per_page', 20)) || 20;
         const primaryColor = this.getSetting('primary_color', '#007EFC');
         const discountBadgeColor = this.getSetting('discount_badge_color', '#ff4444');
@@ -58,7 +65,7 @@ class ProductGridWidget extends WidgetBase {
         // Store config
         window[`productGrid_${cssId}`] = {
             source, columns, postsPerPage, primaryColor, discountBadgeColor, title,
-            showFilters, showCategories, showPriceFilter
+            showFilters, showCategories, showPriceFilter, showPrice, showFreeDelivery, showRating
         };
 
 
@@ -70,7 +77,7 @@ class ProductGridWidget extends WidgetBase {
                 <div style="margin-top: 10px; color: #666;">Loading products...</div>
             </div>`;
 
-        return `<div class="product-grid-widget pt-5 pb-5" id="${cssId}">${loadingHtml}</div>`;
+        return `<div class="product-grid-widget " id="${cssId}">${loadingHtml}</div>`;
     }
 
     waitForContainer(containerId, attempts = 0) {
@@ -89,7 +96,7 @@ class ProductGridWidget extends WidgetBase {
         const config = window[`productGrid_${containerId}`];
         if (!config) return;
 
-        const { source, columns, postsPerPage, primaryColor, discountBadgeColor, title, showFilters, showCategories, showPriceFilter } = config;
+        const { source, columns, postsPerPage, primaryColor, discountBadgeColor, title, showFilters, showCategories, showPriceFilter, showPrice, showFreeDelivery, showRating } = config;
 
         // Show loading indicator
         const loadingHtml = `
@@ -146,7 +153,7 @@ class ProductGridWidget extends WidgetBase {
     renderProductGrid(containerId, productsData, page, totalPages, totalCount, filters = {}) {
         const container = document.getElementById(containerId);
         const config = window[`productGrid_${containerId}`];
-        const { columns, primaryColor, discountBadgeColor, title, showFilters, postsPerPage } = config;
+        const { columns, primaryColor, discountBadgeColor, title, showFilters, postsPerPage, showPrice, showFreeDelivery, showRating } = config;
 
         const startItem = ((page - 1) * postsPerPage) + 1;
         const endItem = Math.min(page * postsPerPage, totalCount);
@@ -169,16 +176,17 @@ class ProductGridWidget extends WidgetBase {
                         <img src="${imageUrl}" alt="${this.escapeHtml(item.name)}" style="width: 100%; height: 100%; object-fit: contain;" loading="lazy">
                     </a>
                     <div style="padding: 15px;">
-                        <a href="${linkUrl}" style="font-size: 14px; font-weight: 500; color: #1f2937; text-decoration: none; display: block; margin-bottom: 8px; line-height: 1.4; height: 40px; overflow: hidden;">${this.escapeHtml(item.name)}</a>
+                        <a href="${linkUrl}" style="font-size: 16px; font-weight: 500; color: #1f2937; text-decoration: none; display: block; margin-bottom: 8px; line-height: 1.4; height: 40px; overflow: hidden;">${this.escapeHtml(item.name)}</a>
+                        ${showPrice === 'yes' ? `
                         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                             <div style="font-size: 18px; font-weight: 700; color: ${primaryColor};">
                                 ${window.EcommerceManager ? window.EcommerceManager.formatPrice(price) : `$${price.toFixed(2)}`}
                             </div>
                             ${discount > 0 ? `<div style="font-size: 14px; color: #9ca3af; text-decoration: line-through;">${window.EcommerceManager ? window.EcommerceManager.formatPrice(originalPrice) : `$${originalPrice.toFixed(2)}`}</div>` : ''}
-                        </div>
-                        ${this.renderStars(rating, primaryColor)}
+                        </div>` : ''}
+                        ${showRating === 'yes' ? this.renderStars(rating, primaryColor) : ''}
                         <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #f3f4f6;">
-                            <div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">🚚 Free Delivery</div>
+                            ${showFreeDelivery === 'yes' ? `<div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">🚚 Free Delivery</div>` : ''}
                             <div style="font-size: 12px; color: #10b981;">✓ In Stock</div>
                         </div>
                     </div>
@@ -194,7 +202,7 @@ class ProductGridWidget extends WidgetBase {
                         <div style="background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; position: sticky; top: 20px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                                 <h4 style="font-size: 18px; font-weight: 700; margin: 0; color: #1f2937;">Filters</h4>
-                                <button onclick="window.productGridResetFilters_${containerId}()" style="background: none; border: none; color: ${primaryColor}; cursor: pointer; font-size: 14px; font-weight: 600;">Reset</button>
+                                <button onclick="window.productGridResetFilters_${containerId}()" style="background: none; border: none; color: ${primaryColor}; cursor: pointer; font-size: 16px; font-weight: 600;">Reset</button>
                             </div>
                             <div id="categories-list-${containerId}">
                                 <div style="text-align: center; padding: 20px; color: #9ca3af;">
@@ -208,14 +216,14 @@ class ProductGridWidget extends WidgetBase {
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                             <div style="font-size: 14px; color: #6b7280;">Showing ${startItem}-${endItem} of ${totalCount} items</div>
                             <div style="display: flex; gap: 10px; align-items: center;">
-                                <select id="sort-select-${containerId}" onchange="window['productGridSort_${containerId}'](this.value)" style="padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 14px; cursor: pointer;">
+                                <select id="sort-select-${containerId}" onchange="window['productGridSort_${containerId}'](this.value)" style="padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 16px; cursor: pointer;">
                                     <option value="" ${!filters.sort || filters.sort === 'newest' ? 'selected' : ''}>Sort by</option>
                                     <option value="price_asc" ${filters.sort === 'price_asc' ? 'selected' : ''}>Price: Low to High</option>
                                     <option value="price_desc" ${filters.sort === 'price_desc' ? 'selected' : ''}>Price: High to Low</option>
                                     <option value="rating" ${filters.sort === 'rating' ? 'selected' : ''}>Top Rated</option>
                                     <option value="newest" ${filters.sort === 'newest' ? 'selected' : ''}>Newest</option>
                                 </select>
-                                <select id="perpage-select-${containerId}" onchange="window['productGridPerPage_${containerId}'](this.value)" style="padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 14px; cursor: pointer;">
+                                <select id="perpage-select-${containerId}" onchange="window['productGridPerPage_${containerId}'](this.value)" style="padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 16px; cursor: pointer;">
                                     <option value="20" ${postsPerPage == 20 ? 'selected' : ''}>Show: 20</option>
                                     <option value="50" ${postsPerPage == 50 ? 'selected' : ''}>Show: 50</option>
                                     <option value="100" ${postsPerPage == 100 ? 'selected' : ''}>Show: 100</option>
@@ -352,7 +360,7 @@ class ProductGridWidget extends WidgetBase {
                             const isSubActive = filters.category == sub.id;
                             const subCount = sub.product_count || 0;
                             html += `
-                                <button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().loadProducts('${containerId}', 1, { category: ${sub.id} })" style="padding: 8px 12px; padding-left: 28px; background: ${isSubActive ? primaryColor + '15' : 'transparent'}; border: none; border-radius: 6px; text-align: left; cursor: pointer; font-size: 13px; color: ${isSubActive ? primaryColor : '#9ca3af'}; font-weight: ${isSubActive ? '600' : '400'}; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;" onmouseover="if(!this.style.background.includes('${primaryColor}')) this.style.background='#f3f4f6'" onmouseout="if(!this.style.background.includes('${primaryColor}')) this.style.background='transparent'">
+                                <button onclick="new (window.elementorWidgetManager.getWidgetClass('product_grid'))().loadProducts('${containerId}', 1, { category: ${sub.id} })" style="padding: 8px 12px; padding-left: 28px; background: ${isSubActive ? primaryColor + '15' : 'transparent'}; border: none; border-radius: 6px; text-align: left; cursor: pointer; font-size: 16px; color: ${isSubActive ? primaryColor : '#9ca3af'}; font-weight: ${isSubActive ? '600' : '400'}; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;" onmouseover="if(!this.style.background.includes('${primaryColor}')) this.style.background='#f3f4f6'" onmouseout="if(!this.style.background.includes('${primaryColor}')) this.style.background='transparent'">
                                     <span>${this.escapeHtml(sub.name)}</span>
                                     <span style="font-size: 11px; color: #cbd5e1;">(${subCount})</span>
                                 </button>`;

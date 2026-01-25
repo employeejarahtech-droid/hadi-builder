@@ -98,9 +98,20 @@ if (!defined('base_url')) {
             $groupedMenuEnabled = !isset($sidebarSettings['sidebar_grouped_menu']) || $sidebarSettings['sidebar_grouped_menu'] == '1';
             $showIcons = !isset($sidebarSettings['sidebar_show_icons']) || $sidebarSettings['sidebar_show_icons'] == '1';
 
+            // Get current user role
+            $userRole = $_SESSION['admin_role'] ?? 'user';
+
+            // Define admin-only menu items
+            $adminOnlyItems = ['users', 'custom_page', 'settings', 'git_version']; // 'users', 'widget-list', 'settings', and 'git_version'
+            
             // Render ungrouped items
             if (!empty($menusData['ungrouped'])) {
                 foreach ($menusData['ungrouped'] as $item) {
+                    // Skip admin-only items if user is not an admin
+                    if (in_array($item['id'], $adminOnlyItems) && $userRole !== 'admin') {
+                        continue;
+                    }
+
                     $isActive = ($currentPage == $item['page_key']) ? 'active' : '';
                     $icon = $showIcons ? '<i class="fa ' . htmlspecialchars($item['icon']) . '"></i> ' : '';
                     echo '<li>';
@@ -152,6 +163,11 @@ if (!defined('base_url')) {
                 }
 
                 foreach ($menusData['footer'] as $item) {
+                    // Skip admin-only items if user is not an admin
+                    if (in_array($item['id'], $adminOnlyItems) && $userRole !== 'admin') {
+                        continue;
+                    }
+
                     $isActive = ($currentPage == $item['page_key']) ? 'active' : '';
                     $icon = $showIcons ? '<i class="fa ' . htmlspecialchars($item['icon']) . '"></i> ' : '';
                     echo '<li>';
@@ -175,19 +191,36 @@ if (!defined('base_url')) {
             <div class="user-menu">
                 <div class="user-dropdown-toggle">
                     <span style="color: var(--secondary); font-size: 0.875rem; font-weight: 500;">
-                        Auth User
+                        <?php echo htmlspecialchars($_SESSION['admin_username'] ?? 'User'); ?>
                     </span>
                     <i class="fa fa-chevron-down" style="font-size: 0.75rem; color: var(--secondary);"></i>
                     <i class="fa fa-user-circle" style="font-size: 1.5rem; color: var(--secondary);"></i>
                 </div>
                 <div class="user-dropdown-menu">
                     <div style="padding: 1rem; border-bottom: 1px solid var(--border);">
-                        <div style="font-weight: 600;">Auth User</div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted);">Administrator</div>
+                        <div style="font-weight: 600;">
+                            <?php echo htmlspecialchars($_SESSION['admin_username'] ?? 'User'); ?>
+                        </div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">
+                            <?php echo ucfirst(htmlspecialchars($_SESSION['admin_role'] ?? 'User')); ?>
+                            <?php if (isset($_SESSION['admin_email'])): ?>
+                                <br><span
+                                    style="font-size: 0.7rem; color: #94a3b8;"><?php echo htmlspecialchars($_SESSION['admin_email']); ?></span>
+                            <?php endif; ?>
+                        </div>
                     </div>
-                    <a href="<?php echo base_url; ?>/admin/settings/" class="user-dropdown-item">
-                        <i class="fa fa-cog" style="width: 16px;"></i> Settings
+
+                    <!-- User Settings (Profile) -->
+                    <a href="<?php echo base_url; ?>/admin/user-settings.php" class="user-dropdown-item">
+                        <i class="fa fa-user-cog" style="width: 16px;"></i> User Settings
                     </a>
+
+                    <!-- Global Settings (Admin Only) -->
+                    <?php if (isset($_SESSION['admin_role']) && $_SESSION['admin_role'] === 'admin'): ?>
+                        <a href="<?php echo base_url; ?>/admin/settings/" class="user-dropdown-item">
+                            <i class="fa fa-cog" style="width: 16px;"></i> Settings
+                        </a>
+                    <?php endif; ?>
                     <div class="user-dropdown-divider"></div>
                     <a href="<?php echo base_url; ?>/admin/?action=logout" class="user-dropdown-item"
                         style="color: #ef4444;">

@@ -85,14 +85,15 @@ class MediaControl extends BaseControl {
             // Clear the value
             this.setValue({ url: '' });
 
-            // Find the control container and re-render it
-            const $controlContainer = $(`[data-control-id="${this.id}"]`).closest('.elementor-control-content');
-            
+            // Find the control container using the clicked button context
+            // This is safer than using ID selector which might match multiple elements
+            const $controlContainer = $(e.currentTarget).closest('.elementor-control-content');
+
             if ($controlContainer.length) {
                 // Re-render the entire control with placeholder
                 $controlContainer.html(this.render());
-                // Re-bind listeners for the new elements
-                this.setupListeners();
+
+                // No need to re-bind listeners as we use document delegation matches
             } else {
                 console.error('Could not find media control container');
             }
@@ -560,32 +561,32 @@ class MediaControl extends BaseControl {
             },
             body: JSON.stringify({ id: mediaId })
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Remove element with animation
-                $element.fadeOut(300, function() {
-                    $(this).remove();
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Remove element with animation
+                    $element.fadeOut(300, function () {
+                        $(this).remove();
 
-                    // Hide delete button if no items left
-                    if ($('.media-library-item').length === 0) {
-                        $('.media-delete-selected-btn').hide();
-                        $('.media-library-grid').html('<div class="media-empty">No media files found. Upload some!</div>');
-                    }
-                });
+                        // Hide delete button if no items left
+                        if ($('.media-library-item').length === 0) {
+                            $('.media-delete-selected-btn').hide();
+                            $('.media-library-grid').html('<div class="media-empty">No media files found. Upload some!</div>');
+                        }
+                    });
 
-                Toast.success('Media deleted successfully');
-            } else {
-                Toast.error('Failed to delete media: ' + (data.message || 'Unknown error'));
-            }
-        })
-        .catch(err => {
-            console.error('Delete error:', err);
-            Toast.error('Error deleting media: ' + err.message);
-        })
-        .finally(() => {
-            $element.removeClass('deleting');
-        });
+                    Toast.success('Media deleted successfully');
+                } else {
+                    Toast.error('Failed to delete media: ' + (data.message || 'Unknown error'));
+                }
+            })
+            .catch(err => {
+                console.error('Delete error:', err);
+                Toast.error('Error deleting media: ' + err.message);
+            })
+            .finally(() => {
+                $element.removeClass('deleting');
+            });
     }
 }
 

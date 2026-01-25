@@ -77,8 +77,56 @@ if (!$id && isset($_GET['page'])) {
     $stmtSlug = $pdo->prepare("SELECT id FROM $table WHERE slug = ?");
     $stmtSlug->execute([$slug]);
     $found = $stmtSlug->fetch();
-    if ($found)
+    if ($found) {
         $id = $found['id'];
+    } elseif ($table === 'pages') {
+        // Auto-create page if it doesn't exist
+        $title = ucfirst(str_replace(['-', '_'], ' ', $slug));
+
+        // Define default content based on slug
+        $defaultContent = '[]';
+
+        if ($slug === 'single-product') {
+            $defaultContent = json_encode([
+                [
+                    'id' => 'def-sp-1',
+                    'type' => 'SingleProductWidget',
+                    'settings' => []
+                ]
+            ]);
+        } elseif ($slug === 'shop') {
+            $defaultContent = json_encode([
+                [
+                    'id' => 'def-shop-1',
+                    'type' => 'ProductGridWidget',
+                    'settings' => [
+                        'title' => 'Shop All Products',
+                        'columns' => '4',
+                        'posts_per_page' => 12
+                    ]
+                ]
+            ]);
+        } elseif ($slug === 'blog') {
+            $defaultContent = json_encode([
+                [
+                    'id' => 'def-blog-1',
+                    'type' => 'BlogSectionWidget',
+                    'settings' => [
+                        'title' => 'Our Latest News',
+                        'posts_per_page' => 6
+                    ]
+                ]
+            ]);
+        }
+
+        try {
+            $stmtInsert = $pdo->prepare("INSERT INTO pages (title, slug, status, content, created_at, updated_at) VALUES (?, ?, 'published', ?, NOW(), NOW())");
+            $stmtInsert->execute([$title, $slug, $defaultContent]);
+            $id = $pdo->lastInsertId();
+        } catch (Exception $e) {
+            // Ignore error, ID will remain null
+        }
+    }
 }
 
 if ($id) {
@@ -98,6 +146,18 @@ if ($id) {
 } else {
     // If no ID, maybe redirect to create page or show error?
 }
+
+// Fetch INACTIVE widgets from database (simpler - show all by default)
+$inactiveWidgets = [];
+try {
+    $stmt = $pdo->query("SELECT widget_name FROM widget_settings WHERE is_active = 0");
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $inactiveWidgets[] = $row['widget_name'];
+    }
+} catch (Exception $e) {
+    // If table doesn't exist or error, no widgets are inactive
+    $inactiveWidgets = [];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -116,6 +176,8 @@ if ($id) {
         const API_URL = "api/save-page.php";
         const SAVE_ALL_URL = "api/save-all.php";
         window.CMS_API_BASE = '../api/';
+        // Inactive widgets list (widgets to hide)
+        window.INACTIVE_WIDGETS = <?php echo json_encode($inactiveWidgets); ?>;
     </script>
 
 
@@ -628,6 +690,9 @@ if ($id) {
             </div>
 
             <div class="top-bar-right">
+                <button class="btn btn-secondary" id="btn-clear-cache" title="Clear Cache">
+                    <i class="fa fa-broom"></i>
+                </button>
                 <button class="btn btn-secondary" id="btn-layers" title="Layers">
                     <i class="fa fa-layer-group"></i>
                 </button>
@@ -712,6 +777,41 @@ if ($id) {
         </div>
     </div>
 
+    <!-- Context Menu -->
+    <div id="widget-context-menu" class="context-menu">
+        <button class="context-menu-item" data-action="edit">
+            <i class="fa fa-edit"></i>
+            <span>Edit</span>
+        </button>
+        <button class="context-menu-item" data-action="duplicate">
+            <i class="fa fa-copy"></i>
+            <span>Duplicate</span>
+        </button>
+        <button class="context-menu-item" data-action="copy">
+            <i class="fa fa-clipboard"></i>
+            <span>Copy</span>
+        </button>
+        <div class="context-menu-divider"></div>
+        <button class="context-menu-item danger" data-action="delete">
+            <i class="fa fa-trash"></i>
+            <span>Delete</span>
+        </button>
+    </div>
+
+    <!-- Canvas Context Menu (for right-click on canvas area) -->
+    <div id="canvas-context-menu" class="context-menu">
+        <button class="context-menu-item" data-action="paste">
+            <i class="fa fa-paste"></i>
+            <span>Paste Widget</span>
+        </button>
+    </div>
+
+    <!-- Paste Button (appears when widget is copied) -->
+    <button id="paste-widget-btn" class="btn btn-secondary"
+        style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
+        <i class="fa fa-paste"></i> Paste Widget
+    </button>
+
     <!-- Load Utilities -->
     <script src="../assets/fields/utils/EventEmitter.js"></script>
     <script src="../assets/fields/utils/Validator.js"></script>
@@ -726,6 +826,7 @@ if ($id) {
     <script src="../assets/fields/select.js?v=<?php echo time() + 1; ?>"></script>
     <script src="../assets/fields/media.js?v=<?php echo time() + 1; ?>"></script>
     <script src="../assets/fields/ckeditor.js?v=<?php echo time(); ?>"></script>
+    <script src="../assets/fields/summernote-control.js?v=<?php echo time(); ?>"></script>
     <script src="../assets/fields/repeater.js?v=<?php echo time(); ?>"></script>
     <script src="../assets/fields/menu.js?v=<?php echo time(); ?>"></script>
     <script src="../assets/fields/icon.js?v=<?php echo time(); ?>"></script>
@@ -809,13 +910,46 @@ if ($id) {
         function renderWidgetsPanel() {
             const categories = widgetManager.getCategories();
             console.log('Rendering categories:', categories);
+            console.log('Active widgets filter:', window.ACTIVE_WIDGETS);
 
             const $widgetsList = $('#widgets-list');
             $widgetsList.empty();
 
             categories.forEach(category => {
-                const widgets = widgetManager.getWidgetsByCategory(category.name);
-                console.log(`Widgets in category ${category.name}:`, widgets.length);
+                const allWidgets = widgetManager.getWidgetsByCategory(category.name);
+
+                console.log(`Category ${category.name} - Total widgets:`, allWidgets.length);
+
+                // Filter out inactive widgets
+                let widgets = allWidgets;
+
+                if (Array.isArray(window.INACTIVE_WIDGETS) && window.INACTIVE_WIDGETS.length > 0) {
+                    console.log('Filtering out inactive widgets:', window.INACTIVE_WIDGETS);
+
+                    widgets = allWidgets.filter(widget => {
+                        // Try multiple ways to get the widget class name
+                        const widgetClassName = widget.constructor.name;
+                        const widgetName = widget.name || '';
+                        const widgetTitle = widget.title || '';
+
+                        // Check if any of these match the inactive list
+                        const isInactive = window.INACTIVE_WIDGETS.includes(widgetClassName) ||
+                            window.INACTIVE_WIDGETS.includes(widgetName) ||
+                            window.INACTIVE_WIDGETS.some(inactive => widgetName.includes(inactive));
+
+                        console.log(`Widget: constructor="${widgetClassName}", name="${widgetName}", title="${widgetTitle}", isInactive: ${isInactive}`);
+
+                        if (isInactive) {
+                            console.log(`✗ HIDING: ${widgetName || widgetClassName}`);
+                        }
+
+                        return !isInactive;
+                    });
+                } else {
+                    console.log('No inactive widgets - showing all');
+                }
+
+                console.log(`Widgets in category ${category.name}: ${widgets.length} shown`);
 
                 if (widgets.length === 0) return;
 
@@ -1217,6 +1351,37 @@ if ($id) {
                 }
             }
 
+            // Handle CKEditor and Summernote controls using ControlManager
+            if ((control.type === 'ckeditor' || control.type === 'summernote') && typeof controlManager !== 'undefined') {
+                const controlInstance = controlManager.createControl(control.id, control.type, {
+                    ...control,
+                    value: value || control.default_value || ''
+                });
+
+                if (controlInstance) {
+                    const html = controlInstance.renderWithWrapper();
+                    const $control = $(html);
+
+                    // Initialize after DOM is ready
+                    setTimeout(() => {
+                        controlInstance.init();
+                    }, 10);
+
+                    // Listen for changes
+                    controlInstance.on('change', (newVal) => {
+                        const newSettings = {
+                            ...element.settings,
+                            [control.id]: newVal
+                        };
+                        elementManager.updateElement(elementId, newSettings);
+                        renderCanvas();
+                        updateComponentCSS(elementId);
+                    });
+
+                    return $control;
+                }
+            }
+
             if (control.type === 'menu' && typeof MenuControl !== 'undefined') {
                 // Instantiate menu control
                 const menuControl = new MenuControl(control.id, {
@@ -1573,6 +1738,270 @@ if ($id) {
             elementManager.selectElement(elementId);
             renderSettings(elementId);
         });
+
+        // Context Menu - Right Click Handler (Widget)
+        let contextMenuTargetId = null;
+
+        $(document).on('contextmenu', '.element-wrapper', function (e) {
+            // If clicking on a drop zone or container slot, let the canvas handler handle it
+            if ($(e.target).closest('.elementor-container-slot').length > 0) {
+                 // But wait! If we clicked a CHILD widget inside the slot, we SHOULD show widget menu for the child.
+                 // We only ignore if the closest widget IS this one (the container) AND we hit the slot.
+                 
+                 const $closestWidget = $(e.target).closest('.element-wrapper');
+                 // If the closest widget is ME, and I hit a slot, then I hit MY slot. Ignore matches.
+                 if ($closestWidget.is($(this))) {
+                     return; 
+                 }
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            const elementId = $(this).data('element-id');
+            contextMenuTargetId = elementId;
+
+            const $contextMenu = $('#widget-context-menu');
+
+            // Hide canvas menu if open
+            $('#canvas-context-menu').removeClass('active');
+
+            // Position the context menu at mouse position
+            $contextMenu.css({
+                left: e.pageX + 'px',
+                top: e.pageY + 'px'
+            }).addClass('active');
+
+            // Select the element visually
+            $('.element-wrapper').removeClass('selected');
+            $(this).addClass('selected');
+
+            return false;
+        });
+
+        // Canvas Area Right-Click Handler (for paste)
+        let pasteTargetParent = null;
+        let pasteTargetContainer = 0;
+
+        $(document).on('contextmenu', '#canvas-area', function (e) {
+            // Determine if valid target for paste menu
+            let isValidTarget = true;
+            
+            // If we clicked a widget wrapper...
+            if ($(e.target).closest('.element-wrapper').length > 0) {
+                // ...it's invalid UNLESS we clicked a container slot
+                if ($(e.target).closest('.elementor-container-slot').length === 0) {
+                    isValidTarget = false;
+                } else {
+                    // We clicked a slot. Ensure we didn't click a widget INSIDE that slot.
+                    // The 'closest' widget should be the container itself.
+                    const $closestWidget = $(e.target).closest('.element-wrapper');
+                    const $closestSlot = $(e.target).closest('.elementor-container-slot');
+                    
+                    // If the closest widget is inside the slot, we clicked a child widget. Invalid.
+                    if ($closestWidget.length && $closestSlot.length && $.contains($closestSlot[0], $closestWidget[0])) {
+                         isValidTarget = false;
+                    }
+                }
+            }
+
+            if (!isValidTarget) {
+                return; // Let widget context menu handle it (though we prevented it there too? No, logic aligns)
+            }
+
+            // Check if there's a copied widget
+            const copiedData = localStorage.getItem('copiedWidget');
+            if (!copiedData) {
+                return; // No widget to paste, don't show menu
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Check if clicking inside a container slot
+            const $slot = $(e.target).closest('.elementor-container-slot');
+            if ($slot.length > 0) {
+                // Get parent element and container index
+                const $parentWrapper = $slot.closest('.element-wrapper');
+                if ($parentWrapper.length > 0) {
+                    pasteTargetParent = $parentWrapper.data('element-id');
+                    pasteTargetContainer = parseInt($slot.data('container-index')) || 0;
+                } else {
+                    pasteTargetParent = null;
+                    pasteTargetContainer = 0;
+                }
+            } else {
+                // Pasting at root level
+                pasteTargetParent = null;
+                pasteTargetContainer = 0;
+            }
+
+            const $canvasMenu = $('#canvas-context-menu');
+
+            // Hide widget context menu if open
+            $('#widget-context-menu').removeClass('active');
+
+            // Position the canvas menu at mouse position
+            $canvasMenu.css({
+                left: e.pageX + 'px',
+                top: e.pageY + 'px'
+            }).addClass('active');
+
+            return false;
+        });
+
+        // Hide context menus on click outside
+        $(document).on('click', function (e) {
+            if (!$(e.target).closest('#widget-context-menu, #canvas-context-menu').length) {
+                $('#widget-context-menu').removeClass('active');
+                $('#canvas-context-menu').removeClass('active');
+            }
+        });
+
+        // Context menu actions (Widget Context Menu)
+        $(document).on('click', '#widget-context-menu .context-menu-item', function (e) {
+            e.stopPropagation();
+            const action = $(this).data('action');
+            const $contextMenu = $('#widget-context-menu');
+
+            if (!contextMenuTargetId) {
+                $contextMenu.removeClass('active');
+                return;
+            }
+
+            switch (action) {
+                case 'edit':
+                    elementManager.selectElement(contextMenuTargetId);
+                    renderSettings(contextMenuTargetId);
+                    break;
+
+                case 'duplicate':
+                    elementManager.duplicateElement(contextMenuTargetId);
+                    break;
+
+                case 'copy':
+                    // Get the element data
+                    const element = elementManager.getElement(contextMenuTargetId);
+                    console.log('Copy action triggered for element:', contextMenuTargetId, element);
+                    if (element) {
+                        // Store widget data in localStorage for cross-page paste
+                        const widgetData = {
+                            type: element.type,
+                            settings: element.settings,
+                            timestamp: Date.now()
+                        };
+                        localStorage.setItem('copiedWidget', JSON.stringify(widgetData));
+                        console.log('Widget copied to localStorage:', widgetData);
+
+                        // Show paste button
+                        $('#paste-widget-btn').fadeIn();
+
+                        Toast.success('Widget copied! You can now paste it on any page.');
+                    } else {
+                        console.error('Element not found for copy:', contextMenuTargetId);
+                    }
+                    break;
+
+                case 'delete':
+                    if (confirm('Delete this element?')) {
+                        elementManager.deleteElement(contextMenuTargetId);
+                    }
+                    break;
+            }
+
+            // Hide context menu
+            $contextMenu.removeClass('active');
+            contextMenuTargetId = null;
+        });
+
+        // Canvas Context Menu Actions
+        $(document).on('click', '#canvas-context-menu .context-menu-item', function (e) {
+            e.stopPropagation();
+            const action = $(this).data('action');
+            const $canvasMenu = $('#canvas-context-menu');
+
+            if (action === 'paste') {
+                // Trigger the paste button click
+                $('#paste-widget-btn').click();
+            }
+
+            // Hide canvas menu
+            $canvasMenu.removeClass('active');
+        });
+
+        // Paste Widget Button Handler
+        $('#paste-widget-btn').on('click', function () {
+            const copiedData = localStorage.getItem('copiedWidget');
+
+            if (!copiedData) {
+                Toast.error('No widget in clipboard');
+                return;
+            }
+
+            try {
+                const widgetData = JSON.parse(copiedData);
+
+                // Use stored parent/container info if available, otherwise paste at root
+                const parentId = pasteTargetParent || null;
+                const containerIdx = pasteTargetContainer || 0;
+
+                // Create new element with copied data
+                const newElement = elementManager.createElement(
+                    widgetData.type,
+                    widgetData.settings,
+                    parentId,      // parent (null for root, or container element ID)
+                    containerIdx,  // containerIndex (which slot in the container)
+                    -1             // position (append to end)
+                );
+
+                if (newElement && newElement.id) {
+                    renderCanvas();
+                    updateComponentCSS(newElement.id);
+
+                    // Select the newly pasted widget
+                    setTimeout(() => {
+                        const $newWidget = $(`.element-wrapper[data-element-id="${newElement.id}"]`);
+                        $('.element-wrapper').removeClass('selected');
+                        $newWidget.addClass('selected');
+                        elementManager.selectElement(newElement.id);
+                        renderSettings(newElement.id);
+
+                        // Scroll to the new widget
+                        $newWidget[0]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+
+                    // Reset paste target after successful paste
+                    pasteTargetParent = null;
+                    pasteTargetContainer = 0;
+
+                    Toast.success('Widget pasted successfully!');
+                }
+            } catch (e) {
+                console.error('Paste error:', e);
+                Toast.error('Failed to paste widget');
+            }
+        });
+
+        // Check if there's a copied widget on page load
+        $(document).ready(function () {
+            const copiedData = localStorage.getItem('copiedWidget');
+            if (copiedData) {
+                $('#paste-widget-btn').fadeIn();
+            }
+        });
+
+        // Keyboard shortcut: Ctrl+V to paste
+        $(document).on('keydown', function (e) {
+            // Ctrl+V or Cmd+V (Mac)
+            if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
+                // Only trigger if not focused on an input field
+                if (!$(e.target).is('input, textarea')) {
+                    e.preventDefault();
+                    $('#paste-widget-btn').click();
+                }
+            }
+        });
+
 
         // Save button
         $('#btn-save').on('click', function () {
@@ -2481,6 +2910,35 @@ if ($id) {
                         }
                     });
                 }
+            });
+
+            // Clear Cache Button Handler
+            $('#btn-clear-cache').click(function () {
+                const btn = $(this);
+                const originalIcon = btn.find('i').attr('class');
+
+                // Show loading state
+                btn.find('i').attr('class', 'fa fa-spinner fa-spin');
+
+                $.ajax({
+                    url: 'cache/?action=clear_all',
+                    method: 'GET',
+                    success: function (response) {
+                        Toast.success('Cache cleared successfully');
+                        // Optional: Reload iframe or preview if needed
+                        const $iframe = $('#preview-frame');
+                        if ($iframe.length) {
+                            $iframe.attr('src', $iframe.attr('src'));
+                        }
+                    },
+                    error: function () {
+                        Toast.error('Failed to clear cache');
+                    },
+                    complete: function () {
+                        // Restore icon
+                        btn.find('i').attr('class', originalIcon);
+                    }
+                });
             });
         });
     </script>

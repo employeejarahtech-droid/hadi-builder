@@ -25,7 +25,7 @@ $where_clauses = [];
 $params = [];
 
 if (!empty($search_query)) {
-    $where_clauses[] = "(name LIKE :search_name OR slug LIKE :search_slug)";
+    $where_clauses[] = "(c.name LIKE :search_name OR c.slug LIKE :search_slug)";
     $params[':search_name'] = '%' . $search_query . '%';
     $params[':search_slug'] = '%' . $search_query . '%';
 }
@@ -33,7 +33,7 @@ if (!empty($search_query)) {
 $where_sql = $where_clauses ? 'WHERE ' . implode(' AND ', $where_clauses) : '';
 
 // Get total count
-$count_sql = "SELECT COUNT(*) FROM categories $where_sql";
+$count_sql = "SELECT COUNT(*) FROM categories c $where_sql";
 if ($params) {
     $count_stmt = $pdo->prepare($count_sql);
     foreach ($params as $key => $value) {
@@ -48,7 +48,12 @@ if ($params) {
 $total_pages = ceil($total_categories / $items_per_page);
 
 // Fetch categories with pagination
-$sql = "SELECT * FROM categories $where_sql ORDER BY name ASC LIMIT :limit OFFSET :offset";
+$sql = "SELECT c.*, p.name as parent_name 
+        FROM categories c 
+        LEFT JOIN categories p ON c.parent_id = p.id 
+        $where_sql 
+        ORDER BY c.name ASC 
+        LIMIT :limit OFFSET :offset";
 $stmt = $pdo->prepare($sql);
 
 foreach ($params as $key => $value) {
@@ -66,9 +71,15 @@ require_once __DIR__ . '/../includes/header.php';
 <div class="page-header">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <h1 class="page-title">Product Categories</h1>
-        <a href="create.php" class="btn btn-primary">
-            <i class="fa fa-plus"></i> Create New Category
-        </a>
+        <div style="display: flex; gap: 10px;">
+            <a href="delete-all.php" class="btn btn-danger"
+                onclick="return confirm('Are you sure you want to delete ALL categories? Only categories not in use by products will be deleted.');">
+                <i class="fa fa-trash"></i> Delete All
+            </a>
+            <a href="create.php" class="btn btn-primary">
+                <i class="fa fa-plus"></i> Create New Category
+            </a>
+        </div>
     </div>
 
     <!-- Filter Form -->
@@ -106,6 +117,7 @@ require_once __DIR__ . '/../includes/header.php';
                         <th style="width: 50px;">ID</th>
                         <th style="width: 80px;">Image</th>
                         <th>Name</th>
+                        <th>Parent</th>
                         <th>Slug</th>
                         <th>Description</th>
                         <th style="text-align: right;">Actions</th>
@@ -134,6 +146,16 @@ require_once __DIR__ . '/../includes/header.php';
                             </td>
                             <td style="font-weight: 500;">
                                 <?php echo htmlspecialchars($category['name']); ?>
+                            </td>
+                            <td>
+                                <?php if (!empty($category['parent_name'])): ?>
+                                    <span
+                                        style="background: #eff6ff; color: #1e40af; padding: 2px 8px; border-radius: 4px; font-size: 0.85em;">
+                                        <?php echo htmlspecialchars($category['parent_name']); ?>
+                                    </span>
+                                <?php else: ?>
+                                    <span style="color: #94a3b8;">-</span>
+                                <?php endif; ?>
                             </td>
                             <td style="color: var(--secondary);">
                                 <?php echo htmlspecialchars($category['slug']); ?>

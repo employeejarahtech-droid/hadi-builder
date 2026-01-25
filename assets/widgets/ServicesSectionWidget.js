@@ -32,8 +32,7 @@ class ServicesSectionWidget extends WidgetBase {
             subtitle_text: 'WHAT WE DO',
             section_title: 'Service Style 01',
             description: 'Our agency can only be as strong as our people our team following agenhave run their businesses designed.',
-            section_padding: { top: 0, right: 0, bottom: 0, left: 0, unit: 'px', isLinked: true },
-            section_margin: { top: 0, right: 0, bottom: 0, left: 0, unit: 'px', isLinked: true },
+
             services: [
                 {
                     image: { url: 'assets/img/service-web-development.png' },
@@ -178,21 +177,121 @@ class ServicesSectionWidget extends WidgetBase {
             tab: 'style'
         });
 
-        this.addControl('section_padding', {
-            type: 'dimensions',
-            label: 'Padding',
-            units: ['px', 'em', 'rem', '%'],
-            default_value: { top: 0, right: 0, bottom: 0, left: 0, unit: 'px', isLinked: false }
+
+
+        this.addControl('items_per_row', {
+            type: 'select',
+            label: 'Items Per Row',
+            options: [
+                { value: '12', label: '1' },
+                { value: '6', label: '2' },
+                { value: '4', label: '3' },
+                { value: '3', label: '4' }
+            ],
+            default_value: '4'
         });
 
-        this.addControl('section_margin', {
-            type: 'dimensions',
-            label: 'Margin',
-            units: ['px', 'em', 'rem', '%'],
-            default_value: { top: 0, right: 0, bottom: 0, left: 0, unit: 'px', isLinked: true }
+        this.addControl('column_gap', {
+            type: 'slider',
+            label: 'Gap',
+            default_value: { size: 30, unit: 'px' },
+            range: {
+                min: 0,
+                max: 100,
+                step: 1
+            },
+            selectors: {
+                '{{WRAPPER}} .jt-row': 'gap: {{SIZE}}{{UNIT}}; display: flex; flex-wrap: wrap;'
+            }
+        });
+
+        this.addControl('background_image_list', {
+            type: 'repeater',
+            label: 'Background Images',
+            default_value: [],
+            fields: [
+                {
+                    name: 'image',
+                    type: 'media',
+                    label: 'Image',
+                    default: ''
+                },
+                {
+                    name: 'position',
+                    type: 'select',
+                    label: 'Position',
+                    options: [
+                        { value: 'top-left', label: 'Top Left' },
+                        { value: 'top-center', label: 'Top Center' },
+                        { value: 'top-right', label: 'Top Right' },
+                        { value: 'center-left', label: 'Center Left' },
+                        { value: 'center-center', label: 'Center Center' },
+                        { value: 'center-right', label: 'Center Right' },
+                        { value: 'bottom-left', label: 'Bottom Left' },
+                        { value: 'bottom-center', label: 'Bottom Center' },
+                        { value: 'bottom-right', label: 'Bottom Right' }
+                    ],
+                    default: 'top-left'
+                },
+                {
+                    name: 'width_unit',
+                    type: 'select',
+                    label: 'Width Unit',
+                    options: [
+                        { value: 'px', label: 'PX' },
+                        { value: 'percent', label: '%' },
+                        { value: 'vw', label: 'VW' },
+                        { value: 'auto', label: 'Auto' }
+                    ],
+                    default: 'px'
+                },
+                {
+                    name: 'width_value',
+                    type: 'text',
+                    label: 'Width Value',
+                    default: '200',
+                    condition: {
+                        width_unit: ['px', 'percent', 'vw']
+                    }
+                },
+                {
+                    name: 'height_unit',
+                    type: 'select',
+                    label: 'Height Unit',
+                    options: [
+                        { value: 'px', label: 'PX' },
+                        { value: 'percent', label: '%' },
+                        { value: 'vh', label: 'VH' },
+                        { value: 'auto', label: 'Auto' }
+                    ],
+                    default: 'auto'
+                },
+                {
+                    name: 'height_value',
+                    type: 'text',
+                    label: 'Height Value',
+                    default: '100',
+                    condition: {
+                        height_unit: ['px', 'percent', 'vh']
+                    }
+                },
+                {
+                    name: 'overflow',
+                    type: 'select',
+                    label: 'Overflow',
+                    options: [
+                        { value: 'visible', label: 'Visible' },
+                        { value: 'hidden', label: 'Hidden' }
+                    ],
+                    default: 'visible'
+                }
+            ]
         });
 
         this.endControlsSection();
+
+        // Add Advanced tab
+        this.registerAdvancedControls();
     }
 
     constructor() {
@@ -204,14 +303,66 @@ class ServicesSectionWidget extends WidgetBase {
         const sectionTitle = this.getSetting('section_title', 'Service Style 01');
         const description = this.getSetting('description', '');
         const services = this.getSetting('services', []);
+        const backgroundImageList = this.getSetting('background_image_list', []);
 
         // Get padding and margin settings
-        const padding = this.getSetting('section_padding', { top: 0, right: 0, bottom: 0, left: 0, unit: 'px' });
-        const margin = this.getSetting('section_margin', { top: 0, right: 0, bottom: 0, left: 0, unit: 'px' });
+        const padding = this.getSetting('padding', { top: 0, right: 0, bottom: 0, left: 0, unit: 'px' });
+        const margin = this.getSetting('margin', { top: 0, right: 0, bottom: 0, left: 0, unit: 'px' });
 
         // Build padding and margin CSS
         const paddingCSS = `padding: ${padding.top}${padding.unit} ${padding.right}${padding.unit} ${padding.bottom}${padding.unit} ${padding.left}${padding.unit};`;
         const marginCSS = `margin: ${margin.top}${margin.unit} ${margin.right}${margin.unit} ${margin.bottom}${margin.unit} ${margin.left}${margin.unit};`;
+
+        // Generate unique ID for scoped styles
+        const uid = 'services_' + Math.floor(Math.random() * 100000);
+
+        // Process Background Images
+        const backgroundImageListHTML = backgroundImageList.map((bgItem, index) => {
+            if (!bgItem.image || !bgItem.image.url) return '';
+
+            let positionStyles = '';
+            switch (bgItem.position) {
+                case 'top-left': positionStyles = 'top: 0; left: 0; transform: translate(0, 0);'; break;
+                case 'top-center': positionStyles = 'top: 0; left: 50%; transform: translate(-50%, 0);'; break;
+                case 'top-right': positionStyles = 'top: 0; right: 0; transform: translate(0, 0);'; break;
+                case 'center-left': positionStyles = 'top: 50%; left: 0; transform: translate(0, -50%);'; break;
+                case 'center-center': positionStyles = 'top: 50%; left: 50%; transform: translate(-50%, -50%);'; break;
+                case 'center-right': positionStyles = 'top: 50%; right: 0; transform: translate(0, -50%);'; break;
+                case 'bottom-left': positionStyles = 'bottom: 0; left: 0; transform: translate(0, 0);'; break;
+                case 'bottom-center': positionStyles = 'bottom: 0; left: 50%; transform: translate(-50%, 0);'; break;
+                case 'bottom-right': positionStyles = 'bottom: 0; right: 0; transform: translate(0, 0);'; break;
+                default: positionStyles = 'top: 0; left: 0;';
+            }
+
+            // Calculate Width
+            let widthStyle = 'width: auto;';
+            if (bgItem.width_unit === 'auto') {
+                widthStyle = 'width: auto;';
+            } else {
+                const widthVal = bgItem.width_value || '200';
+                widthStyle = `width: ${widthVal}${bgItem.width_unit};`;
+            }
+
+            // Calculate Height
+            let heightStyle = 'height: auto;';
+            if (bgItem.height_unit === 'auto') {
+                heightStyle = 'height: auto;';
+            } else {
+                const heightVal = bgItem.height_value || '100';
+                heightStyle = `height: ${heightVal}${bgItem.height_unit};`;
+            }
+
+            const overflow = bgItem.overflow || 'visible';
+
+            return `
+                <div class="background-image-item" style="position: absolute; ${positionStyles} z-index: 0; pointer-events: none; overflow: ${overflow}; ${widthStyle} ${heightStyle}">
+                    <img src="${bgItem.image.url}" alt="Background" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+            `;
+        }).join('');
+
+        const itemsPerRow = this.getSetting('items_per_row', '4');
+        const colClass = `jt-col-${itemsPerRow}`;
 
         let servicesHTML = '';
         if (services && services.length > 0) {
@@ -226,7 +377,7 @@ class ServicesSectionWidget extends WidgetBase {
                 const hoverDescription = service.hover_description || '';
 
                 return `
-                <div class="jt-col-4 swiper-slide">
+                <div class="${colClass} ">
                   <div class="service-item">
                     <div class="service-figure bottom-right">
                       <img src="${imageUrl}" alt="${this.escapeHtml(title)}">
@@ -265,11 +416,19 @@ class ServicesSectionWidget extends WidgetBase {
             }).join('');
         }
 
-        return `
-<div class="service-1" style="${paddingCSS} ${marginCSS}">
+        const outputHtml = `
+<div class="service-1 ${uid}" style="${paddingCSS} ${marginCSS} position: relative;">
+    <style>
+        .${uid} .container {
+            position: relative;
+            z-index: 2; 
+        }
+    </style>
+  ${backgroundImageListHTML}
+
   <div class="container">
 
-    <div style="max-width: 800px;margin: 0 auto;">
+    <div class="ebl-data-blocks" style="max-width: 800px;margin: 0 auto;">
 
         <div class="comingsoon-body-item block-item text-center aos-init aos-animate" data-aos="aos-blockRubberBand">
             <div class="subtitle subtitle_1bececf">
@@ -309,6 +468,8 @@ class ServicesSectionWidget extends WidgetBase {
   </div>
 </div>
     `;
+
+        return this.wrapWithAdvancedSettings(outputHtml, 'services-section-widget');
     }
 
     escapeHtml(text) {

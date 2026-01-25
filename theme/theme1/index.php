@@ -140,6 +140,7 @@ $secondaryColor4 = lightenColor($secondaryColor, 60);
 <link rel="stylesheet" href="<?php echo $themeRoot; ?>/css/slick-theme.css">
 <link rel="stylesheet" href="<?php echo $themeRoot; ?>/css/swiper.min.css">
 <link rel="stylesheet" href="<?php echo $themeRoot; ?>/css/jsocial.css">
+<link rel="stylesheet" href="<?php echo $themeRoot; ?>/css/basier-square-font.css">
 
 <!-- Layout Styles -->
 <link rel="stylesheet" href="<?php echo $themeRoot; ?>/css/topbar.css">

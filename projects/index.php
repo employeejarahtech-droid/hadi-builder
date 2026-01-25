@@ -131,7 +131,7 @@ if ($projPage && !empty($projPage['content'])) {
     <style>
         body {
             margin: 0;
-            font-family: sans-serif;
+            font-family: "Basier Square", sans-serif;
             background-color: #fff;
         }
 
@@ -189,7 +189,7 @@ if ($projPage && !empty($projPage['content'])) {
         }
 
         .drawer-content {
-            padding-top: 50px;
+            padding-top: 20px;
             overflow-y: auto;
             height: 100%;
         }
@@ -211,7 +211,7 @@ if ($projPage && !empty($projPage['content'])) {
             display: none;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
+            padding: 5px 20px;
             background: #fff;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             position: sticky;

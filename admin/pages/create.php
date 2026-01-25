@@ -17,6 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Simple slugify
     if (empty($slug)) {
         $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $title)));
+    } else {
+        // Sanitize manually entered slug
+        $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $slug)));
     }
 
     // Reserved slugs that cannot be used
@@ -211,11 +214,30 @@ require_once __DIR__ . '/../includes/header.php';
 <script>
     $(document).ready(function () {
         // Auto-generate slug
+        let isSlugManuallyEdited = false;
+
         $('#title').on('input', function () {
-            if (!$('#slug').val()) {
+            if (!isSlugManuallyEdited) {
                 let slug = $(this).val().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
                 $('#slug').val(slug);
             }
+        });
+
+        // Enforce slug format on manual input
+        $('#slug').on('input', function () {
+            isSlugManuallyEdited = true;
+            // If user clears the slug, allow auto-generation again
+            if ($(this).val() === '') {
+                isSlugManuallyEdited = false;
+            }
+            
+            let slug = $(this).val().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+            $(this).val(slug);
+        });
+
+        $('#slug').on('blur', function() {
+            let slug = $(this).val().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+            $(this).val(slug);
         });
 
         // Media Modal Logic

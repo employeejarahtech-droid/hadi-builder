@@ -279,7 +279,7 @@ class BrandsSectionWidget extends WidgetBase {
 
         const logoMaxWidth = this.getSetting('logo_max_width', { size: 100, unit: '%' });
         const logoHeight = this.getSetting('logo_height', { size: 80, unit: 'px' });
-        const logoOpacity = this.getSetting('logo_opacity', { size: 0.6, unit: '' });
+        const logoOpacity = this.getSetting('logo_opacity', { size: 1, unit: '' });
         const logoOpacityHover = this.getSetting('logo_opacity_hover', { size: 1, unit: '' });
 
         const padding = this.getSetting('padding', { top: 60, right: 0, bottom: 60, left: 0, unit: 'px' });
@@ -304,7 +304,9 @@ class BrandsSectionWidget extends WidgetBase {
             const content = `
                 <div class="brand-item">
                      <a href="${link}" class="brand-link" title="${this.escapeHtml(name)}">
-                        <img src="${imageUrl}" alt="${this.escapeHtml(name)}" class="brand-logo">
+                        <div class="brand-logo-wrapper">
+                            <img src="${imageUrl}" alt="${this.escapeHtml(name)}" class="brand-logo">
+                        </div>
                      </a>
                 </div>
             `;
@@ -312,8 +314,8 @@ class BrandsSectionWidget extends WidgetBase {
             return `<div class="grid-item">${content}</div>`;
         }).join('');
 
-        // Unique ID for scoped styles
-        const uniqueId = 'brands-' + Math.random().toString(36).substr(2, 9);
+        // Unique class name
+        const uniqueClass = 'brands-' + Math.random().toString(36).substr(2, 9);
 
         const cssVariables = `
             --items-per-row: ${itemsPerRow};
@@ -323,71 +325,218 @@ class BrandsSectionWidget extends WidgetBase {
             --logo-opacity-hover: ${logoOpacityHover.size !== undefined ? logoOpacityHover.size : logoOpacityHover};
         `;
 
-        // Scoped class name instead of ID
-        const uniqueClass = 'brands-' + Math.random().toString(36).substr(2, 9);
-
         return `
             <style>
                 .${uniqueClass} {
                     ${paddingStyle}
                     ${cssVariables}
-                    background-color: #fff;
                     overflow: hidden;
                     position: relative;
                     z-index: 1;
                 }
+                
+                /* Decorative background elements */
+                .${uniqueClass}::before {
+                    content: '';
+                    position: absolute;
+                    top: -50%;
+                    right: -10%;
+                    width: 500px;
+                    height: 500px;
+                    background: radial-gradient(circle, rgba(99, 102, 241, 0.05) 0%, transparent 70%);
+                    border-radius: 50%;
+                    pointer-events: none;
+                }
+                
+                .${uniqueClass}::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -30%;
+                    left: -5%;
+                    width: 400px;
+                    height: 400px;
+                    background: radial-gradient(circle, rgba(236, 72, 153, 0.04) 0%, transparent 70%);
+                    border-radius: 50%;
+                    pointer-events: none;
+                }
+                
                 .${uniqueClass} .container {
-                    max-width: 1200px;
                     margin: 0 auto;
                     padding: 0 15px;
+                    position: relative;
+                    z-index: 2;
                 }
+                
                 .${uniqueClass} .section-header {
                     text-align: center;
-                    margin-bottom: 40px;
+                    margin-bottom: 50px;
+                    animation: fadeInUp 0.6s ease-out;
                 }
+                
                 .${uniqueClass} .section-title {
-                    font-size: 32px;
-                    font-weight: 700;
-                    margin-bottom: 10px;
+                    font-size: 36px;
+                    font-weight: 800;
+                    margin-bottom: 12px;
                     color: #1a1a1a;
+                    background: linear-gradient(135deg, #1a1a1a 0%, #4a5568 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                    letter-spacing: -0.5px;
                 }
+                
                 .${uniqueClass} .section-description {
-                    font-size: 16px;
-                    color: #666;
-                    max-width: 700px;
+                    font-size: 17px;
+                    color: #64748b;
+                    max-width: 650px;
                     margin: 0 auto;
+                    line-height: 1.7;
                 }
+                
+                .${uniqueClass} .brands-grid {
+                    width: 100%;
+                }
+                
+                .${uniqueClass} .grid-wrapper {
+                    display: grid;
+                    grid-template-columns: repeat(${itemsPerRow}, 1fr);
+                    gap: 25px;
+                    width: 100%;
+                    box-sizing: border-box;
+                }
+                
+                .${uniqueClass} .grid-item {
+                    animation: fadeInScale 0.5s ease-out backwards;
+                }
+                
+                /* Stagger animation for grid items */
+                .${uniqueClass} .grid-item:nth-child(1) { animation-delay: 0.1s; }
+                .${uniqueClass} .grid-item:nth-child(2) { animation-delay: 0.15s; }
+                .${uniqueClass} .grid-item:nth-child(3) { animation-delay: 0.2s; }
+                .${uniqueClass} .grid-item:nth-child(4) { animation-delay: 0.25s; }
+                .${uniqueClass} .grid-item:nth-child(5) { animation-delay: 0.3s; }
+                .${uniqueClass} .grid-item:nth-child(6) { animation-delay: 0.35s; }
                 
                 .${uniqueClass} .brand-item {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    transition: all 0.3s ease;
-                    filter: grayscale(100%);
-                    opacity: var(--logo-opacity, 0.6);
+                    height: 100%;
+                    padding: 25px;
+                    background: rgba(255, 255, 255, 0.7);
+                    backdrop-filter: blur(10px);
+                    border-radius: 16px;
+                    border: 1px solid rgba(255, 255, 255, 0.8);
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+                    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                    position: relative;
+                    overflow: hidden;
+                }
+                
+                /* Shine effect on hover */
+                .${uniqueClass} .brand-item::before {
+                    content: '';
+                    position: absolute;
+                    top: -50%;
+                    left: -50%;
+                    width: 200%;
+                    height: 200%;
+                    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
+                    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+                    transition: transform 0.6s;
+                }
+                
+                .${uniqueClass} .brand-link {
+                    display: block;
+                    width: 100%;
                     height: 100%;
                 }
-                .${uniqueClass} .brand-item:hover {
-                    filter: grayscale(0%);
-                    opacity: var(--logo-opacity-hover, 1);
-                    transform: translateY(-5px);
+                
+                .${uniqueClass} .brand-logo-wrapper {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 100%;
+                    height: 100%;
+                    transition: all 0.4s ease;
                 }
+                
+                .${uniqueClass} .brand-item:hover .brand-logo-wrapper {
+                    filter: grayscale(0%) brightness(1);
+                    opacity: var(--logo-opacity-hover, 1);
+                }
+                
                 .${uniqueClass} .brand-logo {
                     max-width: var(--logo-max-width, 100%);
                     max-height: var(--logo-height, 80px);
                     object-fit: contain;
+                    transition: transform 0.4s ease;
                 }
-
-                /* Responsive Layout Overrides */
-                @media (max-width: 768px) {
-                    .${uniqueClass} .brands-grid .grid-wrapper {
-                        grid-template-columns: repeat(2, 1fr) !important;
-                        gap: 15px !important;
+                
+                .${uniqueClass} .brand-item:hover .brand-logo {
+                    transform: scale(1.05);
+                }
+                
+                /* Animations */
+                @keyframes fadeInUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(30px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
                     }
                 }
+                
+                @keyframes fadeInScale {
+                    from {
+                        opacity: 0;
+                        transform: scale(0.9);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: scale(1);
+                    }
+                }
+
+                /* Responsive Layout */
+                @media (max-width: 1024px) {
+                    .${uniqueClass} .grid-wrapper {
+                        grid-template-columns: repeat(${Math.min(itemsPerRow, 4)}, 1fr) !important;
+                        gap: 20px !important;
+                    }
+                    .${uniqueClass} .section-title {
+                        font-size: 32px;
+                    }
+                }
+                
+                @media (max-width: 768px) {
+                    .${uniqueClass} .grid-wrapper {
+                        grid-template-columns: repeat(3, 1fr) !important;
+                        gap: 15px !important;
+                    }
+                    .${uniqueClass} .brand-item {
+                        padding: 20px;
+                    }
+                    .${uniqueClass} .section-title {
+                        font-size: 28px;
+                    }
+                    .${uniqueClass} .section-description {
+                        font-size: 16px;
+                    }
+                }
+                
                 @media (max-width: 480px) {
-                    .${uniqueClass} .brands-grid .grid-wrapper {
-                        grid-template-columns: repeat(1, 1fr) !important;
+                    .${uniqueClass} .grid-wrapper {
+                        grid-template-columns: repeat(2, 1fr) !important;
+                        gap: 12px !important;
+                    }
+                    .${uniqueClass} .brand-item {
+                        padding: 15px;
+                    }
+                    .${uniqueClass} .section-title {
+                        font-size: 24px;
                     }
                 }
             </style>
@@ -401,8 +550,8 @@ class BrandsSectionWidget extends WidgetBase {
                     </div>
                     ` : ''}
 
-                    <div class="brands-grid" style="width: 100%;">
-                        <div class="grid-wrapper" style="display: grid; grid-template-columns: repeat(${itemsPerRow}, 1fr); gap: 30px; width: 100%; box-sizing: border-box;">
+                    <div class="brands-grid">
+                        <div class="grid-wrapper">
                             ${brandsHtml}
                         </div>
                     </div>

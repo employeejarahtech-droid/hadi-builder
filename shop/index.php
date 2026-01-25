@@ -90,7 +90,15 @@ $stmt = $pdo->prepare("SELECT content FROM pages WHERE slug = 'shop'");
 $stmt->execute();
 $shopPage = $stmt->fetch();
 
+$hasContent = false;
 if ($shopPage && !empty($shopPage['content'])) {
+    $decoded = json_decode($shopPage['content'], true);
+    if (is_array($decoded) && count($decoded) > 0) {
+        $hasContent = true;
+    }
+}
+
+if ($hasContent) {
     $pageContent = $shopPage['content'];
 } else {
     // Fallback if not found in DB - use enhanced ProductGridWidget
@@ -139,7 +147,7 @@ if ($shopPage && !empty($shopPage['content'])) {
     <style>
         body {
             margin: 0;
-            font-family: sans-serif;
+            font-family: "Basier Square", sans-serif;
             background-color: #fff;
         }
 
@@ -197,7 +205,7 @@ if ($shopPage && !empty($shopPage['content'])) {
         }
 
         .drawer-content {
-            padding-top: 50px;
+            padding-top: 20px;
             overflow-y: auto;
             height: 100%;
         }
@@ -220,7 +228,7 @@ if ($shopPage && !empty($shopPage['content'])) {
             display: none;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
+            padding: 5px 20px;
             background: #fff;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             position: sticky;
@@ -274,7 +282,7 @@ if ($shopPage && !empty($shopPage['content'])) {
                 <?php if (!empty($settings['site_logo'])): ?>
                     <img src="<?php echo htmlspecialchars($settings['site_logo']); ?>"
                         alt="<?php echo htmlspecialchars($appName); ?>"
-                        style="height: 40px; width: auto; object-fit: contain;">
+                        style="width: 140px; height: auto; object-fit: contain;">
                 <?php else: ?>
                     <?php echo htmlspecialchars($appName); ?>
                 <?php endif; ?>

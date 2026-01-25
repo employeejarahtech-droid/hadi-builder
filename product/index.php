@@ -116,18 +116,37 @@ if (!empty($settings['mobile_menu'])) {
         $mobileMenuContent = $mm['content'];
 }
 
-// Define Page Content with SingleProductWidget
-// Use the detected slug
-$pageContent = json_encode([
-    [
-        'id' => 'single-product-main',
-        'type' => 'single_product', // Must match getName()
-        'settings' => [
-            'product_slug' => $slug,
-            'margin' => ['top' => '40', 'bottom' => '60', 'unit' => 'px']
+// Check for 'single-product' builder page
+$builderPage = null;
+$stmtBP = $pdo->prepare("SELECT * FROM pages WHERE slug = 'single-product' AND status = 'published'");
+$stmtBP->execute();
+$fetchedPage = $stmtBP->fetch();
+
+$hasBuilderContent = false;
+if ($fetchedPage && !empty($fetchedPage['content'])) {
+    $decoded = json_decode($fetchedPage['content'], true);
+    if (is_array($decoded) && count($decoded) > 0) {
+        $hasBuilderContent = true;
+        // Inject current slug into the builder widgets if they are SingleProductWidgets without a slug
+        // This is complex, but the SingleProductWidgetJS handles 'current_query' source.
+        // So we just need to pass the content.
+        $pageContent = $fetchedPage['content'];
+    }
+}
+
+if (!$hasBuilderContent) {
+    // Define Page Content with SingleProductWidget (Default)
+    $pageContent = json_encode([
+        [
+            'id' => 'single-product-main',
+            'type' => 'single_product', // Must match getName()
+            'settings' => [
+                'product_slug' => $slug,
+                'margin' => ['top' => '40', 'bottom' => '60', 'unit' => 'px']
+            ]
         ]
-    ]
-]);
+    ]);
+}
 
 // Determine Page Metadata (Dynamic based on product?)
 // For improved SEO, we could fetch product name here.
@@ -171,7 +190,7 @@ if ($slug) {
     <style>
         body {
             margin: 0;
-            font-family: sans-serif;
+            font-family: "Basier Square", sans-serif;
             background-color: #f8fafc;
         }
 
@@ -229,7 +248,7 @@ if ($slug) {
         }
 
         .drawer-content {
-            padding-top: 50px;
+            padding-top: 20px;
             overflow-y: auto;
             height: 100%;
         }
@@ -252,7 +271,7 @@ if ($slug) {
             display: none;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
+            padding: 5px 20px;
             background: #fff;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             position: sticky;
@@ -306,7 +325,7 @@ if ($slug) {
                 <?php if (!empty($settings['site_logo'])): ?>
                     <img src="<?php echo htmlspecialchars($settings['site_logo']); ?>"
                         alt="<?php echo htmlspecialchars($appName); ?>"
-                        style="height: 40px; width: auto; object-fit: contain;">
+                        style="width: 140px; height: auto; object-fit: contain;">
                 <?php else: ?>
                     <?php echo htmlspecialchars($appName); ?>
                 <?php endif; ?>

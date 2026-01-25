@@ -550,6 +550,91 @@ body.builder-page .elementor-container-slot:empty {
     }
 }
 
+/* Context Menu Styles */
+.context-menu {
+    position: fixed;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 10000;
+    min-width: 180px;
+    padding: 4px 0;
+    display: none;
+}
+
+.context-menu.active {
+    display: block;
+}
+
+.context-menu-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+}
+
+.context-menu-item:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.context-menu-item i {
+    width: 16px;
+    text-align: center;
+    color: #64748b;
+}
+
+.context-menu-item:hover i {
+    color: #3b82f6;
+}
+
+.context-menu-item.danger:hover {
+    background: #fef2f2;
+    color: #ef4444;
+}
+
+.context-menu-item.danger:hover i {
+    color: #ef4444;
+}
+
+.context-menu-divider {
+    height: 1px;
+    background: #e2e8f0;
+    margin: 4px 0;
+}
+
+/* Paste Widget Button */
+#paste-widget-btn {
+    animation: slideInUp 0.3s ease-out;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+#paste-widget-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
 /* Responsive */
 @media (max-width: 1200px) {
     .left-panel {

@@ -84,9 +84,15 @@ require_once __DIR__ . '/../includes/header.php';
 <div class="page-header">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <h1 class="page-title">Project Categories</h1>
-        <a href="create.php" class="btn btn-primary">
-            <i class="fa fa-plus"></i> Create New Category
-        </a>
+        <div style="display: flex; gap: 10px;">
+            <a href="delete-all.php" class="btn btn-danger"
+                onclick="return confirm('Are you sure you want to delete ALL project categories? Projects will be unlinked from these categories.');">
+                <i class="fa fa-trash"></i> Delete All
+            </a>
+            <a href="create.php" class="btn btn-primary">
+                <i class="fa fa-plus"></i> Create New Category
+            </a>
+        </div>
     </div>
 
     <!-- Filter Form -->

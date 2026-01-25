@@ -82,6 +82,13 @@ try {
     if ($currencyRow) {
         $currency = $currencyRow['value'];
     }
+
+    // Create Category Map for easy lookup
+    $categoryMap = [];
+    foreach ($categories as $cat) {
+        $categoryMap[$cat['id']] = $cat['name'];
+    }
+
 } catch (Exception $e) {
     $error = $e->getMessage();
 }
@@ -94,9 +101,15 @@ require_once __DIR__ . '/../includes/header.php';
 <div class="page-header">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <h1 class="page-title">Products</h1>
-        <a href="create.php" class="btn btn-primary">
-            <i class="fa fa-plus"></i> Add New Product
-        </a>
+        <div style="display: flex; gap: 10px;">
+            <a href="delete-all.php" class="btn btn-danger"
+                onclick="return confirm('Are you sure you want to delete ALL products? This action cannot be undone.');">
+                <i class="fa fa-trash"></i> Delete All
+            </a>
+            <a href="create.php" class="btn btn-primary">
+                <i class="fa fa-plus"></i> Add New Product
+            </a>
+        </div>
     </div>
 
     <!-- Filter Form -->
@@ -168,6 +181,7 @@ require_once __DIR__ . '/../includes/header.php';
                         <th>ID</th>
                         <th>Image</th>
                         <th>Name</th>
+                        <th>Category</th>
                         <th>Type</th>
                         <th>Price</th>
                         <th style="text-align: center;">Featured</th>
@@ -199,9 +213,38 @@ require_once __DIR__ . '/../includes/header.php';
                             </td>
                             <td>
                                 <?php
-                                $pType = $product['product_type'] ?? 'simple';
-                                $pTypeClass = $pType === 'variable' ? 'badge-info' : 'badge-secondary';
+                                $catIds = $product['category_id'];
+                                if (!empty($catIds)) {
+                                    // Handle JSON array or single ID
+                                    $ids = json_decode($catIds, true);
+                                    if (!is_array($ids)) {
+                                        $ids = [$catIds];
+                                    }
+
+                                    $catNames = [];
+                                    foreach ($ids as $cid) {
+                                        if (isset($categoryMap[$cid])) {
+                                            $catNames[] = $categoryMap[$cid];
+                                        }
+                                    }
+
+                                    if (!empty($catNames)) {
+                                        foreach ($catNames as $cName) {
+                                            echo '<span class="badge badge-secondary" style="margin-right: 4px; font-weight: normal;">' . htmlspecialchars($cName) . '</span>';
+                                        }
+                                    } else {
+                                        echo '<span style="color: #9ca3af;">-</span>';
+                                    }
+                                } else {
+                                    echo '<span style="color: #9ca3af;">-</span>';
+                                }
                                 ?>
+                                    </td>
+                                    <td>
+                                        <?php
+                                        $pType = $product['product_type'] ?? 'simple';
+                                        $pTypeClass = $pType === 'variable' ? 'badge-info' : 'badge-secondary';
+                                        ?>
                                 <span class="badge <?php echo $pTypeClass; ?>"
                                     style="background-color: <?php echo $pType === 'variable' ? '#e0f2fe' : '#f1f5f9'; ?>; color: <?php echo $pType === 'variable' ? '#0369a1' : '#475569'; ?>;">
                                     <?php echo ucfirst($pType); ?>
@@ -307,42 +350,42 @@ require_once __DIR__ . '/../includes/header.php';
 </div>
 
 <script>
-function toggleFeatured(productId, button) {
-    const icon = button.querySelector('i');
-    const isFeatured = icon.classList.contains('fas');
-    
-    // Send AJAX request
-    fetch('toggle_featured.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: 'id=' + productId + '&featured=' + (isFeatured ? '0' : '1')
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Toggle the icon
-            if (isFeatured) {
-                icon.classList.remove('fas');
-                icon.classList.add('far');
-                icon.style.color = '#cbd5e1';
-                button.title = 'Mark as featured';
-            } else {
-                icon.classList.remove('far');
-                icon.classList.add('fas');
-                icon.style.color = '#fbbf24';
-                button.title = 'Remove from featured';
-            }
-        } else {
-            alert('Error: ' + (data.message || 'Failed to update featured status'));
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Failed to update featured status');
-    });
-}
+    function toggleFeatured(productId, button) {
+        const icon = button.querySelector('i');
+        const isFeatured = icon.classList.contains('fas');
+
+        // Send AJAX request
+        fetch('toggle_featured.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'id=' + productId + '&featured=' + (isFeatured ? '0' : '1')
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Toggle the icon
+                    if (isFeatured) {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                        icon.style.color = '#cbd5e1';
+                        button.title = 'Mark as featured';
+                    } else {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                        icon.style.color = '#fbbf24';
+                        button.title = 'Remove from featured';
+                    }
+                } else {
+                    alert('Error: ' + (data.message || 'Failed to update featured status'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to update featured status');
+            });
+    }
 </script>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

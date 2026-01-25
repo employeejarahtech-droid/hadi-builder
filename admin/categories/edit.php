@@ -328,6 +328,31 @@ require_once __DIR__ . '/../includes/header.php';
                     $('#remove_image_btn').hide();
                 }
             }
+
+            // Slug formatting
+            const slugInput = $('input[name="slug"]');
+            const nameInput = $('input[name="name"]');
+
+            slugInput.on('input', function() {
+                let val = $(this).val();
+                val = val.toLowerCase()
+                        .replace(/[^\w\s-]/g, '') // Remove non-word chars (except spaces and dashes)
+                        .replace(/\s+/g, '-')     // Replace spaces with dashes
+                        .replace(/-+/g, '-');     // Replace multiple dashes with single dash
+                $(this).val(val);
+            });
+
+            // Optional: Auto-generate slug from name if slug is empty or user hasn't manually edited it much
+            nameInput.on('input', function() {
+                if (!slugInput.val()) {
+                     let val = $(this).val();
+                     val = val.toLowerCase()
+                         .replace(/[^\w\s-]/g, '')
+                         .replace(/\s+/g, '-')
+                         .replace(/-+/g, '-');
+                     slugInput.val(val);
+                }
+            });
         });
     </script>
 

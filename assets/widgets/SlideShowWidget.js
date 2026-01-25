@@ -30,14 +30,18 @@ class SlideShowWidget extends WidgetBase {
             label: 'Slides',
             default_value: [
                 {
+                    image: { url: '' },
                     slide_title: 'Welcome to Our Site',
                     slide_description: 'We provide the best solutions for your business.',
-                    button_text: 'Learn More'
+                    button_text: 'Learn More',
+                    link: { url: '', is_external: false, nofollow: false }
                 },
                 {
+                    image: { url: '' },
                     slide_title: 'Professional Services',
                     slide_description: 'Our team of experts is ready to help you succeed.',
-                    button_text: 'Contact Us'
+                    button_text: 'Contact Us',
+                    link: { url: '', is_external: false, nofollow: false }
                 }
             ],
             fields: [
@@ -150,12 +154,37 @@ class SlideShowWidget extends WidgetBase {
             tab: 'style'
         });
 
-        this.addControl('overlay_color', {
-            type: 'color',
-            label: 'Overlay Color',
-            default_value: 'rgba(0, 0, 0, 0.4)',
-            selectors: {
-                '{{WRAPPER}} .cms-slide-overlay': 'background-color: {{VALUE}};'
+
+        this.addControl('title_font_size', {
+            type: 'slider',
+            label: 'Title Font Size (Desktop)',
+            default_value: { size: 48, unit: 'px' },
+            range: {
+                min: 10,
+                max: 100,
+                step: 1
+            }
+        });
+
+        this.addControl('title_font_size_tablet', {
+            type: 'slider',
+            label: 'Title Font Size (Tablet)',
+            default_value: { size: 36, unit: 'px' },
+            range: {
+                min: 10,
+                max: 80,
+                step: 1
+            }
+        });
+
+        this.addControl('title_font_size_mobile', {
+            type: 'slider',
+            label: 'Title Font Size (Mobile)',
+            default_value: { size: 28, unit: 'px' },
+            range: {
+                min: 10,
+                max: 60,
+                step: 1
             }
         });
 
@@ -224,6 +253,10 @@ class SlideShowWidget extends WidgetBase {
         const showDots = this.getSetting('show_dots', 'yes') === 'yes';
         const transitionEffect = this.getSetting('transition_effect', 'slide');
 
+        const titleFontSize = this.getSetting('title_font_size', { size: 48, unit: 'px' });
+        const titleFontSizeTablet = this.getSetting('title_font_size_tablet', { size: 36, unit: 'px' });
+        const titleFontSizeMobile = this.getSetting('title_font_size_mobile', { size: 28, unit: 'px' });
+
         // Removed dynamic connection height variable because we use a class for the container
         // But we need to support the selector replacement for custom height in registerControls
         // The control 'slide_height' targets '{{WRAPPER}} .cms-slideshow-container' which is fine.
@@ -251,27 +284,43 @@ class SlideShowWidget extends WidgetBase {
                     transition: opacity 0.5s ease-in-out;
                 }
 
-                .${uniqueId}-overlay {
+                .${uniqueId}-content {
                     position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
                     text-align: center;
                     padding: 20px;
-                }
-
-                .${uniqueId}-content {
-                    position: relative;
-                    top: 50%;
-                    transform: translateY(-50%);
+                    width: 100%;
+                    max-width: 1200px;
                 }
 
                 .${uniqueId}-title {
-                    font-size: 3rem;
+                    font-size: ${titleFontSize.size}${titleFontSize.unit};
                     font-weight: 700;
                     margin-bottom: 1rem;
                     text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                }
+
+                @media (max-width: 1024px) {
+                    .${uniqueId}-title {
+                        font-size: ${titleFontSizeTablet.size}${titleFontSizeTablet.unit};
+                    }
+                }
+
+                @media (max-width: 767px) {
+                    .${uniqueId}-title {
+                        font-size: ${titleFontSizeMobile.size}${titleFontSizeMobile.unit};
+                    }
+                }
+
+                /* Builder View Support */
+                .canvas-wrapper.tablet .${uniqueId}-title {
+                    font-size: ${titleFontSizeTablet.size}${titleFontSizeTablet.unit};
+                }
+
+                .canvas-wrapper.mobile .${uniqueId}-title {
+                    font-size: ${titleFontSizeMobile.size}${titleFontSizeMobile.unit};
                 }
 
                 .${uniqueId}-desc {
@@ -349,6 +398,10 @@ class SlideShowWidget extends WidgetBase {
         const slidesHtml = slides.map((slide, index) => {
             let image = '';
 
+            // Debug: Log the slide data
+            console.log('Slide', index, 'data:', slide);
+            console.log('Slide', index, 'image value:', slide.image);
+
             // Handle different image formats
             if (slide.image) {
                 if (typeof slide.image === 'string') {
@@ -363,11 +416,16 @@ class SlideShowWidget extends WidgetBase {
                 }
             }
 
+            console.log('Slide', index, 'final image URL:', image);
+
             // Convert relative URLs
             if (image && image.startsWith('/')) {
                 const baseUrl = window.location.origin;
                 image = baseUrl + image;
+                console.log('Slide', index, 'converted to absolute URL:', image);
             }
+
+            console.log('Slide', index, 'FINAL URL to be used:', image);
 
             const title = slide.slide_title || '';
             const desc = slide.slide_description || '';
@@ -396,16 +454,14 @@ class SlideShowWidget extends WidgetBase {
 
             return `
                 <div class="${uniqueId}-slide cms-slide" style="${bgStyle} ${transitionStyle}">
-                    <div class="${uniqueId}-overlay cms-slide-overlay">
-                        <div class="${uniqueId}-content">
-                            ${title ? `<h2 class="${uniqueId}-title cms-slide-title">${this.escapeHtml(title)}</h2>` : ''}
-                            ${desc ? `<p class="${uniqueId}-desc cms-slide-desc">${this.escapeHtml(desc)}</p>` : ''}
-                            ${btnText ? `
-                                <a href="${linkUrl}" target="${target}" rel="${rel}" class="${uniqueId}-button cms-slide-button">
-                                    ${this.escapeHtml(btnText)}
-                                </a>
-                            ` : ''}
-                        </div>
+                    <div class="${uniqueId}-content">
+                        ${title ? `<h2 class="${uniqueId}-title cms-slide-title">${this.escapeHtml(title)}</h2>` : ''}
+                        ${desc ? `<p class="${uniqueId}-desc cms-slide-desc">${this.escapeHtml(desc)}</p>` : ''}
+                        ${btnText ? `
+                            <a href="${linkUrl}" target="${target}" rel="${rel}" class="${uniqueId}-button cms-slide-button">
+                                ${this.escapeHtml(btnText)}
+                            </a>
+                        ` : ''}
                     </div>
                 </div>
             `;

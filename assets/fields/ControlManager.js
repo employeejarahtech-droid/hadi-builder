@@ -95,6 +95,12 @@ class ControlManager extends EventEmitter {
             this.registerControlType('ckeditor', window.CKEditorControl);
         }
 
+        if (typeof SummernoteControl !== 'undefined') {
+            this.registerControlType('summernote', SummernoteControl);
+        } else if (typeof window.SummernoteControl !== 'undefined') {
+            this.registerControlType('summernote', window.SummernoteControl);
+        }
+
         // Register width and height controls
         if (typeof WIDTH !== 'undefined') {
             this.registerControlType('width', WIDTH);

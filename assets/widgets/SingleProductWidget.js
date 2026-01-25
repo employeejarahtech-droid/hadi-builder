@@ -28,6 +28,16 @@ class SingleProductWidget extends WidgetBase {
             }
         });
 
+        this.addControl('show_cart_box', {
+            type: 'select',
+            label: 'Show Cart Box',
+            default_value: 'yes',
+            options: [
+                { value: 'yes', label: 'Yes' },
+                { value: 'no', label: 'No' }
+            ]
+        });
+
         this.endControlsSection();
 
         this.startControlsSection('style_section', { label: 'Style', tab: 'style' });
@@ -41,6 +51,7 @@ class SingleProductWidget extends WidgetBase {
     render() {
         const source = this.getSetting('source', 'current_query');
         const productId = this.getSetting('product_id', '');
+        const showCartBox = this.getSetting('show_cart_box', 'yes');
         const buttonColor = this.getSetting('button_color', '#3b82f6');
         const priceColor = this.getSetting('price_color', '#3b82f6');
         const cssClasses = this.getSetting('css_classes', '');
@@ -63,7 +74,7 @@ class SingleProductWidget extends WidgetBase {
 
         // Store config
         window[`singleProduct_${cssId}`] = {
-            source, productId, buttonColor, priceColor,
+            source, productId, buttonColor, priceColor, showCartBox,
             productSlug: this.getSetting('product_slug', '')
         };
 
@@ -80,27 +91,93 @@ class SingleProductWidget extends WidgetBase {
     }
 
     async loadProduct(containerId, retryCount = 0) {
-        console.log(`Loading product for container: ${containerId} (Attempt ${retryCount + 1})`);
+        console.log(`[SingleProduct] content loading... ${containerId}`);
 
         const container = document.getElementById(containerId);
         if (!container) {
             if (retryCount < 5) {
-                console.warn(`Container ${containerId} not found, retrying in 200ms...`);
                 setTimeout(() => this.loadProduct(containerId, retryCount + 1), 200);
                 return;
             }
-            console.error('Container not found after retries:', containerId);
+            console.error('Container not found', containerId);
             return;
         }
 
         const config = window[`singleProduct_${containerId}`];
         if (!config) {
-            console.error('Config not found for:', containerId);
+            console.error('Config missing', containerId);
             container.innerHTML = '<div class="alert alert-error">Configuration error. Please refresh.</div>';
             return;
         }
 
-        const { source, productId, buttonColor, priceColor, productSlug } = config;
+        const { source, productId, buttonColor, priceColor, productSlug, showCartBox } = config;
+
+        // DEBUG LOGGING
+        const currentUrl = window.location.href;
+        const urlParams = new URLSearchParams(window.location.search);
+        const pageParam = urlParams.get('page');
+        const isBuilder = currentUrl.includes('builder.php');
+
+        console.log('[SingleProduct Debug]', {
+            location: currentUrl,
+            params_page: pageParam,
+            is_builder_php: isBuilder,
+            config_productId: productId
+        });
+
+        // CHECK FOR BUILDER MODE
+        // User requested strict check: "if page=single-product"
+        if (isBuilder && (pageParam === 'single-product' || !productId)) {
+            console.log('Builder Mode Detected. Page:', pageParam);
+
+            const dummyProduct = {
+                id: 'dummy_1',
+                name: 'Premium Wireless Headphones (Builder Preview)',
+                price: '299.00',
+                regular_price: '349.00',
+                sku: 'BUILDER-SKU-001',
+                description: 'This is a preview of the product description. In the real product page, this will be fetched dynamically.',
+                long_description: '<p>Experience the ultimate sound quality with our Premium Wireless Headphones. Designed for comfort and durability, these headphones are perfect for music lovers and professionals alike. This content is for preview purposes in the builder.</p>',
+                image_url: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80',
+                gallery_images: JSON.stringify([
+                    'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80',
+                    'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&q=80',
+                    'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=800&q=80'
+                ]),
+                status: 'active',
+                attributes: JSON.stringify([
+                    { name: 'Color', value: 'Black|Silver|Blue', is_variation: true },
+                    { name: 'Connectivity', value: 'Bluetooth 5.2' }
+                ]),
+                variations: [
+                    { id: 'v1', price: '299.00', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80', attributes: { "Color": "Black" } },
+                    { id: 'v2', price: '309.00', image: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&q=80', attributes: { "Color": "Silver" } }
+                ],
+                similar_products_data: [
+                    { id: 'sim1', name: 'Bluetooth Speaker', price: '120.00', slug: 'bluetooth-speaker', image_url: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&q=80' },
+                    { id: 'sim2', name: 'Smart Watch', price: '199.00', slug: 'smart-watch', image_url: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80' },
+                    { id: 'sim3', name: 'Noise Cancellation Earbuds', price: '150.00', slug: 'earbuds', image_url: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&q=80' },
+                    { id: 'sim4', name: 'Gaming Headset', price: '89.00', slug: 'gaming-headset', image_url: 'https://images.unsplash.com/photo-1599669467696-61a905a8f4c5?w=400&q=80' }
+                ]
+            };
+            this.renderProduct(container, dummyProduct, buttonColor, priceColor, containerId, showCartBox);
+
+            // Render Dummy Reviews
+            const reviewsContainer = document.createElement('div');
+            reviewsContainer.id = `reviews-dummy_1`;
+            reviewsContainer.style.cssText = 'margin-top: 60px; padding-top: 60px; border-top: 1px solid #e2e8f0;';
+            container.appendChild(reviewsContainer);
+
+            this.renderReviews(reviewsContainer, {
+                reviews: [
+                    { user_name: 'Builder Preview User', rating: 5, created_at: new Date().toISOString(), title: 'Excellent Quality', review_text: 'This is a preview of the review section. It helps you visualize how customer feedback will look on your page.', verified_purchase: true },
+                    { user_name: 'Jane Doe', rating: 4, created_at: new Date(Date.now() - 86400000).toISOString(), title: 'Good value', review_text: 'Another example review to populate the list.', verified_purchase: false }
+                ],
+                stats: { average_rating: 4.5, total_reviews: 2, rating_breakdown: { 5: 1, 4: 1, 3: 0, 2: 0, 1: 0 } }
+            }, 'dummy_1', buttonColor);
+
+            return;
+        }
 
         let targetId = productId;
         let queryType = 'id';
@@ -151,7 +228,7 @@ class SingleProductWidget extends WidgetBase {
             console.log('API Response:', data);
 
             if (data.success && data.product) {
-                this.renderProduct(container, data.product, buttonColor, priceColor, containerId);
+                this.renderProduct(container, data.product, buttonColor, priceColor, containerId, showCartBox);
             } else {
                 container.innerHTML = `<div style="text-align: center; padding: 40px; color: #ef4444;">
                     Product not found in database.<br>
@@ -167,7 +244,7 @@ class SingleProductWidget extends WidgetBase {
         }
     }
 
-    renderProduct(container, product, buttonColor, priceColor, containerId) {
+    renderProduct(container, product, buttonColor, priceColor, containerId, showCartBox = 'yes') {
         // Safe styling
         const price = parseFloat(product.price);
         const formattedPrice = window.EcommerceManager ? window.EcommerceManager.formatPrice(price) : `$${price.toFixed(2)}`;
@@ -228,7 +305,7 @@ class SingleProductWidget extends WidgetBase {
                     <i class="fas fa-arrow-left"></i> Back to Products
                 </a>
                 
-                <div class="product-layout" style="display: grid; grid-template-columns: 1fr 1.2fr 380px; gap: 40px; align-items: start;">
+                <div class="product-layout" style="display: grid; grid-template-columns: ${showCartBox === 'yes' ? '1fr 1.2fr 380px' : '1fr 1.5fr'}; gap: 40px; align-items: start;">
                     <!-- Column 1: Gallery -->
                     <div class="product-gallery">
                         ${mainImageHtml}
@@ -272,18 +349,19 @@ class SingleProductWidget extends WidgetBase {
                     </div>
 
                     <!-- Column 3: Buy Box -->
+                    ${showCartBox === 'yes' ? `
                     <div class="product-buy-box" style="border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; background: #fff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); position: sticky; top: 100px;">
                         
                         <div style="margin-bottom: 20px;">
                             <div style="display: flex; align-items: baseline; gap: 10px;">
                                 <div class="product-price-display" style="font-size: 32px; font-weight: 700; color: ${priceColor};">${formattedPrice}</div>
                                 ${product.regular_price && parseFloat(product.regular_price) > parseFloat(product.price)
-                ? `<div style="text-decoration: line-through; color: #94a3b8; font-size: 16px;">${window.EcommerceManager ? window.EcommerceManager.formatPrice(parseFloat(product.regular_price)) : '$' + parseFloat(product.regular_price).toFixed(2)}</div>`
-                : ''}
+                    ? `<div style="text-decoration: line-through; color: #94a3b8; font-size: 16px;">${window.EcommerceManager ? window.EcommerceManager.formatPrice(parseFloat(product.regular_price)) : '$' + parseFloat(product.regular_price).toFixed(2)}</div>`
+                    : ''}
                             </div>
                             ${product.regular_price && parseFloat(product.regular_price) > parseFloat(product.price)
-                ? `<div style="color: #ef4444; font-size: 14px; font-weight: 600; margin-top: 5px;">-17% off</div>`
-                : ''}
+                    ? `<div style="color: #ef4444; font-size: 14px; font-weight: 600; margin-top: 5px;">-17% off</div>`
+                    : ''}
                             <div style="color: #64748b; font-size: 14px; margin-top: 5px;">Inclusive All Tax</div>
                         </div>
 
@@ -291,10 +369,10 @@ class SingleProductWidget extends WidgetBase {
 
                         <div style="margin-bottom: 20px;">
                             ${product.status === 'active'
-                ? `<div style="color: #166534; font-size: 18px; font-weight: 600; margin-bottom: 5px;">In Stock</div>
+                    ? `<div style="color: #166534; font-size: 18px; font-weight: 600; margin-bottom: 5px;">In Stock</div>
                    <div style="color: #64748b; font-size: 14px;">4 Available in stock</div>`
-                : `<div style="color: #991b1b; font-size: 18px; font-weight: 600;">Currently Unavailable</div>`
-            }
+                    : `<div style="color: #991b1b; font-size: 18px; font-weight: 600;">Currently Unavailable</div>`
+                }
                         </div>
 
                         ${(!(window.CMS_SETTINGS && window.CMS_SETTINGS.enable_cart === '0')) ? `
@@ -342,9 +420,8 @@ class SingleProductWidget extends WidgetBase {
                             </div>
                         </div>
 
-                    </div>
+                    </div>` : ''}
                     <!-- End Buy Box -->
-
                 </div>
 
                 ${this.renderSimilarProducts(product, buttonColor)}

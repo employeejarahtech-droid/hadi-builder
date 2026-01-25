@@ -1,42 +1,42 @@
-.nav-main > ul {
+.nav-main>ul {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
-.nav-main > ul > li {
+.nav-main>ul>li {
   position: relative;
   padding: 10px 0;
 }
 
-.nav-main > ul > li:hover .dropdown-box {
+.nav-main>ul>li:hover .dropdown-box {
   transform: translate3d(0, 0, 0);
   visibility: visible;
   opacity: 1;
   top: 50px;
 }
 
-.nav-main > ul > li > a {
+.nav-main>ul>li>a {
   color: #000;
   font-weight: 500;
   display: inline-flex;
   align-items: center;
   padding: 5px 0;
-  font-size: 14px;
+  font-size: 16px;
   text-transform: uppercase;
   transition: all 0.3s ease;
   position: relative;
 }
 
-.nav-main > ul > li > a:hover {
+.nav-main>ul>li>a:hover {
   color: var(--color-primary);
 }
 
-.nav-main ul > li.active > a {
+.nav-main ul>li.active>a {
   color: var(--color-primary);
 }
 
-.nav-main ul > li:hover > a svg {
+.nav-main ul>li:hover>a svg {
   rotate: 180deg;
 }
 
@@ -70,13 +70,13 @@
   gap: 0;
 }
 
-.dropdown-box ul > li {
+.dropdown-box ul>li {
   position: relative;
   width: 100%;
   padding: 0;
 }
 
-.dropdown-box ul > li > a {
+.dropdown-box ul>li>a {
   font-weight: 400;
   text-transform: capitalize;
   line-height: 1;
@@ -108,17 +108,17 @@
   border-bottom: 1px solid var(--color-primary);
 }
 
-.dropdown-box ul > li:last-child > a {
+.dropdown-box ul>li:last-child>a {
   border-radius: 0 0 5px 5px;
 }
 
-.dropdown-box ul > li > a:hover {
+.dropdown-box ul>li>a:hover {
   background-color: var(--color-primary);
   color: #fff;
   padding-left: 25px;
 }
 
-.dropdown-box ul > li:first-child > a {
+.dropdown-box ul>li:first-child>a {
   border-radius: 5px 5px 0 0;
 }
 
@@ -126,11 +126,11 @@
     display: block;
   } */
 
-.dropdown-box ul > li > a > svg {
+.dropdown-box ul>li>a>svg {
   rotate: 0deg;
 }
 
-.dropdown-box ul > li:hover > a > svg {
+.dropdown-box ul>li:hover>a>svg {
   rotate: 0deg;
 }
 
@@ -149,7 +149,7 @@
   border-radius: 5px;
 }
 
-.dropdown-box ul > li:hover .submenu {
+.dropdown-box ul>li:hover .submenu {
   transform: translate3d(0, 0, 0);
   visibility: visible;
   opacity: 1;

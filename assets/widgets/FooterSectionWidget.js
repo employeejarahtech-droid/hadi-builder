@@ -343,7 +343,7 @@ class FooterSectionWidget extends WidgetBase {
           name: 'image',
           type: 'media',
           label: 'Image',
-          default_value: ''
+          default: ''
         },
         {
           name: 'position',
@@ -360,12 +360,67 @@ class FooterSectionWidget extends WidgetBase {
             { value: 'bottom-center', label: 'Bottom Center' },
             { value: 'bottom-right', label: 'Bottom Right' }
           ],
-          default_value: 'top-left'
+          default: 'top-left'
+        },
+        {
+          name: 'width_unit',
+          type: 'select',
+          label: 'Width Unit',
+          options: [
+            { value: 'px', label: 'PX' },
+            { value: 'percent', label: '%' },
+            { value: 'vw', label: 'VW' },
+            { value: 'auto', label: 'Auto' }
+          ],
+          default: 'px'
+        },
+        {
+          name: 'width_value',
+          type: 'text',
+          label: 'Width Value',
+          default: '200',
+          condition: {
+            width_unit: ['px', 'percent', 'vw']
+          }
+        },
+        {
+          name: 'height_unit',
+          type: 'select',
+          label: 'Height Unit',
+          options: [
+            { value: 'px', label: 'PX' },
+            { value: 'percent', label: '%' },
+            { value: 'vh', label: 'VH' },
+            { value: 'auto', label: 'Auto' }
+          ],
+          default: 'auto'
+        },
+        {
+          name: 'height_value',
+          type: 'text',
+          label: 'Height Value',
+          default: '100',
+          condition: {
+            height_unit: ['px', 'percent', 'vh']
+          }
+        },
+        {
+          name: 'overflow',
+          type: 'select',
+          label: 'Overflow',
+          options: [
+            { value: 'visible', label: 'Visible' },
+            { value: 'hidden', label: 'Hidden' }
+          ],
+          default: 'visible'
         }
       ]
     });
 
     this.endControlsSection();
+
+    // Add Advanced tab
+    this.registerAdvancedControls();
   }
 
   constructor() {
@@ -407,6 +462,9 @@ class FooterSectionWidget extends WidgetBase {
     const headingColor = this.getSetting('heading_color', '#ffffff');
     const linkHoverColor = this.getSetting('link_hover_color', '#60a5fa');
     const backgroundImageList = this.getSetting('background_image_list', []);
+
+    // Generate unique ID for scoped styles
+    const uid = 'footer_' + Math.floor(Math.random() * 100000);
 
     // Build Column 1 menu
     let col1MenuHTML = '';
@@ -457,18 +515,67 @@ class FooterSectionWidget extends WidgetBase {
           default: positionStyles = 'top: 0; left: 0;';
         }
 
-        return `<div class="footer-bg-image" style="position: absolute; ${positionStyles} z-index: 0; pointer-events: none;">
-          <img src="${item.image.url}" alt="Background" style="max-width: 200px; opacity: 0.3;">
+        // Process Width
+        const widthUnit = item.width_unit || 'px';
+        const widthVal = item.width_value || '200';
+        let realWidthUnit = widthUnit;
+        if (widthUnit === 'percent') realWidthUnit = '%';
+
+        const widthStyle = widthUnit === 'auto' ? 'width: auto;' : `width: ${widthVal}${realWidthUnit};`;
+
+        // Process Height
+        const heightUnit = item.height_unit || 'auto';
+        const heightVal = item.height_value || '100';
+        let realHeightUnit = heightUnit;
+        if (heightUnit === 'percent') realHeightUnit = '%';
+
+        const heightStyle = heightUnit === 'auto' ? 'height: auto;' : `height: ${heightVal}${realHeightUnit};`;
+
+        const overflow = item.overflow || 'visible';
+
+        return `<div class="footer-bg-image" style="position: absolute; ${positionStyles} z-index: 0; pointer-events: none; overflow: ${overflow};">
+            <img src="${item.image.url}" alt="Background" style="${widthStyle} ${heightStyle} opacity: 1; max-width: none;">
         </div>`;
       }).join('');
     }
 
-    return `
-<footer class="main-footer" style="background-color: ${backgroundColor}; color: ${textColor};">
-  ${backgroundImageListHTML}
-  
-  <div class="container" style="position: relative; z-index: 1;">
-    <div class="footer-top">
+    const outputHtml = `
+      <style>
+        /* Scoped Styles for Footer */
+        .${uid} {
+          position: relative;
+          background-color: ${backgroundColor};
+          color: ${textColor};
+          font-family: 'Inter', sans-serif;
+          overflow: hidden; /* Ensure background images don't spill out */
+        }
+
+        .${uid} .main-footer {
+          position: relative;
+          padding: 80px 0 40px;
+          z-index: 1;
+        }
+
+        /* Ensure background images are behind content */
+        .${uid} .footer-bg-image {
+            z-index: 0;
+        }
+
+        /* Container needs z-index to stay on top */
+        .${uid} .container {
+            position: relative;
+            z-index: 1;
+        }
+      </style>
+
+      <footer class="${uid}">
+        ${backgroundImageListHTML}
+        
+        <div class="main-footer">
+          <div class="container">
+            <div class="row">
+              <!-- Brand Column -->
+      
       ${showBrand ? `
       <div class="footer-brand">
         ${brandLogo.url ? `<div class="footer-logo"><img src="${brandLogo.url}" alt="Logo"></div>` : ''}
@@ -543,24 +650,26 @@ class FooterSectionWidget extends WidgetBase {
     </div>
     
     ${showBottomBar ? `
-    <div class="footer-bottom">
-      <div class="footer-bottom-left">
-        <p class="copyright-text">${this.escapeHtml(copyrightText)}</p>
-      </div>
-      <div class="footer-bottom-right">
-        ${paymentText ? `<p>${this.escapeHtml(paymentText)}</p>` : ''}
-        ${paymentImage.url ? `<img src="${paymentImage.url}" alt="Payment methods">` : ''}
+    <div class="bottom-bar" style="border-top: 1px solid rgba(255,255,255,0.1); padding: 25px 0; background-color: rgba(0,0,0,0.2); position: relative; z-index: 1;">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+            <p style="margin: 0; font-size: 14px; opacity: 0.7;">${copyrightText}</p>
+          </div>
+          <div class="col-md-6 text-center text-md-end">
+            <div class="payment-methods d-inline-flex align-items-center">
+              ${paymentText ? `<span style="margin-right: 15px; font-size: 14px; opacity: 0.7;">${paymentText}</span>` : ''}
+              ${paymentImage.url ? `<img src="${paymentImage.url}" alt="Payment Methods" style="height: 24px;">` : ''}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     ` : ''}
-  </div>
+      </footer>
     `;
 
-    /* 
-    * Styles are now handled by external footer.css to ensure consistency and responsiveness.
-    * Dynamic styles (colors, images) are applied via inline styles in the HTML above.
-    */
-
+    return this.wrapWithAdvancedSettings(outputHtml, 'footer-section-widget');
   }
 
 

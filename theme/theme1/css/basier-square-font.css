@@ -1,0 +1,24 @@
+/* Basier Square Regular Font */
+@font-face {
+  font-family: "Basier Square";
+  src: url("../fonts/Basier Square Regular.eot");
+  /* IE9 Compat Modes */
+  src: url("../fonts/Basier Square Regular.eot?#iefix") format("embedded-opentype"),
+    /* IE6-IE8 */
+    url("../fonts/Basier Square Regular.woff2") format("woff2"),
+    /* Modern Browsers */
+    url("../fonts/Basier Square Regular.woff") format("woff"),
+    /* Modern Browsers */
+    url("../fonts/Basier Square Regular.ttf") format("truetype"),
+    /* Safari, Android, iOS */
+    url("../fonts/Basier Square Regular.otf") format("opentype");
+  /* OpenType */
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Helper class to use Basier Square font */
+.basier-square {
+  font-family: "Basier Square", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}

@@ -6,6 +6,16 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     exit;
 }
 
+// Access Control - Only Administrators can access Git Version
+if (($_SESSION['admin_role'] ?? 'user') !== 'admin') {
+    $currentPage = 'git_version';
+    $pageTitle = 'Git Version Deploy';
+    require_once __DIR__ . '/../includes/header.php';
+    echo '<div class="content-wrapper"><div class="card" style="text-align: center; padding: 40px; color: #ef4444;"><i class="fa fa-lock" style="font-size: 48px; margin-bottom: 20px;"></i><h2>Access Denied</h2><p>Only Administrators can access Git Version Deploy.</p></div></div>';
+    require_once __DIR__ . '/../includes/footer.php';
+    exit;
+}
+
 $currentPage = 'git_version';
 $pageTitle = 'Git Version Deploy';
 require_once __DIR__ . '/../includes/header.php';
@@ -474,12 +484,12 @@ require_once __DIR__ . '/../includes/header.php';
                     showConsole(response.output || response.message, true);
                     showToast('SSH key generated successfully', 'success');
                     checkSSHKey();
-                    
+
                     // Show instructions if provided
                     if (response.instructions) {
                         showConsole('\n=== Next Steps ===\n' + response.instructions.join('\n'), true);
                     }
-                    
+
                     if (response.publicKey) {
                         $('#sshPublicKey').val(response.publicKey);
                         showSSHKeyModal();
@@ -488,27 +498,27 @@ require_once __DIR__ . '/../includes/header.php';
                     // Show error message
                     let errorMsg = '=== SSH Key Generation Failed ===\n';
                     errorMsg += response.message + '\n';
-                    
+
                     if (response.reason) {
                         errorMsg += '\nReason: ' + response.reason + '\n';
                     }
-                    
+
                     // Show manual instructions if available (cPanel environment)
                     if (response.manual_instructions) {
                         errorMsg += '\n' + response.manual_instructions.title + '\n';
                         errorMsg += '='.repeat(response.manual_instructions.title.length) + '\n\n';
                         errorMsg += response.manual_instructions.steps.join('\n') + '\n';
-                        
+
                         if (response.manual_instructions.alternative) {
                             errorMsg += '\n' + response.manual_instructions.alternative + '\n';
                             errorMsg += response.manual_instructions.local_steps.join('\n') + '\n';
                         }
                     }
-                    
+
                     if (response.help) {
                         errorMsg += '\n💡 ' + response.help + '\n';
                     }
-                    
+
                     showConsole(errorMsg, false);
                     showToast(response.message || 'Failed to generate SSH key', 'error');
                 }
